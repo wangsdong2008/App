@@ -1,0 +1,74 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+		    "path": "pages/users/login/login",
+		    "style": {
+		        "navigationBarTitleText": "登录"
+		    }
+		},{
+			"path": "pages/parents/parents/index",
+			"style": {
+				"navigationBarTitleText": "家长页面"
+			}
+		},{
+			"path": "pages/company/company/index",
+			"style": {
+				"navigationBarTitleText": "机构页面"
+			}
+		},{
+			"path": "pages/company/company/studentssearch",
+			"style": {
+				"navigationBarTitleText": "学生查询"
+			}
+		},{
+			"path": "pages/company/company/studentsshow",
+			"style": {
+				//"app-plus": {"titleNView": false},
+				"navigationBarTitleText": "学生详情"
+			}
+		},{
+			"path": "pages/company/company/statistics",
+			"style": {
+				"navigationBarTitleText": "统计"
+			}
+		},{
+			"path": "pages/company/company/statisticsstudents",
+			"style": {
+				"navigationBarTitleText": "学生选择"
+			}
+		},{
+			"path": "pages/company/company/statisticsresult",
+			"style": {
+				"navigationBarTitleText": "统计结果"
+			}
+		},{
+			"path": "pages/company/company/sksign",
+			"style": {
+				"navigationBarTitleText": "上课签到"
+			}
+		},{
+			"path": "pages/company/company/cfsign",
+			"style": {
+				"navigationBarTitleText": "吃饭签到"
+			}
+		},{
+			"path": "pages/company/company/ygsign",
+			"style": {
+				"navigationBarTitleText": "员工签到"
+			}
+		},{
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {"titleNView": false}, //隐藏顶部导航栏
+				"navigationBarTitleText": "首页"
+			}
+		}
+		
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	}
+}

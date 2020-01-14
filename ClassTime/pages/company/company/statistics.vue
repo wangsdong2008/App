@@ -1,0 +1,53 @@
+<template>
+	<view class="main_content">
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="login_center content">
+			<uni-section title="全部统计" type="line"></uni-section>
+			<uni-list>
+				<uni-list-item title="上课统计" thumb="../../../static/img/stj.png" @tap="bindtj(1)" :show-arrow="true" /></uli-list-item>
+				<uni-list-item title="吃饭统计" thumb="../../../static/img/ftj.png" @tap="bindtj(2)" :show-arrow="false" /></uli-list-item>
+				<uni-list-item title="员工统计" thumb="../../../static/img/etj.png" :show-arrow="false" /></uli-list-item>
+			</uni-list>
+		</view>
+	</view>
+</template>
+
+<script>
+	import service from '@/service.js';
+	import mInput from '@/components/m-input.vue'
+	import headerNav from "@/components/header/company_header.vue"
+	import uniList from "@/components/uni-list/uni-list.vue"
+	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
+	import uniSection from '@/components/uni-section/uni-section.vue'
+	
+	import {
+	    mapState,
+	    mapMutations
+	} from 'vuex'
+	
+	export default {
+	    components: {
+			headerNav,uniList,uniListItem,uniSection
+		},
+		data(){
+			return{		
+				headermsg:'统计,Statistics',
+				dataList:[]
+			}
+		},
+		methods:{
+			bindtj(id){
+				this.navigateTo('statisticsstudents?id='+id);	
+			}
+			
+		}
+	}
+</script>
+
+<style>
+	.uni-list-item{
+		padding:0upx;
+		width:94%;
+		margin: 0 auto;
+	}
+</style>
