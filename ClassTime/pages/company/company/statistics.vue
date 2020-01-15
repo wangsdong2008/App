@@ -1,13 +1,34 @@
 <template>
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
-		<view class="login_center content">
+		<view class="center100 content">
 			<uni-section title="全部统计" type="line"></uni-section>
-			<uni-list>
-				<uni-list-item title="上课统计" thumb="../../../static/img/stj.png" @tap="bindtj(1)" :show-arrow="true" /></uli-list-item>
-				<uni-list-item title="吃饭统计" thumb="../../../static/img/ftj.png" @tap="bindtj(2)" :show-arrow="false" /></uli-list-item>
+			<uni-collapse>
+			    <uni-collapse-item title="上课统计" thumb="../../../static/img/stj.png">
+			        <view style="padding: 30rpx;">
+			           <uni-list>
+						   <uni-list-item title="单人查询"  @tap="bindtj(1)" :show-arrow="false" /></uli-list-item>
+						   <uni-list-item title="整体查询"  :show-arrow="false" /></uli-list-item>
+					   </uni-list>
+			        </view>
+			    </uni-collapse-item>
+			</uni-collapse>
+			
+			<uni-collapse>
+			    <uni-collapse-item title="吃饭统计" thumb="../../../static/img/ftj.png">
+			        <view style="padding: 30rpx;">
+			           <uni-list>
+						   <uni-list-item title="单人查询"  @tap="bindtj(2)" :show-arrow="false" /></uli-list-item>
+						   <uni-list-item title="整体查询" :show-arrow="false" /></uli-list-item>
+					   </uni-list>
+			        </view>
+			    </uni-collapse-item>
+			</uni-collapse>
+			
+			<uni-list>				
 				<uni-list-item title="员工统计" thumb="../../../static/img/etj.png" :show-arrow="false" /></uli-list-item>
 			</uni-list>
+			
 		</view>
 	</view>
 </template>
@@ -19,6 +40,8 @@
 	import uniList from "@/components/uni-list/uni-list.vue"
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import uniSection from '@/components/uni-section/uni-section.vue'
+	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
+	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
 	
 	import {
 	    mapState,
@@ -27,7 +50,7 @@
 	
 	export default {
 	    components: {
-			headerNav,uniList,uniListItem,uniSection
+			headerNav,uniList,uniListItem,uniSection,uniCollapse,uniCollapseItem
 		},
 		onLoad:function() {
 			this.checkLogin();			
@@ -41,7 +64,8 @@
 		methods:{
 			bindtj(id){
 				this.navigateTo('statisticsstudents?id='+id);	
-			}
+			},
+			change(e) {}
 			
 		}
 	}

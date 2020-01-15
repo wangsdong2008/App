@@ -1,8 +1,7 @@
 <template>
-	<view class="main">
-		<view>
-			<view class="icenter">				
-				<!-- <view class="title">上课签到</view> -->
+	<view class="main_content">
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">	
 				<view class="studentlist">
 					<checkbox-group  @change="checkboxChange"> 
 					<uni-list v-for="(item,index) in dataList">
@@ -23,8 +22,6 @@
 						</uni-list-item>
 					</uni-list>
 					</checkbox-group>
-					
-					 
 					  
 					  <view class="btnlist">
 						<checkbox-group @change="bindSelectAll">
@@ -42,7 +39,7 @@
 					  </view>
 					  
 				</view>
-			</view>
+			
 		</view>
 	</view>
 </template>
@@ -52,16 +49,18 @@
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
+	import headerNav from "@/components/header/company_header.vue"
 
 	export default {
-	    components: {uniList,uniListItem,uniGrid,uniGridItem},
+	    components: {uniList,uniListItem,uniGrid,uniGridItem,headerNav},
 		data(){
 			return{
 				dataList:[],	
 				dataList_num:0,
 				selectid:'',
 				isCheckedAll: false,
-				ulist:[]
+				ulist:[],
+				headermsg:'上课签到,Class sign',
 			}
 		},
 		onReady:function(){
@@ -99,7 +98,7 @@
 					    	var data = res.data.list; 
 							if(parseInt(res.data.status)==0){
 								uni.showToast({
-									title: '无数据',
+									title: '无数据1',
 									icon: 'none',
 								});		
 							}else{	
@@ -213,7 +212,7 @@
 </script>
 
 
-<style>	
+<style>		
 	.btnlist{
 		border-top:2px solid #eeeeee;
 		padding-top: 40upx;

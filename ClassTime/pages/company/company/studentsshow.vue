@@ -1,7 +1,7 @@
 <template>
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
-		<view class="login_center content">
+		<view class="center100 content">
 			<view class="bgcolor">
 				<view class="bg">
 					<view class="icenter">
@@ -108,7 +108,8 @@
 				dataList:[],
 				courseList:[],
 				school_name:'',
-				grade_name:''
+				grade_name:'',
+				mtel:''
 			}
 		},
 		onLoad:function(options){
@@ -162,6 +163,7 @@
 					    	var data = res.data.studentslist; 
 							if(parseInt(res.data.status) == 3){
 								this.dataList = data;
+								this.mtel = data['mtel'];
 								
 								this.school_name = data['schoolinfo']['school_name'];
 								this.grade_name = data['gradeinfo']['grade_name'] + data['classinfo']['class_name'];

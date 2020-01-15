@@ -13,6 +13,10 @@
 </script>
 
 <style>
+	.center100{
+		width:100%;			
+		margin: 0 auto;
+	}
 	/*每个页面公共css */
 	.footer{
 		height: 90upx;

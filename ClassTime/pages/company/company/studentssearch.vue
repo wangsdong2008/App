@@ -1,7 +1,7 @@
 <template>
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
-		<view class="login_center content">
+		<view class="center100 content">
 			
 			<view class="icenter bg">
 				<view>请选择：</view>
