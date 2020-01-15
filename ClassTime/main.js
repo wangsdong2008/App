@@ -51,9 +51,74 @@ Vue.prototype.GetStudentsDetail = Vue.prototype.CompanyUrl + "getstudentsdetail"
 Vue.prototype.GetStudentsCategory = Vue.prototype.CompanyUrl + "getstudentscategory"//学生所报的课程分类
 Vue.prototype.GetStudentssign = Vue.prototype.CompanyUrl + "getstudentssign" //学生签到查询
 Vue.prototype.SetsignUrl = Vue.prototype.CompanyUrl + "setsign"
-
+Vue.prototype.GetBirthdaytStudentsUrl = Vue.prototype.CompanyUrl + "getbirthdaystudents"  //获取一周内过生日的学生
 
 //常用函数
+Vue.prototype.sendsms = function (userInfo) {	
+	uni.request({
+		url:this.SendSmsUrl,
+		header: {
+	             "Content-Type": "application/x-www-form-urlencoded"							 
+	    },
+	    data: {
+	        "mobile": userInfo.mobile,
+			"t":Math.random()
+	    },
+	    method: "get",
+		success: (res) => {
+			var data = res.data;
+			switch(parseInt(data.status)){
+				case 0:{ //
+					uni.showToast({
+						title: '出错',
+						mask: true,
+						duration: 1500
+					});
+					break;
+					}
+				case 1:{ //
+					uni.showToast({
+						title: '出错2',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				case 2:{
+					uni.showToast({
+						title: '手机号码已被使用，请更换',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				case 3:{
+					uni.showToast({
+						title: '发送成功,请在5分钟内输入',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}				
+				case 4:{
+					uni.showToast({
+						title: '验证码不正确',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				default:{
+					uni.showToast({
+					    title: '注册失败，请检查'
+					});
+					break;
+				}
+			}
+		}
+	});
+}
+
 Vue.prototype.getUsers = function () {
     let ret = '';
     ret = uni.getStorageSync(this.USERS_KEY);

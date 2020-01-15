@@ -29,6 +29,9 @@
 	    components: {
 			headerNav,uniList,uniListItem,uniSection
 		},
+		onLoad:function() {
+			this.checkLogin();			
+		},
 		data(){
 			return{		
 				headermsg:'统计,Statistics',

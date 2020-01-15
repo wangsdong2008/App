@@ -55,7 +55,7 @@
 							<image src="../../../static/img/tjsearch.png" @tap="bindstatistics"></image>
 						</uni-grid-item>					
 						<uni-grid-item v-if="is_brithday === 1">
-							<image :src="'../../../static/img/brithday'+isBrithday+'.png'"></image>
+							<image :src="'../../../static/img/brithday'+isBrithday+'.png'" @tap="bindbrithday" ></image>
 						</uni-grid-item>
 						<uni-grid-item>
 							<image src="../../../static/img/system.png"></image>
@@ -111,6 +111,9 @@
 			},
 			bindstatistics(){ //统计
 				this.navigateTo('statistics');
+			},
+			bindbrithday(){ //生日提醒
+				this.navigateTo('birthday')
 			},
 			show(){
 				let ret = uni.getStorageSync(this.USERS_KEY);				

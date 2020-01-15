@@ -6,6 +6,12 @@
 		        "navigationBarTitleText": "登录"
 		    }
 		},{
+		    "path": "pages/users/reg/reg",
+		    "style": {
+		        "navigationBarTitleText": "注册新用户"
+		    }
+		},
+		{
 			"path": "pages/parents/parents/index",
 			"style": {
 				"navigationBarTitleText": "家长页面"
@@ -55,6 +61,11 @@
 			"path": "pages/company/company/ygsign",
 			"style": {
 				"navigationBarTitleText": "员工签到"
+			}
+		},{
+			"path": "pages/company/company/birthday",
+			"style": {
+				"navigationBarTitleText": "生日提醒"
 			}
 		},{
 			"path": "pages/index/index",

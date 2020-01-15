@@ -21,7 +21,7 @@
 				<button class="btn" type="submit" cursor @tap="bindLogin" >登录</button>
 			</view>
 			<view class="action-row">
-			    <navigator url="../reg/reg">注册账号</navigator>
+			    <navigator url="../reg/reg" @tap="bindRegister">注册账号</navigator>
 			    <text>|</text>
 			    <navigator url="../pwd/pwd">忘记密码</navigator>
 			</view>
@@ -57,6 +57,9 @@
 		    ...mapMutations(['login']),
 			getsession(){
 				this.getcurrentsession();	
+			},
+			bindRegister(){
+				this.reLaunchurl('../reg/reg');
 			},
 			bindLogin() {
                 /**
