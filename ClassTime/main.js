@@ -11,6 +11,8 @@ Vue.prototype.$store = store
 Vue.prototype.USERS_KEY = "userinfo";
 Vue.prototype.Temp_KEY = "tempinfo";
 
+Vue.prototype.STUDYTIME = "2019-06-01";
+
 //图片地址
 Vue.prototype.WebUrl = "http://192.168.1.103/";
 Vue.prototype.PicUrl = Vue.prototype.Url + "uploadfile/" ;
@@ -52,8 +54,42 @@ Vue.prototype.GetStudentsCategory = Vue.prototype.CompanyUrl + "getstudentscateg
 Vue.prototype.GetStudentssign = Vue.prototype.CompanyUrl + "getstudentssign" //学生签到查询
 Vue.prototype.SetsignUrl = Vue.prototype.CompanyUrl + "setsign"
 Vue.prototype.GetBirthdaytStudentsUrl = Vue.prototype.CompanyUrl + "getbirthdaystudents"  //获取一周内过生日的学生
+Vue.prototype.GetAllSubCompanyUrl = Vue.prototype.CompanyUrl + "getsubcompanylist"  //获取子公司
+Vue.prototype.GetCompanyCategory = Vue.prototype.CompanyUrl + "getcompanycategory"  //获取子公司的培训课程
+Vue.prototype.GetCompanyStatisticUrl = Vue.prototype.CompanyUrl + "getcompanystatistic"  //获取子公司某一课程的统计结果
+
 
 //常用函数
+//获取月份
+Vue.prototype.GetStudyMonth = function () {	
+	var startdate = new Date(this.STUDYTIME);
+	var enddate = new Date();			   	
+	var year_s = startdate.getFullYear(); //获取开始日期的年份
+	var month_s = startdate.getMonth(); //获取开始日期的月份
+	
+	var year_e = enddate.getFullYear(); //获取当前日期的年份
+	var month_e = enddate.getMonth() ; //获取当前日期的月份
+	
+	var arr = new Array();
+	var y = year_s;
+	var m = month_s;
+	var len = (year_e - y)*12 - m + month_e;	
+	m = m + 1;
+	var str;
+	for(var i = 0; i < len; i++){
+		m = m + 1;
+		if(m > 12){
+			y = y + 1;
+			m = 1;
+		}
+		str = "00"+m;
+		arr[i] = y + "-" + str.substr(str.length-2,str.length);
+	}	
+	//把数组给反过来
+	return arr.reverse();
+}
+
+//发送短信
 Vue.prototype.sendsms = function (userInfo) {	
 	uni.request({
 		url:this.SendSmsUrl,

@@ -48,9 +48,19 @@
 				"navigationBarTitleText": "学生选择"
 			}
 		},{
+			"path": "pages/company/company/statisticscompany",
+			"style": {
+				"navigationBarTitleText": "公司统计"
+			}
+		},{
 			"path": "pages/company/company/statisticsresult",
 			"style": {
 				"navigationBarTitleText": "统计结果"
+			}
+		},{
+			"path": "pages/company/company/statisticcompanysresult",
+			"style": {
+				"navigationBarTitleText": "公司统计结果"
 			}
 		},{
 			"path": "pages/company/company/cfsign",

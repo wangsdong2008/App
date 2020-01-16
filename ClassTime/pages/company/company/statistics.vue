@@ -7,8 +7,8 @@
 			    <uni-collapse-item title="上课统计" thumb="../../../static/img/stj.png">
 			        <view style="padding: 30rpx;">
 			           <uni-list>
-						   <uni-list-item title="单人查询"  @tap="bindtj(1)" :show-arrow="false" /></uli-list-item>
-						   <uni-list-item title="整体查询"  :show-arrow="false" /></uli-list-item>
+						   <uni-list-item title="单人查询" @tap="bindtj(1)" :show-arrow="true" /></uli-list-item>
+						   <uni-list-item title="整体查询" @tap="bindcompanytj(1)"  :show-arrow="true" /></uli-list-item>
 					   </uni-list>
 			        </view>
 			    </uni-collapse-item>
@@ -18,15 +18,15 @@
 			    <uni-collapse-item title="吃饭统计" thumb="../../../static/img/ftj.png">
 			        <view style="padding: 30rpx;">
 			           <uni-list>
-						   <uni-list-item title="单人查询"  @tap="bindtj(2)" :show-arrow="false" /></uli-list-item>
-						   <uni-list-item title="整体查询" :show-arrow="false" /></uli-list-item>
+						   <uni-list-item title="单人查询"  @tap="bindtj(2)" :show-arrow="true" /></uli-list-item>
+						   <uni-list-item title="整体查询" :show-arrow="true" /></uli-list-item>
 					   </uni-list>
 			        </view>
 			    </uni-collapse-item>
 			</uni-collapse>
 			
 			<uni-list>				
-				<uni-list-item title="员工统计" thumb="../../../static/img/etj.png" :show-arrow="false" /></uli-list-item>
+				<uni-list-item title="员工统计" thumb="../../../static/img/etj.png" :show-arrow="true" /></uli-list-item>
 			</uni-list>
 			
 		</view>
@@ -56,7 +56,7 @@
 			this.checkLogin();			
 		},
 		data(){
-			return{		
+			return{
 				headermsg:'统计,Statistics',
 				dataList:[]
 			}
@@ -64,6 +64,9 @@
 		methods:{
 			bindtj(id){
 				this.navigateTo('statisticsstudents?id='+id);	
+			},
+			bindcompanytj(id){
+				this.navigateTo('statisticscompany?id='+id);	
 			},
 			change(e) {}
 			

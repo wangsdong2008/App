@@ -1,8 +1,6 @@
 <template>
 	<view class="login_content">
-		<view class="title">
-		    <view class="login_center login_title_txt">登录<br /><span>Welcome back</span></view>
-		</view>
+		<headerNav :msg="headermsg"></headerNav>
 		<view class="login_center content">
 			<view class="login_account">帐号</view>
 			<view class="login_account_input">
@@ -33,6 +31,7 @@
 <script>
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue'
+	import headerNav from "@/components/header/company_header.vue";
 	import {
 	    mapState,
 	    mapMutations
@@ -40,10 +39,11 @@
 	
 	export default {
 	    components: {
-	        mInput
+	        mInput,headerNav
 	    },
 	    data() {
 	        return {
+				headermsg:'登录,login',
 	            providerList: [],
 				hasProvider: false,
 	            account: '13816141683',
@@ -59,7 +59,7 @@
 				this.getcurrentsession();	
 			},
 			bindRegister(){
-				this.reLaunchurl('../reg/reg');
+				this.navigateTo('../reg/reg');
 			},
 			bindLogin() {
                 /**

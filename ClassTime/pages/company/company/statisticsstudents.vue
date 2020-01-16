@@ -155,13 +155,13 @@
 									}
 								}
 								
-								list = [];
+								/* list = [];
 								var dlist = res.data.datelist;
 								for(var i = dlist.length-1; i > 0; i--){
 									var item = dlist[i];
 									list.push(item.d);
-								}
-								this.dateList = list;
+								} */
+								this.dateList = this.GetStudyMonth();
 								this.cid = this.dataIDList[0];
 								this.dateid = this.dateList[0];
 							}					    	
