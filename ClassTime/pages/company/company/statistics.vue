@@ -19,7 +19,7 @@
 			        <view style="padding: 30rpx;">
 			           <uni-list>
 						   <uni-list-item title="单人查询"  @tap="bindtj(2)" :show-arrow="true" /></uli-list-item>
-						   <uni-list-item title="整体查询" :show-arrow="true" /></uli-list-item>
+						   <uni-list-item title="整体查询" @tap="bindcompanytj(2)" :show-arrow="true" /></uli-list-item>
 					   </uni-list>
 			        </view>
 			    </uni-collapse-item>
