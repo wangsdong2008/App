@@ -19,6 +19,7 @@
 	}
 	/*每个页面公共css */
 	.footer{
+		margin-top: 50upx;
 		height: 90upx;
 	}
 	.main{

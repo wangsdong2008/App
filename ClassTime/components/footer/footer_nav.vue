@@ -34,7 +34,7 @@
 				},
 				{
 					nav: 'companysite',
-					url: 'company/company/site',
+					url: 'company/site/index',
 					text: '设置',
 					imgNormal:'/static/img/companysite.png',
 					imgClick:'/static/img/companysiteHL.png'

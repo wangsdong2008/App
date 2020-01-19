@@ -5,7 +5,7 @@
 				<view class="studentlist">
 					<checkbox-group  @change="checkboxChange"> 
 					<uni-list v-for="(item,index) in dataList">
-						<uni-list-item v-if="parseInt(item.category_num) > 0" class="list-title" :title="item.com_name" :show-arrow="false" :show-badge="true" ></uni-list-item>
+						<uni-list-item v-if="parseInt(item.category_num) > 0" class="list-title" :title="item.com_name" :show-arrow="false" :show-badge="true" thumb="../../../static/img/school.png" ></uni-list-item>
 						<uni-list-item :show-arrow="false" :show-badge="true">
 							<uni-list v-if="parseInt(item2.students_num) > 0" v-for="(item2,index2) in item.categorylist"> 
 								<uni-list-item class="list-title2" :show-arrow="false" :show-badge="true" :title="'【'+item2.cat_name+'】'"></uni-list-item>

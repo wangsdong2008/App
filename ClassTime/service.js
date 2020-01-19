@@ -27,9 +27,19 @@ const checkEmail = function(email){
 const checkMobile = function(mobile){
     return RegExp(/^1[34578]\d{9}$/).test(mobile);
 }
+//检测中文
+const checkName = function(sname){
+	if(sname == undefined || sname.length == 0)
+	{
+		return false;
+	}else{
+		return RegExp(/[\u4e00-\u9fa5]+/).test(sname);
+	}
+}
 
 export default { 
 	GetRequestParameters,
 	checkMobile,
-	checkEmail
+	checkEmail,
+	checkName
 }

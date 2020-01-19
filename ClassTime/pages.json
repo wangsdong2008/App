@@ -22,6 +22,11 @@
 				"navigationBarTitleText": "家长页面"
 			}
 		},{
+			"path": "pages/company/site/index",
+			"style": {
+				"navigationBarTitleText": "公司设置"
+			}
+		},{
 			"path": "pages/company/company/index",
 			"style": {
 				"navigationBarTitleText": "机构页面"
@@ -82,6 +87,36 @@
 			"style": {
 				"app-plus": {"titleNView": false}, //隐藏顶部导航栏
 				"navigationBarTitleText": "首页"
+			}
+		},{
+			"path": "pages/company/site/company",
+			"style": {
+				"navigationBarTitleText": "公司管理"
+			}
+		},{
+			"path": "pages/company/site/companyedit",
+			"style": {
+				"navigationBarTitleText": "公司管理"
+			}
+		},{
+			"path": "pages/company/site/school",
+			"style": {
+				"navigationBarTitleText": "所在学校"
+			}
+		},{
+			"path": "pages/company/site/schooledit",
+			"style": {
+				"navigationBarTitleText": "编辑学校"
+			}
+		},{
+			"path": "pages/company/site/category",
+			"style": {
+				"navigationBarTitleText": "编辑分类"
+			}
+		},{
+			"path": "pages/company/site/categoryedit",
+			"style": {
+				"navigationBarTitleText": "编辑分类"
 			}
 		}
 		

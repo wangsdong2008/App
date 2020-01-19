@@ -54,10 +54,22 @@ Vue.prototype.GetStudentsCategory = Vue.prototype.CompanyUrl + "getstudentscateg
 Vue.prototype.GetStudentssign = Vue.prototype.CompanyUrl + "getstudentssign" //学生签到查询
 Vue.prototype.SetsignUrl = Vue.prototype.CompanyUrl + "setsign"
 Vue.prototype.GetBirthdaytStudentsUrl = Vue.prototype.CompanyUrl + "getbirthdaystudents"  //获取一周内过生日的学生
+
 Vue.prototype.GetAllSubCompanyUrl = Vue.prototype.CompanyUrl + "getsubcompanylist"  //获取子公司
 Vue.prototype.GetCompanyCategory = Vue.prototype.CompanyUrl + "getcompanycategory"  //获取子公司的培训课程
 Vue.prototype.GetCompanyStatisticUrl = Vue.prototype.CompanyUrl + "getcompanystatistic"  //获取子公司某一课程的统计结果
+Vue.prototype.GetAllSubCompanyCategoryUrl = Vue.prototype.CompanyUrl + "getsubcompanycategorylist"  //获取子公司所有分类
+Vue.prototype.GetCategoryInfoUrl = Vue.prototype.CompanyUrl + "getcategoryinfo" //获取分类信息
 
+
+Vue.prototype.GetCompanyInfoUrl = Vue.prototype.CompanyUrl + "getcompanyinfo" //获取公司信息
+Vue.prototype.UpdateCompanyInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyinfo" //修改公司信息
+Vue.prototype.DelCompanyInfoUrl = Vue.prototype.CompanyUrl + "delcompanyinfo" //删除公司信息
+
+Vue.prototype.GetAllSchoolUrl = Vue.prototype.CompanyUrl + "getallschoollist" //获取所有学校
+Vue.prototype.GetSchoolInfoUrl = Vue.prototype.CompanyUrl + "getschoolinfo" //获取学校信息
+Vue.prototype.UpdateSchoolInfoUrl = Vue.prototype.CompanyUrl + "updateschoolinfo" //修改学校信息
+Vue.prototype.DelSchoolInfoUrl = Vue.prototype.CompanyUrl + "delschoolinfo" //删除学校信息
 
 //常用函数
 //获取月份
