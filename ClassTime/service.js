@@ -36,10 +36,21 @@ const checkName = function(sname){
 		return RegExp(/[\u4e00-\u9fa5]+/).test(sname);
 	}
 }
+//不能为空
+const checkNull = function(v){
+	if(v.trim() == '' || v.trim().length == 0){
+		return false;
+	}else{
+		return true;
+	}
+	
+}
+
 
 export default { 
 	GetRequestParameters,
 	checkMobile,
 	checkEmail,
-	checkName
+	checkName,
+	checkNull
 }

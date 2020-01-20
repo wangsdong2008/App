@@ -41,17 +41,17 @@
 				},
 				{
 					nav: 'family',
-					url: 'family2',
+					url: 'parents/parents/index',
 					text: '家长',
 					imgNormal:'/static/img/family.png',
 					imgClick:'/static/img/familyHL.png'
 				},
 				{
-					nav: 'product',
-					url: 'products',
-					text: '老师',
-					imgNormal:'/static/img/teacher.png',
-					imgClick:'/static/img/active/teacherHL.png'
+					nav: 'familysite',
+					url: 'parents/parents/site',
+					text: '设置',
+					imgNormal:'/static/img/familysite.png',
+					imgClick:'/static/img/familysiteHL.png'
 				},
 				{
 					nav: 'mine',
@@ -77,9 +77,9 @@
 				//userlevel = 3; //测试使用
 				let _this = this;
 				switch(parseInt(userlevel)){
-					case 1:{//家长
-						_this.tabBar.splice(4,1);
-						_this.tabBar.splice(1, 1);
+					case 1:{//家长						
+						_this.tabBar.splice(2, 1);
+						_this.tabBar.splice(1,1);
 						break;
 					}
 					case 2:{//机构

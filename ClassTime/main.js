@@ -60,7 +60,8 @@ Vue.prototype.GetCompanyCategory = Vue.prototype.CompanyUrl + "getcompanycategor
 Vue.prototype.GetCompanyStatisticUrl = Vue.prototype.CompanyUrl + "getcompanystatistic"  //获取子公司某一课程的统计结果
 Vue.prototype.GetAllSubCompanyCategoryUrl = Vue.prototype.CompanyUrl + "getsubcompanycategorylist"  //获取子公司所有分类
 Vue.prototype.GetCategoryInfoUrl = Vue.prototype.CompanyUrl + "getcategoryinfo" //获取分类信息
-
+Vue.prototype.UpdateCategoryInfoUrl = Vue.prototype.CompanyUrl + "updatecategoryinfo" //修改分类信息
+Vue.prototype.DelCategoryInfoUrl = Vue.prototype.CompanyUrl + "delcategoryinfo" //删除分类信息
 
 Vue.prototype.GetCompanyInfoUrl = Vue.prototype.CompanyUrl + "getcompanyinfo" //获取公司信息
 Vue.prototype.UpdateCompanyInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyinfo" //修改公司信息
