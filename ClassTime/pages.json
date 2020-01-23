@@ -22,6 +22,36 @@
 				"navigationBarTitleText": "家长页面"
 			}
 		},{
+			"path": "pages/parents/site/index",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		},{
+			"path": "pages/parents/site/course",
+			"style": {
+				"navigationBarTitleText": "课程设置"
+			}
+		},{
+			"path": "pages/parents/site/courseedit",
+			"style": {
+				"navigationBarTitleText": "课程管理"
+			}
+		},{
+			"path": "pages/parents/site/child",
+			"style": {
+				"navigationBarTitleText": "孩子设置"
+			}
+		},{
+			"path": "pages/parents/site/childshow",
+			"style": {
+				"navigationBarTitleText": "孩子设置"
+			}
+		},{
+			"path": "pages/parents/site/plan",
+			"style": {
+				"navigationBarTitleText": "计划设置"
+			}
+		},{
 			"path": "pages/company/site/index",
 			"style": {
 				"navigationBarTitleText": "公司设置"

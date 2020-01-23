@@ -198,12 +198,27 @@ Vue.prototype.getUserInfo = function(){
 	}	
 	return ret;
 }
+
+//退出
+Vue.prototype.quit = function(){
+	try {
+		uni.clearStorageSync();  
+	} catch (e) {  
+	// error  
+	}
+	//this.logout();
 	
+	/**
+	 * 如果需要强制登录跳转回登录页面
+	 */	
+	this.reLaunchurl('/pages/users/login/login');
+}
+
 //检查用户登录状态
 Vue.prototype.checkLogin = function(){
 	let that = this;
 	let ret = uni.getStorageSync(that.USERS_KEY);
-	if(!ret){
+	if(ret == undefined || ret == ""){
 		uni.reLaunch({
 		    url: '/pages/users/login/login',
 		});

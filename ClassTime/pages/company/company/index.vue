@@ -91,7 +91,7 @@
 				footer: 'company'
 			}
 		},
-		onLoad:function() {		
+		onLoad:function() {	
 			this.checkLogin();
 		},
 		onReady(){

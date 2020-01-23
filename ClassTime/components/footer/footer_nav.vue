@@ -48,7 +48,7 @@
 				},
 				{
 					nav: 'familysite',
-					url: 'parents/parents/site',
+					url: 'parents/site/index',
 					text: '设置',
 					imgNormal:'/static/img/familysite.png',
 					imgClick:'/static/img/familysiteHL.png'
@@ -76,6 +76,7 @@
 				let userlevel = userinfo.identity;
 				//userlevel = 3; //测试使用
 				let _this = this;
+				//debugger;
 				switch(parseInt(userlevel)){
 					case 1:{//家长						
 						_this.tabBar.splice(2, 1);

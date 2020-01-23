@@ -2,18 +2,13 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<uni-section title="公司相关设置" type="line"></uni-section>
-			<uni-list>
-				<uni-list-item title="公司设置" thumb="../../../static/img/company.png" @tap="bindCompany" />
-				<uni-list-item title="课程分类"   thumb="../../../static/img/category.png" @tap="bindCategory" />
-				<uni-list-item title="学校管理" thumb="../../../static/img/school.png" @tap="bindShcool" />
-				<uni-list-item title="年级管理" thumb="../../../static/img/grade.png" />
-				<uni-list-item title="班级管理" thumb="../../../static/img/classs.png" />
-				<uni-list-item title="学生管理" thumb="../../../static/img/students.png" />
-				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" />
+			<uni-section title="系统设置" type="line"></uni-section>
+			<uni-list>				
+				<uni-list-item title="课程设置"   thumb="../../../static/img/couse.png" @tap="bindCourse" />
+				<uni-list-item title="孩子管理" thumb="../../../static/img/userHL.png" @tap="bindChild" />
+				<uni-list-item title="上课计划" thumb="../../../static/img/plan.png" @tap="bindPlan" />
 			</uni-list>
 			<uni-list>
-				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				   <uni-list-item title="权限管理" thumb="../../../static/img/power.png" />
 				<uni-list-item title="退出" thumb="../../../static/img/quit.png" @tap="bindquit"></uni-list-item>
 			</uni-list>
 		</view>
@@ -41,22 +36,22 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'公司设置,Company Siteup',
-				footer: 'companysite'
+				headermsg:'系统设置,System Siteup',
+				footer: 'familysite'
 			}
 		},
 		onLoad:function() {
 			this.checkLogin();
 		},
 		methods:{
-			bindCompany:function(){
-				this.navigateTo('company');
+			bindCourse:function(){
+				this.navigateTo('course');
 			},
-			bindShcool:function(){
-				this.navigateTo('school');
+			bindChild:function(){
+				this.navigateTo('child');
 			},
-			bindCategory:function(){
-				this.navigateTo('category');
+			bindPlan:function(){
+				this.navigateTo('plan');
 			},
 			bindquit:function(){
 				this.quit();
