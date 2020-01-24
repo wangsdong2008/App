@@ -52,6 +52,11 @@
 				"navigationBarTitleText": "计划设置"
 			}
 		},{
+			"path": "pages/parents/site/planshow",
+			"style": {
+				"navigationBarTitleText": "计划设置"
+			}
+		},{
 			"path": "pages/company/site/index",
 			"style": {
 				"navigationBarTitleText": "公司设置"

@@ -13,7 +13,7 @@
 						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="false"  :thumb="'../../../static/img/week.png'" >
 								<uni-list>
 									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name" :thumb="'../../../static/img/course.png'" >
-										<view class="statuslist"><span @tap="showchild(item.child_id)">修改</span><span @tap="delchild(item.child_id)">删除</span></view>
+										<view class="statuslist"><span @tap="showplan(item3.p_id)">修改</span><span @tap="delplan(item3.p_id)">删除</span></view>
 									</uni-list-item>
 								</uni-list>
 							</uni-collapse-item>
@@ -101,12 +101,12 @@
 					}
 				})
 			},
-			childadd(){
+			planadd(){
 				uni.navigateTo({
-					url: './childshow',
+					url: './planshow',
 				});
 			},
-			delchild(id){
+			delplan(id){
 				//debugger;
 				let ret = uni.getStorageSync(this.USERS_KEY);
 				if(!ret){
@@ -121,7 +121,7 @@
 				    token: ret.token
 				};								
 				uni.request({
-					url: this.DelChildrenUrl,
+					url: this.DelChildPlanUrl,
 					header: {
 				        "Content-Type": "application/x-www-form-urlencoded"							 
 				    },
@@ -160,9 +160,9 @@
 					}
 				})
 			},
-			showchild(id){
+			showplan(id){
 					uni.navigateTo({
-					    url: './childshow?id='+id,
+					    url: './planshow?id='+id,
 					});
 			}
 		}
