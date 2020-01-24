@@ -42,7 +42,8 @@ Vue.prototype.ModifyOrganUrl = Vue.prototype.ParentUrl + "organmodify" //所有�
 Vue.prototype.DelOrganUrl = Vue.prototype.ParentUrl + "organdel" //删除课程机构
 Vue.prototype.ChildWeekUrl = Vue.prototype.ParentUrl + "childweeklist" //某一孩子一周课程安排
 Vue.prototype.ModifyChildPlanUrl = Vue.prototype.ParentUrl + "childplanmodify" //某一孩子修改或者添加计划
-Vue.prototype.DelChildPlanUrl = Vue.prototype.ParentUrl + "childplandel" //删除某一孩子的计划
+Vue.prototype.DelChildPlanUrl = Vue.prototype.ParentUrl + "childplan" //删除某一孩子的计划
+Vue.prototype.ShowChildPlanUrl = Vue.prototype.ParentUrl + "childplanshow" //显示某一计划 
 
 //公司相关
 //当天要接的孩子

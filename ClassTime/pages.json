@@ -49,12 +49,12 @@
 		},{
 			"path": "pages/parents/site/plan",
 			"style": {
-				"navigationBarTitleText": "计划设置"
+				"navigationBarTitleText": "上课安排"
 			}
 		},{
 			"path": "pages/parents/site/planshow",
 			"style": {
-				"navigationBarTitleText": "计划设置"
+				"navigationBarTitleText": "上课设置"
 			}
 		},{
 			"path": "pages/company/site/index",

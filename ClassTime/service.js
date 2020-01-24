@@ -42,8 +42,11 @@ const checkNull = function(v){
 		return false;
 	}else{
 		return true;
-	}
-	
+	}	
+}
+//不为数字
+const checkNum = function(num){
+    return RegExp(/\d+/).test(num);
 }
 
 
@@ -52,5 +55,6 @@ export default {
 	checkMobile,
 	checkEmail,
 	checkName,
-	checkNull
+	checkNull,
+	checkNum
 }

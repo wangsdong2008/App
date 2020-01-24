@@ -8,9 +8,9 @@
 			<view>
 				<!-- 一般用法 -->
 				<uni-collapse accordion="true">					
-				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="item.open" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="true" >
+				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="item.open" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="true" class="colbg">
 						<uni-collapse>
-						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="false"  :thumb="'../../../static/img/week.png'" >
+						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true"  :thumb="'../../../static/img/week.png'" >
 								<uni-list>
 									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name" :thumb="'../../../static/img/course.png'" >
 										<view class="statuslist"><span @tap="showplan(item3.p_id)">修改</span><span @tap="delplan(item3.p_id)">删除</span></view>
@@ -24,7 +24,7 @@
 				
 			</view>
 			<view class="button-sp-area">
-				<button type="primary" plain="true" @tap="childadd">添加计划</button>
+				<button type="primary" plain="true" @tap="planadd">添加计划</button>
 			</view>
 		</view>
 	</view>
@@ -53,7 +53,7 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'计划设置,Plan Manage'
+				headermsg:'上课安排,Class Plan'
 			}
 		},
 		methods:{
@@ -171,6 +171,14 @@
 </script>
 
 <style>
+	 .uni-collapse > .colbg{
+		color:#fff;
+		background-color: #66ccff;
+		margin-bottom: 40upx;
+	}
+	.uni-collapse .uni-collapse > .uni-collapse-item{
+		color:#f00;
+	}
 	.uni-collapse .uni-collapse{
 		width: 100%;
 		margin: 0 auto;
@@ -216,7 +224,7 @@
 		border: 0upx;
 	}
 	.uni-list{
-		padding-bottom: 50upx;
+		padding-bottom: 0upx;
 	}
 	.uni-list-item__container{
 		padding: 10upx;
