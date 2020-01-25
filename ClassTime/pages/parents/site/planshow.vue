@@ -138,7 +138,6 @@
 					    method: "get",
 						success: (res) => {
 						   if(res.data){
-							   //debugger;
 							   //所有孩子
 							   var childlist = res.data.childlist;
 							   var list = [];
@@ -172,11 +171,21 @@
 							    								
 								if(parseInt(res.data.status)==3){
 									
-									//var planlist = res.data.planlist; 
-									/* this.child_name = data.child_name;
-									this.is_show = data.is_show;
-									this.child_order = data.child_order.toString(); 
-									this.child_id = data.child_id;*/
+									var planlist = res.data.planlist; 
+									this.child_id = planlist.child_id;
+									var j = this.child_dataIDList.findIndex(i => i == this.child_id);
+									this.child_index = j;
+									
+									this.course_id = planlist.c_id;
+									j = this.course_dataIDList.findIndex(i => i == this.course_id);
+									this.course_index = j;
+									
+									this.week_id = planlist.p_week;
+									j = this.week_dataIDList.findIndex(i => i == this.week_id);
+									this.week_index = j;
+									
+									this.p_time = planlist.p_time;
+									this.p_id = planlist.p_id;
 									
 									
 									

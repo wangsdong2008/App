@@ -12,7 +12,7 @@
 						<uni-collapse>
 						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true"  :thumb="'../../../static/img/week.png'" >
 								<uni-list>
-									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name" :thumb="'../../../static/img/course.png'" >
+									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name + '（'+item3.p_time +'）' " :thumb="'../../../static/img/course.png'" >
 										<view class="statuslist"><span @tap="showplan(item3.p_id)">修改</span><span @tap="delplan(item3.p_id)">删除</span></view>
 									</uni-list-item>
 								</uni-list>

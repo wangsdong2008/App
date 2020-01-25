@@ -217,10 +217,10 @@ Vue.prototype.quit = function(){
 }
 
 //检查用户登录状态
-Vue.prototype.checkLogin = function(){
+Vue.prototype.checkLogin = function(){	
 	let that = this;
 	let ret = uni.getStorageSync(that.USERS_KEY);
-	if(ret == undefined || ret == ""){
+	if(ret == undefined || ret == "" || ret.identity == undefined){
 		uni.reLaunch({
 		    url: '/pages/users/login/login',
 		});
