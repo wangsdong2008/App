@@ -10,7 +10,7 @@
 				<uni-collapse accordion="true">					
 				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="item.open" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="true" class="colbg">
 						<uni-collapse>
-						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true"  :thumb="'../../../static/img/week.png'" >
+						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true"  :thumb="'../../../static/img/week.png'" class="colweek" >
 								<uni-list>
 									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name + '（'+item3.p_time +'）' " :thumb="'../../../static/img/course.png'" >
 										<view class="statuslist"><span @tap="showplan(item3.p_id)">修改</span><span @tap="delplan(item3.p_id)">删除</span></view>
@@ -27,6 +27,9 @@
 				<button type="primary" plain="true" @tap="planadd">添加计划</button>
 			</view>
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 
@@ -36,13 +39,16 @@
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
-	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
+	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
+	import footerNav from "@/components/footer/footer_nav.vue"
 	export default {
 	    components: {
 			uniList,
 			uniListItem,
 			headerNav,
-			uniCollapse,uniCollapseItem
+			uniCollapse,
+			uniCollapseItem,
+			footerNav
 		},
 		onLoad(){
 			this.checkLogin();
@@ -53,7 +59,8 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'上课安排,Class Plan'
+				headermsg:'上课安排,Class Plan',
+				footer: 'familysite'
 			}
 		},
 		methods:{
@@ -107,7 +114,6 @@
 				});
 			},
 			delplan(id){
-				//debugger;
 				let ret = uni.getStorageSync(this.USERS_KEY);
 				if(!ret){
 					uni.showToast({
@@ -171,21 +177,20 @@
 </script>
 
 <style>
-	 .uni-collapse > .colbg{
+	.colweek{
+		color:#3b4144;
+	}
+	.colweek uni-image{
+		width:60upx;
+		height: 60upx;
+	}
+	.colbg{
 		color:#fff;
 		background-color: #66ccff;
 		margin-bottom: 40upx;
+		border-radius: 15upx;
 	}
-	.uni-collapse .uni-collapse > .uni-collapse-item{
-		color:#f00;
-	}
-	.uni-collapse .uni-collapse{
-		width: 100%;
-		margin: 0 auto;
-	}
-	.uni-collapse .uni-collapse .uni-view{
-		padding-left: 20upx;
-		}
+	
 	.content{
 		width:96%;
 		margin: 0 auto;

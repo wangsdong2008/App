@@ -53,9 +53,9 @@
 			return{
 				cat_id:0,
 				cat_name:'',
-				cat_order:'1',	
+				cat_order:'',	
 				cat_content:'',
-				dataList:[],				
+				dataList:[],
 				headermsg:'',
 				cindex:0,
 				com_id:0,
@@ -77,6 +77,20 @@
 					uni.showToast({
 					    icon: 'none',
 					    title: '分类名称不能为空'
+					});
+					return;
+				}
+				if(that.com_id == 0){
+					uni.showToast({
+					    icon: 'none',
+					    title: '请选择公司'
+					});
+					return;
+				}
+				if(!service.checkNum(that.cat_order)){
+					uni.showToast({
+					    icon: 'none',
+					    title: '请填写顺序'
 					});
 					return;
 				}
@@ -114,7 +128,21 @@
 								break;
 							}
 							case 3:{
-								str = '修改成功';
+								if(that.cat_id > 0){
+									str = '修改成功';
+									that.cat_id = 0;
+									that.cat_name = '';
+									that.cat_order = '';	
+									that.cat_content = '';
+									that.cindex = 0;
+									that.com_id = 0;
+									that.cList = array();
+									that.cIDList = array();
+									this.show();
+								}
+								else{
+									str = '添加成功';
+								}
 								break;
 							}							
 						}
@@ -124,9 +152,9 @@
 							icon: 'none',
 							duration:2000
 						});	
-						if(status == 3){
+						/* if(status == 3){
 							this.navigateTo('category');
-						}
+						}*/
 					}
 			    });	
 			
@@ -167,6 +195,8 @@
 								if(parseInt(res.data.status) == 3){									
 									let list = [];
 									let idlist = [];
+									list.push("==请选择==");
+									idlist.push(0);
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];									
 										list.push(item.com_name);

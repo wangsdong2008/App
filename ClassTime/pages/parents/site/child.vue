@@ -17,6 +17,9 @@
 				<button type="primary" plain="true" @tap="childadd">添加孩子</button>
 			</view>
 		</view>
+	    <view class="footer">
+	    	<footerNav :msg="footer"></footerNav>
+	    </view>
 	</view>
 </template>
 
@@ -27,12 +30,15 @@
 	import headerNav from "@/components/header/company_header.vue"
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
+	import footerNav from "@/components/footer/footer_nav.vue"
 	export default {
 	    components: {
 			uniList,
 			uniListItem,
 			headerNav,
-			uniCollapse,uniCollapseItem
+			uniCollapse,
+			uniCollapseItem,
+			footerNav
 		},
 		onLoad(){
 			this.checkLogin();
@@ -43,7 +49,8 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'孩子设置,Children Manage'
+				headermsg:'孩子设置,Children Manage',
+				footer: 'familysite'
 			}
 		},
 		methods:{

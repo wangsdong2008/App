@@ -7,7 +7,7 @@
 				<m-input class="m-input register-input register-input-mobile" type="text" clearable focus v-model="mobile" placeholder="填写手机号码"></m-input>
 			</view>
 			<view class="register_account_input">
-				<m-input class="m-input register-input register-input-mail" type="text" clearable v-model="mail" placeholder="填写验证码"></m-input>
+				<m-input class="m-input register-input register-input-mail" type="text" clearable v-model="code" placeholder="填写验证码"></m-input>
 				<button class="btn1 btn" type="default" @tap="send_sms">获取验证码</button>
 			</view>
 			<view class="clear"></view>
@@ -162,7 +162,7 @@
         data() {
             return {
 				headermsg:'注册,Register',
-				mail:'',
+				code:'',
                 password: '',
                 againpassword: '',
 				mobile:'',
@@ -171,8 +171,7 @@
         },
         methods: {
 			send_sms(){
-				let that = this;
-				//debugger;
+				let that = this;				
 				if(!service.checkMobile(this.mobile)){
 					uni.showToast({
 					    icon: 'none',
@@ -180,8 +179,18 @@
 					});
 					return;
 				}
-				let ret = uni.getStorageSync(that.Temp_KEY);
-				if(!ret){//如果不能获取的话，获取新的sessionid，防止软件直接注册
+				
+				if(this.temp_status == 1){ //测试
+					try {
+						uni.clearStorageSync();  
+					} catch (e) {  
+					// error  
+					}
+					debugger;
+				}
+									
+				var ret = uni.getStorageSync(that.Temp_KEY);
+				if(ret == undefined || ret == ""){//如果不能获取的话，获取新的sessionid，防止软件直接注册
 					return false;
 				}else{
 					//正常的页面，通过登录页面过来的
@@ -202,6 +211,15 @@
 				    });
 				    return;
 				}
+				
+				if(!service.checkNull(this.code)){
+				    uni.showToast({
+				        icon: 'none',
+				        title: '验证码不能为空'
+				    });
+				    return;
+				}
+				
                 if (this.password.length < 6) {
                     uni.showToast({
                         icon: 'none',
@@ -228,15 +246,15 @@
                     password: this.password,
 					againpassword: this.againpassword,
                     mobile: this.mobile,
-					mail:this.mail
+					code:this.code
                 }
-                service.addUser(data);
-                uni.showToast({
+                this.addUsers(data);
+                /* uni.showToast({
                     title: '注册成功'
                 });
                 uni.navigateBack({
                     delta: 1
-                }); 
+                }); */
             }
         }
     }

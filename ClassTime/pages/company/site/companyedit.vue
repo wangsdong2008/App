@@ -3,18 +3,51 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="register_account">公司信息</view>
-			<view class="register_account_input">				
+			<view class="register_account_input">
+				<view class="uni-list-cell-left">
+				    名称
+				</view> 
+				<view>
 				<m-input class="m-input" type="text" clearable focus v-model="com_name" placeholder="填写公司名"></m-input>
+				</view>
 			</view>	
 			<view class="register_account_input">
+				<view class="uni-list-cell-left">
+				    电话
+				</view> 
+				<view>
 				<m-input class="m-input" type="text" clearable v-model="com_tel" placeholder="填写公司电话"></m-input>
+				</view>
 			</view>
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="com_address" placeholder="填写公司地址"></m-input>
+				<view class="uni-list-cell-left">
+				    地址
+				</view> 
+				<view>
+					<m-input class="m-input" type="text" clearable v-model="com_address" placeholder="填写公司地址"></m-input>
+				</view>
 			</view>
-				<view class="register_account_input">
+			<view class="register_account_input">
+				<view class="uni-list-cell-left">
+				    顺序
+				</view> 
+				<view>
 					<m-input class="m-input" type="text" clearable v-model="com_order" placeholder="填写顺序"></m-input>
-				</view>	
+				</view>
+			</view>
+			<view class="register_account_input">
+			    <view class="uni-list-cell-left">
+			        使用定位
+			    </view>     
+				<radio-group @change="radioChange">
+					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in items" :key="item.value">
+					<view>
+						<radio class="radios" :value="item.value" :checked="parseInt(item.value) === gps_status" />
+					</view>
+					<view class="radio_text">{{item.name}}</view>
+					</label>
+				</radio-group>	
+			</view>		
 			
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">修改</button>
@@ -54,14 +87,47 @@
 			return{
 				com_id:0,
 				com_name:'',
-				com_order:'1',
+				com_order:'',
 				com_address:'',
 				com_tel:'',
 				dataList:[],				
-				headermsg:''
+				headermsg:'',
+				gps_status:0,
+				gps_x:0,
+				gps_y:0,
+				items: [
+					{
+						value: '1',
+						name: '启用'
+					},
+					{
+						value: '0',
+						name: '不启用'
+					}
+				]
 			}
 		},
 		methods:{
+			radioChange: function(evt) {
+				var current = evt.detail.value;
+				this.gps_status = current;
+				if(current == 1){
+					uni.getLocation({
+					  // 默认为 wgs84 返回 gps 坐标，
+					  // gcj02 返回国测局坐标，可用于 uni.openLocation 的坐标
+					  type: 'wgs84',
+					  geocode: true,
+					  success: (data) => {					    
+						this.gps_x = data.latitude;
+						this.gps_y = data.longitude;
+					  },
+					  fail: (err) => {
+					    console.log(err)
+					    // this.$api.msg('获取定位失败');
+					  }
+					});
+				}
+			},
 			bindmodify(){
 				let that = this;
 				//debugger;
@@ -69,6 +135,13 @@
 					uni.showToast({
 					    icon: 'none',
 					    title: '公司名称必须是中文'
+					});
+					return;
+				}
+				if(!service.checkNum(that.gps_status)){
+					uni.showToast({
+					    icon: 'none',
+					    title: '请选择是否使用定位'
 					});
 					return;
 				}
@@ -89,6 +162,9 @@
 						"address": this.com_address,
 						"sorder":this.com_order,
 						"tel":this.com_tel,
+						"gps_status":this.gps_status,
+						"gps_x":this.gps_x,
+						"gps_y":this.gps_y,
 						"t":Math.random()
 				    },
 				    method: "get",
@@ -106,6 +182,7 @@
 							}
 							case 3:{
 								str = '修改成功';
+								
 								break;
 							}							
 						}
@@ -115,9 +192,9 @@
 							icon: 'none',
 							duration:2000
 						});	
-						if(status == 3){
+						/* if(status == 3){
 							this.navigateTo('company');
-						}
+						} */
 					}
 			    });				
 			},
@@ -155,6 +232,9 @@
 									this.com_address = data.com_address;
 									this.com_tel = data.com_tel;
 									this.com_order = data.com_order.toString();
+									this.gps_status = data.gps_status;
+									this.gps_x = data.latitude;
+									this.gps_y = data.longitude;
 								}
 								else{
 									uni.showToast({
@@ -172,6 +252,23 @@
 </script>
 
 <style>
+	.m-input{
+		border: 0upx;
+		font-size: 28upx;	
+		width: 70%;
+		border: 1upx solid #66ccff;
+	}
+	.uni-list-cell-left{
+		margin-right: 40upx;
+		float: left;
+	}
+	.radio_text{
+		margin-right: 40upx;
+	}
+	.uni-list-cell-pd view{
+		width: auto;
+		float: left;
+	}
 	.content{
 		width:96%;
 		margin: 0 auto;
@@ -216,10 +313,7 @@
 		margin-top: 30upx;
 		margin-bottom: 20upx;
 	}
-	.m-input{
-		border: 0upx;
-		font-size: 28upx;
-	}
+	
 	.register-input{		
 		width:90%;
 		line-height: 60upx;

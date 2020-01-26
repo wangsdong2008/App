@@ -2,12 +2,19 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="title">今日上课 </view>
+			<view class="title waring">				
+				<view class="title2">
+					<image src="../../../static/img/clock.png" mode=""></image>
+					<view>今日上课</view>
+				</view>
+				<view class="date">{{currenttime}}</view>
+				<view class="clear"></view>
+			</view>
 			<view class="studentlist">
 					<view>
 						<!-- 一般用法 -->
 						<uni-collapse>					
-						    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="true" :thumb="'../../../static/img/'+(item.sex == '1'?'p_boy.png':'p_gril.png')" :showAnimation="true" class="classlist" >
+						    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="true" :show-arrow="false" :thumb="'../../../static/img/'+(item.sex == '1'?'p_boy.png':'p_gril.png')" :showAnimation="true" class="classlist"  >
 								<uni-list>
 									<uni-list-item v-for="(item2,index2) in item.courselist" :show-arrow="false" :title="'【' + item2.c_name + '】----'+item2.organname+'----'+item2.c_address">
 										<view class="statuslist">{{item2.p_time}}</view>
@@ -49,13 +56,17 @@
 			this.checkLogin();
 		},
 		onReady() {
+			var date = new Date();
+			var str = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate()+ " " + "星期" + "日一二三四五六".charAt(new Date().getDay());
+			this.currenttime = str;
 			this.getData();
 		},
 		data(){
 			return{
 				dataList:[],	
 				headermsg:'今日提醒,System Siteup',
-				footer: 'family' 
+				footer: 'family',
+				currenttime:''
 			}
 		},
 		methods: {
@@ -100,11 +111,35 @@
 </script>
 
 <style>	
+	.title2{
+		
+	}
+	.title2 image{
+		width: 50upx;
+		height: 50upx;
+		float: left;
+	}
+	.title2 view{
+		width: auto;
+		float: left;
+	}
+	.waring{
+		position: relative;
+		margin-bottom: 20upx;
+	}
+	.date{
+		position: absolute;
+		top:0upx;
+		right:10upx;
+		font-size: 25upx;
+		height: 60upx;
+		line-height: 60upx;
+	}
 	.classlist{
+		/* background-color: #ff0000;color:#fff; */
 		margin-bottom: 40upx;
 		border-radius: 25upx;
-		background-color: #66ccff;
-		color:#fff;
+		
 		padding: 10upx 0px;
 	}
 	.classlist>.uni-list{

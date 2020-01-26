@@ -273,16 +273,18 @@
 							case 3:{
 								if(this.plan_id == 0){
 									str = '添加成功';
+									this.child_id = 0;
+									this.course_id = 0;
+									this.week_id = 0;
+									this.child_index = 0;
+									this.course_index = 0;
+									this.week_index = 0;
+									this.p_time = "12:00";
 								}else{
 									str = '修改成功';
-								}
-								this.child_id = 0;
-								this.course_id = 0;
-								this.week_id = 0;
-								this.child_index = 0;
-								this.course_index = 0;
-								this.week_index = 0;
-								this.p_time = "12:00";
+									//this.show();
+	;							}
+								
 								break;
 							}							
 						}
