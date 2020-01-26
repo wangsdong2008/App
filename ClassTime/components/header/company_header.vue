@@ -1,5 +1,5 @@
 <template>
-	<view class="title">
+	<view class="header-title">
 	    <view class="login_center login_title_txt">{{name}}<br /><span>{{en_name}}</span></view>
 	</view>	
 </template>
@@ -33,7 +33,7 @@
 </script>
 
 <style>
-	.title{
+	.header-title{
 		background:url('../../static/img/login_title.png') #ffffff center 0 no-repeat;
 	    background-size:100% 100%;
 	    padding-bottom:20%
