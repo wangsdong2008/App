@@ -168,6 +168,12 @@
 	.statuslist span{
 		margin-right: 10upx;
 	}
+	.uni-list{
+		width:98%;
+		margin: 0 auto;
+		margin-bottom: 15upx;
+		border-radius: 15upx;
+	}
 	
 	
 </style>

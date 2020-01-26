@@ -1,6 +1,13 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"app-plus": {"titleNView": false}, //隐藏顶部导航栏
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
 		    "path": "pages/users/login/login",
 		    "style": {
 		        "navigationBarTitleText": "登录"
@@ -118,12 +125,6 @@
 				"navigationBarTitleText": "生日提醒"
 			}
 		},{
-			"path": "pages/index/index",
-			"style": {
-				"app-plus": {"titleNView": false}, //隐藏顶部导航栏
-				"navigationBarTitleText": "首页"
-			}
-		},{
 			"path": "pages/company/site/company",
 			"style": {
 				"navigationBarTitleText": "公司管理"
@@ -152,6 +153,16 @@
 			"path": "pages/company/site/categoryedit",
 			"style": {
 				"navigationBarTitleText": "编辑分类"
+			}
+		},{
+			"path": "pages/index/index/search",
+			"style": {
+				"navigationBarTitleText": "查找"
+			}
+		},{
+			"path": "pages/index/index/searchresult",
+			"style": {				
+				"navigationBarTitleText": "查找"
 			}
 		}
 		
