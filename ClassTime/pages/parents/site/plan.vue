@@ -10,9 +10,9 @@
 				<uni-collapse accordion="true">					
 				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :open="item.open" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="true" class="colbg">
 						<uni-collapse>
-						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true"  :thumb="'../../../static/img/week.png'" class="colweek" >
+						    <uni-collapse-item :open="true" :option="true" v-for="(item2,index2) in item.weeklist" :title="item2.weekname":show-arrow="true" class="colweek" >
 								<uni-list>
-									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name + '（'+item3.p_time +'）' " :thumb="'../../../static/img/course.png'" >
+									<uni-list-item :show-arrow="false" v-for="(item3,index3) in item2.list" :title="item3.c_name + '（'+item3.p_time +'）' " >
 										<view class="statuslist"><span @tap="showplan(item3.p_id)">修改</span><span @tap="delplan(item3.p_id)">删除</span></view>
 									</uni-list-item>
 								</uni-list>
