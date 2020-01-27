@@ -136,7 +136,7 @@
 		line-height: 60upx;
 	}
 	.classlist{
-		/* background-color: #ff0000;color:#fff; */
+		/* background-color: #66ccff; */
 		margin-bottom: 40upx;
 		border-radius: 25upx;
 		

@@ -55,7 +55,7 @@
 			return{
 				dataList:[],				
 				headermsg:'课程设置,Course Manage',
-				footer: 'familysite'
+				footer: ''
 			}
 		},
 		methods:{
@@ -92,12 +92,7 @@
 									that.navigateTo('./course');
 								},2000); */
 								var data = res.data.list;
-								if(parseInt(res.data.status)==0){
-									uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									});		
-								}else{	
+								if(parseInt(res.data.status) == 3){
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
@@ -154,12 +149,7 @@
 					success: (res) => {
 					    if(res.data){
 					    	var data = res.data.list; 
-							if(parseInt(res.data.status)==0){
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});		
-							}else{	
+							if(parseInt(res.data.status) == 3){
 								let list = [];
 								for (var i = 0; i < data.length; i++) {
 									var item = data[i];

@@ -224,7 +224,7 @@ Vue.prototype.quit = function(){
 Vue.prototype.checkLogin = function(){	
 	let that = this;
 	let ret = uni.getStorageSync(that.USERS_KEY);
-	if(ret == undefined || ret == "" || ret.identity == undefined){
+	if(ret == undefined || ret == "" || ret.identity == undefined || ret.identity == ""){
 		uni.reLaunch({
 		    url: '/pages/users/login/login',
 		});

@@ -61,7 +61,7 @@
 		data(){
 			return{
 				c_id:0,
-				c_order:'1',		
+				c_order:'',		
 				headermsg:'',
 				c_name:'',
 				organname:'',
@@ -100,6 +100,17 @@
 					    title: '机构名不能为空'
 					});
 					return;
+				}
+				if(that.c_order == "" || that.c_order == undefined){
+					that.c_order = 1;
+				}else{
+					if(!service.checkNum(that.c_order)){
+						uni.showToast({
+							icon: 'none',
+							title: '顺序请填写数字'
+						});
+						return;
+					}
 				}
 				let ret = uni.getStorageSync(this.USERS_KEY);
 				if(!ret){
@@ -184,17 +195,17 @@
 						success: (res) => {
 						   if(res.data){
 								var data = res.data.list; 
-								if(parseInt(res.data.status)==3){
+								if(parseInt(res.data.status) == 3){
 									this.c_name = data.c_name;
 									this.organname = data.organname;
 									this.c_address = data.c_address;
 									this.is_show = data.is_show;
 									this.c_order = data.c_order.toString();
 								}else{
-									uni.showToast({
+									/* uni.showToast({
 										title: '无数据',
 										icon: 'none',
-									});
+									}); */
 								}
 							}
 						}

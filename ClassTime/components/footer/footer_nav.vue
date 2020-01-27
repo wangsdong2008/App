@@ -20,7 +20,7 @@
 				tabBar: [
 				{
 					nav: 'index',
-					url: 'index/index',					
+					url: 'index/index/index',					
 					text: '首页',
 					imgNormal:'/static/img/home.png',
 					imgClick:'/static/img/homeHL.png'
@@ -77,7 +77,9 @@
 				//userlevel = 3; //测试使用
 				let _this = this;
 				//debugger;
-				switch(parseInt(userlevel)){
+				if(userlevel == "" || userlevel == undefined) userlevel = 0;
+				else userlevel = parseInt(userlevel);
+				switch(userlevel){
 					case 1:{//家长						
 						_this.tabBar.splice(2, 1);
 						_this.tabBar.splice(1,1);
@@ -91,6 +93,13 @@
 					case 3:{//老师
 						_this.tabBar.splice(3,1);
 						_this.tabBar.splice(2,1);
+						break;
+					}
+					default:{
+						_this.tabBar.splice(4,1);
+						_this.tabBar.splice(3,1);
+						_this.tabBar.splice(2,1);
+						_this.tabBar.splice(1,1);
 						break;
 					}
 				}

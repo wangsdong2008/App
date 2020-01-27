@@ -7,7 +7,7 @@
 				<view class="uni-list-cell-left">
 				    选择孩子
 				</view>
-				<picker @change="ChildPickerChange($event)" :value="child_index" :range="child_dataList">
+				<picker focus @change="ChildPickerChange($event)" :value="child_index" :range="child_dataList">
 					<view class="uni-input">{{child_dataList[child_index]}}</view>
 				</picker>
 			</view>
@@ -35,8 +35,24 @@
 				    <view class="uni-input">{{p_time}}</view>
 				</picker>
 			</view>
+			<view class="register_account_input">
+			    <view class="uni-list-cell-left">
+			        总节数
+			    </view>
+				<view class="cell-right">
+					<m-input class="m-input" type="text" clearable  v-model="p_num" placeholder="总节数"></m-input>	
+				</view>
+			</view>
+			<view class="register_account_input">
+			    <view class="uni-list-cell-left">
+			        已上节数
+			    </view>  
+				<view class="cell-right">
+					<m-input class="m-input" type="text" clearable v-model="p_numed" placeholder="已上节数"></m-input>
+				</view>
+			</view>
 			<view class="btn-row">
-			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
+			    <button type="primary" class="primary btn" @tap="bindmodify">{{btntxt}}</button>
 			</view>
 			</view>
 		</view>
@@ -74,6 +90,8 @@
 				is_show:'1',
 				
 				plan_id:0,
+				p_num:'',
+				p_numed:'',
 				
 				child_id:0,	
 				child_index:0,
@@ -186,14 +204,9 @@
 									
 									this.p_time = planlist.p_time;
 									this.p_id = planlist.p_id;
+									this.p_num = planlist.p_num.toString();
+									this.p_numed = planlist.p_numed.toString();
 									
-									
-									
-								}else{
-									/* uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									}); */
 								}
 							}
 						}
@@ -230,7 +243,7 @@
 			    	});
 					return;
 			    }
-				if(that.week_id == 0){
+				if(that.week_id == -1){
 			    	uni.showToast({
 			    	    icon: 'none',
 			    	    title: '请选择周几'
@@ -254,6 +267,8 @@
 						"course_id":this.course_id,
 						"week_id":this.week_id,
 						"p_time":this.p_time,
+						"p_num":this.p_num,
+						"p_numed":this.p_numed,
 						"t":Math.random()
 				    },
 				    method: "get",
@@ -280,6 +295,8 @@
 									this.course_index = 0;
 									this.week_index = 0;
 									this.p_time = "12:00";
+									this.p_num = '';
+									this.p_numed = '';
 								}else{
 									str = '修改成功';
 									//this.show();
@@ -375,25 +392,7 @@
 		float: left;
 		/* border:1px solid #ff0000; */
 	}
-	.btn1{
-		border:0upx;
-		background-color: #ccc;
-		
-	}
-	.btn{
-		float: right;
-		background-color: #eee;
-		color:#225181;
-		font-size: 24upx;
-		align:center;
-		width: 29%;
-		height: 76upx;
-		line-height: 76upx;
-		border-radius: 45upx;
-		top:10upx;
-		
-		
-	}
+	
 	.register-input-password{
 		background:url(../../../static/img/password.png) no-repeat;		
 	}
@@ -421,11 +420,20 @@
 	}
 	.uni-list-cell-left{
 		margin-right: 40upx;
+		width:25%;
 	}
 	picker view{
 		border: 1px solid #66ccff;
 		width:60%;
 		text-align: center;
 	}
-	
+	.cell-right{
+		float: left;
+		border: 1px solid #66ccff;
+		width:60%;
+		text-align: center;		
+	}
+	.btn-row{
+		margin-bottom: 60upx;
+	}
 </style> 

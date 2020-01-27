@@ -219,21 +219,21 @@
 		margin-top: 20upx;
 	}
 	.btn-row{
-			margin-top: 15upx;
-		}
-		.btn{
-			background-color: #55c5ff;
-			border-radius: 50upx;
-			border: 0px;
-			text-align: center;
-			line-height:80upx;
-			height: 80upx;
-			color: #ffffff;
-			cursor: pointer;		
-		}
-		uni-button:after{
-			border: 0px;
-		}
+		margin-top: 45upx;
+	}
+	.btn{
+		background-color: #55c5ff;
+		border-radius: 50upx;
+		border: 0px;
+		text-align: center;
+		line-height:80upx;
+		height: 80upx;
+		color: #ffffff;
+		cursor: pointer;		
+	}
+	uni-button:after{
+		border: 0px;
+	}
 	.remeber{
 		font-size: 28upx;
 		margin-top: 20upx;		

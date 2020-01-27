@@ -24,7 +24,7 @@
 				
 			</view>
 			<view class="button-sp-area">
-				<button type="primary" plain="true" @tap="planadd">添加计划</button>
+				<button type="primary" plain="true" @tap="planadd">添加上课安排</button>
 			</view>
 		</view>
 		<view class="footer">
@@ -60,7 +60,7 @@
 			return{
 				dataList:[],				
 				headermsg:'上课安排,Class Plan',
-				footer: 'familysite'
+				footer: ''
 			}
 		},
 		methods:{
@@ -96,13 +96,8 @@
 								for (var i = 0; i < data.length; i++) {
 									var item = data[i];
 									list.push(item);
-								}								
+								}
 								this.dataList = list;	
-							}else{	
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});	
 							}
 					    }
 					}
@@ -148,12 +143,7 @@
 								});		
 							}else{
 								var data = res.data.list;
-								if(parseInt(res.data.status)==0){
-									uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									});		
-								}else{	
+								if(parseInt(res.data.status) == 3){
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
@@ -176,7 +166,7 @@
 	
 </script>
 
-<style>
+<style>	
 	.colweek{
 		color:#3b4144;
 	}
@@ -188,7 +178,8 @@
 		color:#fff;
 		background-color: #66ccff;
 		margin-bottom: 40upx;
-		border-radius: 15upx;
+		border-radius: 25upx;		
+		
 	}
 	
 	.content{
@@ -223,6 +214,7 @@
 	}
 	.uni-list-item{
 		font-size: inherit;
+		border: 0upx;
 	}
 	.uni-list-item .uni-view{
 		padding: 10upx;
@@ -230,6 +222,9 @@
 	}
 	.uni-list{
 		padding-bottom: 0upx;
+		padding: 10upx 0px;
+		/* border: 1upx solid #f00; */
+		margin-bottom: 0upx;		
 	}
 	.uni-list-item__container{
 		padding: 10upx;

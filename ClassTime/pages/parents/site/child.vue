@@ -50,7 +50,7 @@
 			return{
 				dataList:[],				
 				headermsg:'孩子设置,Children Manage',
-				footer: 'familysite'
+				footer: ''
 			}
 		},
 		methods:{
@@ -95,12 +95,7 @@
 								});		
 							}else{
 								var data = res.data.list;
-								if(parseInt(res.data.status)==0){
-									uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									});		
-								}else{	
+								if(parseInt(res.data.status)==3){
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];

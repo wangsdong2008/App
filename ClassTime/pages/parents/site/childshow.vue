@@ -10,7 +10,7 @@
 				<radio-group @change="sexChange">
 					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in sex_items" :key="item.value">
 					<view>
-						<radio class="radios" :value="item.value" :checked="parseInt(item.value) === sex" />
+						<radio class="radios" :value="item.value" :checked="parseInt(item.value) == sex" />
 					</view>
 					<view class="radio_text">{{item.name}}</view>
 					</label>
@@ -24,7 +24,7 @@
 				<radio-group @change="radioChange">
 					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in items" :key="item.value">
 					<view>
-						<radio class="radios" :value="item.value" :checked="parseInt(item.value) === is_show" />
+						<radio class="radios" :value="item.value" :checked="parseInt(item.value) == is_show" />
 					</view>
 					<view class="radio_text">{{item.name}}</view>
 					</label>
@@ -66,7 +66,7 @@
 		data(){
 			return{
 				child_id:0,
-				child_order:'1',		
+				child_order:'',		
 				headermsg:'',
 				child_name:'',
 				btntxt:'',
@@ -112,11 +112,24 @@
 					    title: '孩子名不能为空'
 					});
 					return;
-				}				
+				}
+				if(that.child_order == "" || that.child_order == undefined){
+					that.child_order = 1;
+				}else{
+					if(!service.checkNum(that.child_order)){
+						uni.showToast({
+							icon: 'none',
+							title: '顺序请填写数字'
+						});
+						return;
+					}
+				}
+				
 				let ret = uni.getStorageSync(this.USERS_KEY);
 				if(!ret){
 					return false;
 				}
+				that = this;
 				uni.request({
 					url: that.ModifyChildrenUrl,
 					header: {
@@ -125,11 +138,11 @@
 				    data: {
 						"guid": ret.guid,
 						"token": ret.token,
-						"id": this.child_id,
-						"childname": this.child_name,
-						"childorder":this.child_order,
-						"is_show":this.is_show,
-						"sex":this.sex,
+						"id": that.child_id,
+						"childname": that.child_name,
+						"childorder":that.child_order,
+						"is_show":that.is_show,
+						"sex":that.sex,
 						"t":Math.random()
 				    },
 				    method: "get",
@@ -148,7 +161,17 @@
 								break;
 							}
 							case 3:{
-								str = '修改成功';
+								if(that.child_id == 0){
+									str = '添加成功';
+									that.child_id = 0;
+									that.child_name = "";
+									that.child_order = "";
+									that.is_show = 1;
+									that.sex = 1;
+									
+								}else{
+									str = '修改成功';
+								}
 								break;
 							}							
 						}
@@ -158,9 +181,9 @@
 							icon: 'none',
 							duration:2000
 						});	
-						if(status == 3){
+						/* if(status == 3){
 							this.navigateTo('child');
-						}
+						} */
 					}
 			    });	
 			
@@ -198,16 +221,11 @@
 						   if(res.data){
 							   	//debugger;
 								var data = res.data.list; 
-								if(parseInt(res.data.status)==3){
+								if(parseInt(res.data.status) == 3){
 									this.child_name = data.child_name;
 									this.is_show = data.is_show;
 									this.child_order = data.child_order.toString();
 									this.sex = data.sex;
-								}else{
-									uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									});
 								}
 							}
 						}
