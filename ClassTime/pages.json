@@ -164,6 +164,41 @@
 			"style": {				
 				"navigationBarTitleText": "查找"
 			}
+		},{
+			"path": "pages/users/main/main",
+			"style": {				
+				"navigationBarTitleText": "会员中心"
+			}
+		},{
+			"path": "pages/users/main/main2",
+			"style": {				
+				"navigationBarTitleText": "会员中心"
+			}
+		},{
+			"path": "pages/users/main/account",
+			"style": {				
+				"navigationBarTitleText": "个人信息"
+			}
+		},{
+			"path": "pages/users/main/modifypassword",
+			"style": {				
+				"navigationBarTitleText": "修改密码"
+			}
+		},{
+			"path": "pages/users/main/modifymobile",
+			"style": {				
+				"navigationBarTitleText": "更换手机"
+			}
+		},{
+			"path": "pages/users/main/upgrade",
+			"style": {				
+				"navigationBarTitleText": "升级"
+			}
+		},{
+			"path": "pages/users/main/tjgoodsfriend",
+			"style": {				
+				"navigationBarTitleText": "推荐好友"
+			}
 		}
 		
 	],

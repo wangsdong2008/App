@@ -64,7 +64,7 @@
 		data(){
 			return{
 				dataList:[],	
-				headermsg:'今日提醒,System Siteup',
+				headermsg:'今日提醒,Remind today',
 				footer: 'family',
 				currenttime:''
 			}

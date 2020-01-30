@@ -55,7 +55,7 @@
 				},
 				{
 					nav: 'mine',
-					url: 'mines',
+					url: 'users/main/main',
 					text: '我的',
 					imgNormal:'/static/img/user.png',
 					imgClick:'/static/img/userHL.png'

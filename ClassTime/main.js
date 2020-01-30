@@ -16,7 +16,7 @@ Vue.prototype.STUDYTIME = "2019-06-01";
 
 //图片地址
 Vue.prototype.WebUrl = "http://192.168.1.103/";
-Vue.prototype.PicUrl = Vue.prototype.Url + "uploadfile/" ;
+Vue.prototype.PicUrl = Vue.prototype.WebUrl + "uploadfile/" ;
 
 //api接口变量
 Vue.prototype.GeneralUrl = Vue.prototype.WebUrl + "api/general/"; //通用地址
@@ -26,12 +26,17 @@ Vue.prototype.CompanyUrl = Vue.prototype.WebUrl + "api/company/"; //公司地址
 
 
 //通用功能
+Vue.prototype.getUsersInfoUrl = Vue.prototype.GeneralUrl + "getuserinfo" //个人信息
 Vue.prototype.LoginUrl = Vue.prototype.GeneralUrl + "dl" //登录地址
 Vue.prototype.CheckTokenUrl = Vue.prototype.GeneralUrl + "checktoken" //检测是否登录，每天第一次打开进行检测
 Vue.prototype.RegisterUrl = Vue.prototype.GeneralUrl + "register" //注册新用户
 Vue.prototype.getSessionUrl = Vue.prototype.GeneralUrl + "getsessionid" //生成session
 Vue.prototype.SendSmsUrl = Vue.prototype.GeneralUrl + "sendsms" //发短信
 Vue.prototype.SearchCourseUrl = Vue.prototype.GeneralUrl + "search" //查找机构
+
+Vue.prototype.ModifyUserInfoUrl = Vue.prototype.GeneralUrl + "modifyuserinfo" //修改个人信息
+Vue.prototype.ModifyParentfaceUrl = Vue.prototype.GeneralUrl + "modifyparentface" //修改家长头像
+
 
 //家长相关
 Vue.prototype.DayClassUrl = Vue.prototype.ParentUrl + "dayclass" //当天课程
@@ -48,6 +53,7 @@ Vue.prototype.ChildWeekUrl = Vue.prototype.ParentUrl + "childweeklist" //某一�
 Vue.prototype.ModifyChildPlanUrl = Vue.prototype.ParentUrl + "childplanmodify" //某一孩子修改或者添加计划
 Vue.prototype.DelChildPlanUrl = Vue.prototype.ParentUrl + "childplandel" //删除某一孩子的计划
 Vue.prototype.ShowChildPlanUrl = Vue.prototype.ParentUrl + "childplanshow" //显示某一计划 
+
 
 //公司相关
 //当天要接的孩子

@@ -30,7 +30,7 @@
 		},
 		methods:{
 			bindLogin(){
-				let url = '';
+				let url = "users/login/login";
 				let Storage = this.getUserInfo();
 				if(Storage != "[]"){
 					switch(parseInt(Storage.identity))
@@ -48,8 +48,6 @@
 							break;
 						}
 					}
-				}else{
-					url = "users/login/login";
 				}			
 				url = '../../' + url;
 				this.navigateTo(url);
