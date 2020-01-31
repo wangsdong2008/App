@@ -9,7 +9,7 @@
 				<image src="../../../static/img/indeximg.png" mode=""></image>
 			</view>
 			<view class="center detail">
-				轻松管理一周学习时间
+				轻松掌握<br />孩子每天的学习课程和时间
 			</view>
 			<view class="center btn" @tap="bindLogin" >
 				进入
@@ -70,8 +70,8 @@
 	.detail{
 		margin-top: 50upx;
 		color: #66CCFF;
-		margin-bottom: 100upx;
-		
+		margin-bottom: 80upx;
+		line-height: 55upx;
 	}
 	.mainpic{
 		margin-top: 70upx;
@@ -91,7 +91,7 @@
 		border:1upx solid #ccc; */
 		margin: 0 auto;
 		padding:0 30upx;
-		margin-top: 160upx;
+		margin-top: 120upx;
 	}
 	.pinyin{
 		font-size: 60upx;
@@ -100,6 +100,9 @@
 	.content{
 		width:95%;			
 		margin: 0 auto;
-		/* border:1upx solid #f00; */
+		/* border:1upx solid #f00;	 */	
+	}
+	.main_content{
+		padding-top: 40upx;
 	}
 </style>
