@@ -78,6 +78,7 @@
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
     import footerNav from "@/components/footer/footer_nav.vue"
+	var _self;
 	
 	export default {
 	    components: {
@@ -92,6 +93,7 @@
 			}
 		},
 		onLoad:function() {	
+			_self = this;
 			this.checkLogin();
 		},
 		onReady(){
@@ -129,21 +131,20 @@
 				this.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetCurrentStudents,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				let ret = this.getUserInfo();
+				_self.sendRequest({
+					url : _self.GetCurrentStudents,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.list;
-							if(parseInt(res.data.status) == 0){
+					},
+				    hideLoading : true,
+				    success:function (res) {						
+						if(res){
+							var data = res.list;
+							if(parseInt(res.status) == 0){
 								uni.showToast({
 									title: '无数据',
 									icon: 'none',
@@ -154,14 +155,14 @@
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
 										list.push(item);
-									}								
-									this.dataList = list;
+									}							
+									_self.dataList = list;
 								}
-								this.isBrithday = res.data.isBrithday;
+								_self.isBrithday = res.isBrithday; 
 							}					    	
-					    }
-					}
-				})
+						}
+				    }
+				},"1","");
 			}
 		}
 	}
