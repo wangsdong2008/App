@@ -36,6 +36,7 @@
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
 	import footerNav from "@/components/footer/footer_nav.vue"
+	var _self;
 	export default {
 	    components: {
 			uniList,
@@ -46,10 +47,11 @@
 			footerNav
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -60,45 +62,38 @@
 		},
 		methods:{
 			showorganadd(){
-				this.navigateTo('courseedit');
+				_self.navigateTo('courseedit');
 			},
 			showorgan(id){				
-				this.navigateTo('courseedit?id='+id);
+				_self.navigateTo('courseedit?id='+id);
 			},
 			DelData(data){
-				let that = this;
 				var data2 = {
 					"guid": data.guid,
 					"token":data.token,
 					"id":data.id,
 					"t":Math.random()
 				};
-				uni.request({
-					url: this.DelOrganUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: data2,
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-							//debugger;
-							if(parseInt(res.data.status) == 3){								
+				this.sendRequest({
+					url : this.DelOrganUrl,
+				    method : "post",
+				    data : data2,
+				    hideLoading : false,
+				    success:function (res) {
+						if(res){
+							if(parseInt(res.status) == 3){	
 								uni.showToast({
 									title: '删除成功',
 									icon: 'none',
 								});
-								/* setTimeout(function(){
-									that.navigateTo('./course');
-								},2000); */
-								var data = res.data.list;
-								if(parseInt(res.data.status) == 3){
+								var data = res.list;
+								if(parseInt(res.status) == 3){
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
 										list.push(item);
 									}								
-									this.dataList = list;
+									_self.dataList = list;
 								}		
 								
 							}else{
@@ -107,12 +102,25 @@
 									icon: 'none',
 								});
 							}					    	
-					    }
+						}
+				    }
+				},"1","");	
+				
+				
+				/* uni.request({
+					url: _self.DelOrganUrl,
+					header: {
+				        "Content-Type": "application/x-www-form-urlencoded"							 
+				    },
+				    data: data2,
+				    method: "get",
+					success: (res) => {
+					   
 					}
-				})
+				}) */
 			},			
 			delorgan(id){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
@@ -121,10 +129,10 @@
 				    token: ret.token,
 					id:id
 				};
-				this.DelData(data);
+				_self.DelData(data);
 			},
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
 				}
@@ -132,34 +140,32 @@
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.AllOrganUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.list; 
-							if(parseInt(res.data.status) == 3){
-								let list = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];
-									list.push(item);
-								}								
-								this.dataList = list;
-							}					    	
-					    }
-					}
-				})
+				this.sendRequest({
+				       url : this.AllOrganUrl,
+				       method : "post",
+				       data : {
+						   "guid": data.guid,
+						   "token":data.token,
+						   "t":Math.random()
+					   },
+				       hideLoading : true,
+				       success:function (res) {
+							if(res){
+								var data = res.list; 
+								if(parseInt(res.status) == 3){
+									let list = [];
+									for (var i = 0; i < data.length; i++) {
+										var item = data[i];
+										list.push(item);
+									}								
+									_self.dataList = list;
+								}					    	
+							}
+				       }
+				   },"1","");
 			}
 			
 		}

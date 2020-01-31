@@ -41,6 +41,7 @@
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
 	import footerNav from "@/components/footer/footer_nav.vue"
+	var _self;
 	export default {
 	    components: {
 			uniList,
@@ -51,10 +52,11 @@
 			footerNav
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -65,42 +67,40 @@
 		},
 		methods:{
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);
-				if(ret){
-					this.hasLogin = true;
+				let ret = _self.getUserInfo();
+				if(!ret){
+					return;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.ChildWeekUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				this.sendRequest({
+			       url : this.ChildWeekUrl,
+			       method : "post",
+			       data : {
 						"guid": data.guid,
 						"token":data.token,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.childlist; 
-							if(parseInt(res.data.status) == 3){
-								let list = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];
-									list.push(item);
-								}
-								this.dataList = list;	
+					},
+			       hideLoading : true,
+			       success:function (res) {
+					if(res){
+						var data = res.childlist; 
+						if(parseInt(res.status) == 3){
+							let list = [];
+							for (var i = 0; i < data.length; i++) {
+								var item = data[i];
+								list.push(item);
 							}
-					    }
+							_self.dataList = list;	
+						}
 					}
-				})
+			       }
+			   },"1","");				
 			},
 			planadd(){
 				uni.navigateTo({
@@ -108,7 +108,7 @@
 				});
 			},
 			delplan(id){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					uni.showToast({
 						title: '孩子不存在',
@@ -119,46 +119,42 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
-				};								
-				uni.request({
-					url: this.DelChildPlanUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				};
+				this.sendRequest({
+				       url : this.DelChildPlanUrl,
+				       method : "post",
+				       data : {
 						"guid": data.guid,
 						"token":data.token,
 						"id":id,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){							
-					    	var data = res.data; 
-							if(parseInt(res.data.status) == 0){
+					   },
+				       hideLoading : false,
+				       success:function (res) {
+						if(res){
+							var data = res; 
+							if(parseInt(res.status) == 0){
 								uni.showToast({
 									title: '删除失败',
 									icon: 'none',
 								});		
 							}else{
-								var data = res.data.list;
-								if(parseInt(res.data.status) == 3){
+								var data = res.list;
+								if(parseInt(res.status) == 3){
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
 										list.push(item);
 									}								
-									this.dataList = list;
+									_self.dataList = list;
 								}
 							}
-					    }
-					}
-				})
+						}
+				       }
+				   },"1","");
 			},
 			showplan(id){
-					uni.navigateTo({
-					    url: './planshow?id='+id,
-					});
+				this.navigateTo('./planshow?id='+id);
 			}
 		}
 	}

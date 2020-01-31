@@ -37,6 +37,9 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	
+	var _self;
+	
 	export default {
 	    components: {
 			service,
@@ -44,19 +47,20 @@
 			mInput
 		},
 		onLoad(options){
-			this.checkLogin();
-			this.c_id = options['id'];
-			if(this.c_id == undefined){
-				this.c_id = 0;
+			_self = this;
+			_self.checkLogin();
+			_self.c_id = options['id'];
+			if(_self.c_id == undefined){
+				_self.c_id = 0;
 			}
-			if(this.c_id == 0){
-				this.headermsg = "添加课程,Course Add";
+			if(_self.c_id == 0){
+				_self.headermsg = "添加课程,Course Add";
 			}else{
-				this.headermsg = "课程编辑,Course Edit";
+				_self.headermsg = "课程编辑,Course Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -83,28 +87,27 @@
 		methods:{
 			radioChange: function(evt) {
 				var current = evt.detail.value;
-				this.is_show = current;	
+				_self.is_show = current;	
 			},
-			bindmodify(){
-				let that = this;
-				if(!service.checkNull(that.c_name)){
+			bindmodify(){				
+				if(!service.checkNull(_self.c_name)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '课程名称不能为空'
 					});
 					return;
 				}
-				if(!service.checkNull(that.organname)){
+				if(!service.checkNull(_self.organname)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '机构名不能为空'
 					});
 					return;
 				}
-				if(that.c_order == "" || that.c_order == undefined){
-					that.c_order = 1;
+				if(_self.c_order == "" || _self.c_order == undefined){
+					_self.c_order = 1;
 				}else{
-					if(!service.checkNum(that.c_order)){
+					if(!service.checkNum(_self.c_order)){
 						uni.showToast({
 							icon: 'none',
 							title: '顺序请填写数字'
@@ -112,104 +115,103 @@
 						return;
 					}
 				}
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				uni.request({
-					url: that.ModifyOrganUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,
-						"id": this.c_id,
-						"c_name": this.c_name,
-						"organname":this.organname,
-						"c_address": this.c_address,
-						"c_order":this.c_order,
-						"is_show":this.is_show,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						//debugger;
-						let status = res.data.status;
-						status = parseInt(status);
-						let str = '';
-						switch(status){
-							case 0:{
-								str = '数据填写错误';
-								break;
+				_self.sendRequest({
+				       url : _self.ModifyOrganUrl,
+				       method : "post",
+				       data : {
+							"guid": ret.guid,
+							"token": ret.token,
+							"id": _self.c_id,
+							"c_name": _self.c_name,
+							"organname":_self.organname,
+							"c_address": _self.c_address,
+							"c_order":_self.c_order,
+							"is_show":_self.is_show,
+							"t":Math.random()					
+					   },
+				       hideLoading : false,
+				       success:function (res) {
+							//debugger;
+							let status = res.status;
+							status = parseInt(status);
+							let str = '';
+							switch(status){
+								case 0:{
+									str = '数据填写错误';
+									break;
+								}
+								case 2:{
+									str = '课程已经存在';
+									break;
+								}
+								case 3:{
+									if(_self.c_id > 0){
+										str = '修改成功';
+									}else{
+										_self.c_id = 0;	
+										_self.c_order = '';	
+										_self.headermsg = '';	
+										_self.c_name = '';	
+										_self.organname = '';	
+										_self.c_address = '';	
+										_self.btntxt = '';
+										_self.is_show = 1;
+										str = '添加成功';
+									}
+									break;
+								}							
 							}
-							case 2:{
-								str = '课程已经存在';
-								break;
-							}
-							case 3:{
-								str = '修改成功';
-								break;
-							}							
-						}
-						
-						uni.showToast({
-							title: str,
-							icon: 'none',
-							duration:2000
-						});	
-						if(status == 3){
-							this.navigateTo('course');
-						}
-					}
-			    });	
-			
+							uni.showToast({
+								title: str,
+								icon: 'none',
+								duration:2000
+							});	
+							
+				       }
+				   },"1","");			
 			},
 			show(){
-				//if(this.c_id == 0 ) return;  //考虑添加功能,允许等于0
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				//if(_self.c_id == 0 ) return;  //考虑添加功能,允许等于0
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.c_id
+					id:_self.c_id
 				};
-				if(this.c_id == 0) this.btntxt="添加"; else this.btntxt = '修改';
-				this.getData(data);
+				if(_self.c_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.OrganUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
+				this.sendRequest({
+				       url : this.OrganUrl,
+				       method : "post",
+				       data : {
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
 							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						   if(res.data){
-								var data = res.data.list; 
-								if(parseInt(res.data.status) == 3){
-									this.c_name = data.c_name;
-									this.organname = data.organname;
-									this.c_address = data.c_address;
-									this.is_show = data.is_show;
-									this.c_order = data.c_order.toString();
-								}else{
-									/* uni.showToast({
-										title: '无数据',
-										icon: 'none',
-									}); */
+						},
+				       hideLoading : true,
+				       success:function (res) {
+							if(res){
+								var data = res.list;
+								if(parseInt(res.status) == 3){
+									_self.c_name = data.c_name;
+									_self.organname = data.organname;
+									_self.c_address = data.c_address;
+									_self.is_show = data.is_show;
+									_self.c_order = data.c_order.toString();
 								}
 							}
-						}
-					})
+				       }
+				   },"1","");
 			}
 		}
     }

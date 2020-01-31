@@ -7,7 +7,7 @@
 					<li class="header_title">
 						<ul class="header_txt">
 							<li>{{userinfo.nick_name}}</li>
-							<li>{{userinfo.user_identity == 2?'培训机构':'孩子家长'}}</li>
+							<li>{{userinfo.user_identity == 2?'机构':'家长'}}</li>
 						</ul>
 					</li>
 				</ul>

@@ -8,9 +8,6 @@
 				<uni-list-item title="孩子管理" thumb="../../../static/img/userHL.png" @tap="bindChild" />
 				<uni-list-item title="上课计划" thumb="../../../static/img/plan.png" @tap="bindPlan" />
 			</uni-list>
-			<uni-list>
-				<uni-list-item title="退出" thumb="../../../static/img/quit.png" @tap="bindquit"></uni-list-item>
-			</uni-list>
 		</view>
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
@@ -52,11 +49,7 @@
 			},
 			bindPlan:function(){
 				this.navigateTo('plan');
-			},
-			bindquit:function(){
-				this.quit();
-			}
-			
+			}			
 		}
 	}
 </script>

@@ -42,6 +42,7 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			service,
@@ -49,19 +50,20 @@
 			mInput
 		},
 		onLoad(options){
-			this.checkLogin();
-			this.child_id = options['id'];
-			if(this.child_id == undefined){
-				this.child_id = 0;
+			_self = this;
+			_self.checkLogin();
+			_self.child_id = options['id'];
+			if(_self.child_id == undefined){
+				_self.child_id = 0;
 			}
-			if(this.child_id == 0){
-				this.headermsg = "添加孩子,Children Add";
+			if(_self.child_id == 0){
+				_self.headermsg = "添加孩子,Children Add";
 			}else{
-				this.headermsg = "孩子编辑,Children Edit";
+				_self.headermsg = "孩子编辑,Children Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -97,26 +99,25 @@
 		methods:{
 			sexChange: function(evt) {
 				var current = evt.detail.value;
-				this.sex = current;	
+				_self.sex = current;	
 			},
 			radioChange: function(evt) {
 				var current = evt.detail.value;
-				this.is_show = current;	
+				_self.is_show = current;	
 			},
 			bindmodify(){
 				//debugger;
-				let that = this;
-				if(!service.checkNull(that.child_name)){
+				if(!service.checkNull(_self.child_name)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '孩子名不能为空'
 					});
 					return;
 				}
-				if(that.child_order == "" || that.child_order == undefined){
-					that.child_order = 1;
+				if(_self.child_order == "" || _self.child_order == undefined){
+					_self.child_order = 1;
 				}else{
-					if(!service.checkNum(that.child_order)){
+					if(!service.checkNum(_self.child_order)){
 						uni.showToast({
 							icon: 'none',
 							title: '顺序请填写数字'
@@ -125,30 +126,28 @@
 					}
 				}
 				
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				that = this;
-				uni.request({
-					url: that.ModifyChildrenUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,
-						"id": that.child_id,
-						"childname": that.child_name,
-						"childorder":that.child_order,
-						"is_show":that.is_show,
-						"sex":that.sex,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
+				
+				this.sendRequest({
+				       url : this.ModifyChildrenUrl,
+				       method : "post",
+				       data : {
+							"guid": ret.guid,
+							"token": ret.token,
+							"id": _self.child_id,
+							"childname": _self.child_name,
+							"childorder":_self.child_order,
+							"is_show":_self.is_show,
+							"sex":_self.sex,
+							"t":Math.random()
+					   },
+				       hideLoading : true,
+				       success:function (res) {
 						//debugger;
-						let status = res.data.status;
+						let status = res.status;
 						status = parseInt(status);
 						let str = '';
 						switch(status){
@@ -161,13 +160,13 @@
 								break;
 							}
 							case 3:{
-								if(that.child_id == 0){
+								if(_self.child_id == 0){
 									str = '添加成功';
-									that.child_id = 0;
-									that.child_name = "";
-									that.child_order = "";
-									that.is_show = 1;
-									that.sex = 1;
+									_self.child_id = 0;
+									_self.child_name = "";
+									_self.child_order = "";
+									_self.is_show = 1;
+									_self.sex = 1;
 									
 								}else{
 									str = '修改成功';
@@ -181,55 +180,48 @@
 							icon: 'none',
 							duration:2000
 						});	
-						/* if(status == 3){
-							this.navigateTo('child');
-						} */
-					}
-			    });	
-			
+				       }
+				   },"1","");			
 			},
 			show(){
-				//if(this.child_id == 0 ) return;  //考虑添加功能,允许等于0
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				//if(_self.child_id == 0 ) return;  //考虑添加功能,允许等于0
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.child_id
+					id:_self.child_id
 				};
-				if(this.child_id == 0) this.btntxt="添加"; else this.btntxt = '修改';
-				if(this.child_id > 0){
-					this.getData(data);
+				if(_self.child_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
+				if(_self.child_id > 0){
+					_self.getData(data);
 				}
 			},
 			getData(data){
-				uni.request({
-					url: this.ShowChildrenUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
-							"guid": data.guid,
-							"token":data.token,
-							"id":data.id,
-							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						   if(res.data){
-							   	//debugger;
-								var data = res.data.list; 
-								if(parseInt(res.data.status) == 3){
-									this.child_name = data.child_name;
-									this.is_show = data.is_show;
-									this.child_order = data.child_order.toString();
-									this.sex = data.sex;
+				this.sendRequest({
+				       url : this.ShowChildrenUrl,
+				       method : "post",
+				       data : {
+						"guid": data.guid,
+						"token":data.token,
+						"id":data.id,
+						"t":Math.random()
+					   },
+				       hideLoading : true,
+				       success:function (res) {
+							if(res){							
+								var data = res.list; 
+								if(parseInt(res.status) == 3){
+									_self.child_name = data.child_name;
+									_self.is_show = data.is_show;
+									_self.child_order = data.child_order.toString();
+									_self.sex = data.sex;
 								}
 							}
-						}
-					})
+				       }
+				   },"1","");
 			}
 		}
     }

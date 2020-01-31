@@ -28,10 +28,16 @@
 		</view>
 		<view class="main-body write lists">
 			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index)"></uni-list-item>
+				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,1)"></uni-list-item>
 			</uni-list>
 		</view>
 		
+		<view class="main-body write lists">
+			<uni-list>
+				<uni-list-item v-for="(item,index) in dataList2" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,2)"></uni-list-item>
+				<uni-list-item title="退出" thumb="/static/img/quit.png" @tap="bindquit"></uni-list-item>
+			</uni-list>
+		</view>
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
 		</view>
@@ -68,6 +74,10 @@
 					{"text":"升级账号","url":"upgrade","image":"upgrade.png"},
 					{"text":"推荐好友","url":"tjgoodsfriend","image":"tj.png"},
 				],
+				dataList2:[
+					{"text":"系统管理","url":"system","image":"system.png"},	
+					{"text":"会员续费","url":"pay","image":"xf.png"}, 	
+				],
 				footer: 'mine',
 				data_ctgy:[  
 				    {image:'../../../static/img/message.png',text:'我的消息',url:"../../pages/mngt-ctgy/ctgy-indicator"},  
@@ -77,9 +87,18 @@
 				]
 			}
 		},
-		methods:{			
-			bindclick:function(num){
-				_self.navigateTo(this.dataList[num].url);
+		methods:{
+			bindquit:function(){
+				_self.quit();
+			},
+			bindclick:function(num,n){
+				if(n == 1){
+					_self.navigateTo(this.dataList[num].url);
+				}
+				else{
+					_self.navigateTo(this.dataList2[num].url);
+				}
+				
 			},
 			show(){
 				let ret = this.getUserInfo();
