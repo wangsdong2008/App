@@ -199,6 +199,11 @@
 			"style": {				
 				"navigationBarTitleText": "推荐好友"
 			}
+		},{
+			"path": "pages/users/main/pay",
+			"style": {				
+				"navigationBarTitleText": "会员续费"
+			}
 		}
 		
 	],
