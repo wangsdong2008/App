@@ -164,12 +164,11 @@
 					return;
 				}
 				let ret = that.getUserInfo();
-				uni.request({
-					url: that.ModifyUserInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				
+				this.sendRequest({
+				    url : this.ModifyUserInfoUrl,
+				    method : "post",
+				    data : {
 						"guid": ret.guid,
 						"token": ret.token,	
 						"old_password":that.old_password,
@@ -177,10 +176,10 @@
 						"again_password":that.again_password,						
 						"status":1,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						let data = res.data;
+					},
+				    hideLoading : false,
+				    success:function (res) {
+						let data = res;
 						let str = '';
 						switch(parseInt(data.status)){
 							case 1:{
@@ -201,9 +200,8 @@
 						    icon: 'none',
 						    title: str
 						});	
-						
-					}
-				});				
+                    }
+				},"1","");
 			},
 			show(){
 				let ret = this.getUserInfo();
@@ -214,29 +212,18 @@
 				this.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.getUsersInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						if(res.data){
-							let data = res.data;
-							if(data.status == 3){
-								this.userinfo = data.userinfo;
-								this.nick_name = this.userinfo.nick_name;
-								
-							}
-							
+				this.sendRequest({
+			       url : this.getUsersInfoUrl,
+			       method : "post",
+			       data : {"token":data.token,"guid":data.guid},
+			       hideLoading : true,
+			       success:function (res) {
+						if(data.status == 3){
+							this.userinfo = data.userinfo;
+							this.nick_name = this.userinfo.nick_name;
 						}
-					}
-				});
+			       }
+			   },"1","");	
 			}
 			
 		}

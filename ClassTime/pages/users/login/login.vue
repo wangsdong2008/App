@@ -47,7 +47,7 @@
 	            providerList: [],
 				hasProvider: false,
 	            account: '13816141685',
-	            password: '123123',
+	            password: '123456',
 	            positionTop: 0
 	        }
 	    },

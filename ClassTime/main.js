@@ -23,7 +23,7 @@ Vue.prototype.GeneralUrl = Vue.prototype.WebUrl + "api/general/"; //通用地址
 Vue.prototype.ParentUrl = Vue.prototype.WebUrl + "api/parents/";   //家长地址
 Vue.prototype.CompanyUrl = Vue.prototype.WebUrl + "api/company/"; //公司地址
 
-
+Vue.prototype.getTestUrl = Vue.prototype.GeneralUrl + "gettest" //测试页面
 
 //通用功能
 Vue.prototype.getUsersInfoUrl = Vue.prototype.GeneralUrl + "getuserinfo" //个人信息
@@ -112,72 +112,6 @@ Vue.prototype.GetStudyMonth = function () {
 	}	
 	//把数组给反过来
 	return arr.reverse();
-}
-
-//发送短信
-Vue.prototype.sendsms = function (userInfo) {	
-	uni.request({
-		url:this.SendSmsUrl,
-		header: {
-	             "Content-Type": "application/x-www-form-urlencoded"							 
-	    },
-	    data: {
-	        "mobile": userInfo.mobile,
-			"t":Math.random()
-	    },
-	    method: "get",
-		success: (res) => {
-			var data = res.data;
-			switch(parseInt(data.status)){
-				case 0:{ //
-					uni.showToast({
-						title: '出错',
-						mask: true,
-						duration: 1500
-					});
-					break;
-					}
-				case 1:{ //
-					uni.showToast({
-						title: '出错2',
-						mask: true,
-						duration: 1500
-					});
-					break;
-				}
-				case 2:{
-					uni.showToast({
-						title: '手机号码已被使用，请更换',
-						mask: true,
-						duration: 1500
-					});
-					break;
-				}
-				case 3:{
-					uni.showToast({
-						title: '发送成功,请在5分钟内输入',
-						mask: true,
-						duration: 1500
-					});
-					break;
-				}				
-				case 4:{
-					uni.showToast({
-						title: '验证码不正确',
-						mask: true,
-						duration: 1500
-					});
-					break;
-				}
-				default:{
-					uni.showToast({
-					    title: '注册失败，请检查'
-					});
-					break;
-				}
-			}
-		}
-	});
 }
 
 Vue.prototype.getUsers = function () {
@@ -458,13 +392,13 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 
 //获取临时sessionid
 Vue.prototype.getcurrentsession = function(){
-	//debugger;	
-	/* try {
-		uni.clearStorageSync();  
-	} catch (e) {  
-		// error  
-	} */
 	let that = this;
+	uni.removeStorage({
+	    key:that.Temp_KEY,
+	    success:function() {
+	        //console.log(' 移除成功')　　　　　
+	    }
+	});
 	let ret = uni.getStorageSync(that.Temp_KEY);
 	if(!ret){//如果不能获取的话，获取新的sessionid
 		that.getsessionsi();
@@ -493,26 +427,90 @@ Vue.prototype.getsessionsi = function(){
 	});	
 }
 
-//发送短信
-/*
- status:1发送验证码短信，2取回密码短信，3生日祝福短信
-*/
-Vue.prototype.sendsms = function(datainfo){
+//发送短信1
+Vue.prototype.sendsms = function (userInfo) {	
 	uni.request({
 		url:this.SendSmsUrl,
 		header: {
 	             "Content-Type": "application/x-www-form-urlencoded"							 
 	    },
 	    data: {
-			"token":datainfo.token,
-			"mobile":datainfo.mobile,
-			"status":datainfo.status,
-			"smsid":datainfo.smsid,
+	        "mobile": userInfo.mobile,
 			"t":Math.random()
 	    },
 	    method: "get",
 		success: (res) => {
 			var data = res.data;
+			switch(parseInt(data.status)){
+				case 0:{ //
+					uni.showToast({
+						title: '出错',
+						mask: true,
+						duration: 1500
+					});
+					break;
+					}
+				case 1:{ //
+					uni.showToast({
+						title: '出错2',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				case 2:{
+					uni.showToast({
+						title: '手机号码已被使用，请更换',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				case 3:{
+					uni.showToast({
+						title: '发送成功,请在5分钟内输入',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}				
+				case 4:{
+					uni.showToast({
+						title: '验证码不正确',
+						mask: true,
+						duration: 1500
+					});
+					break;
+				}
+				default:{
+					uni.showToast({
+					    title: '操作失败，请检查'
+					});
+					break;
+				}
+			}
+		}
+	});
+}
+
+/*
+ status:1发送验证码短信，2取回密码短信，3生日祝福短信
+*/
+//发送短信
+Vue.prototype.sendsms2 = function(datainfo){
+	this.sendRequest({
+	       url : this.SendSmsUrl,
+	       method : "post",
+	       data : {
+			"token":datainfo.token,
+			"mobile":datainfo.mobile,
+			"status":datainfo.status,
+			"smsid":datainfo.smsid,
+			"t":Math.random()
+		   },
+	       hideLoading : false,
+	       success:function (res) {
+			var data = res;
 			switch(parseInt(data.status)){
 				case 1:{
 					uni.showToast({
@@ -548,8 +546,21 @@ Vue.prototype.sendsms = function(datainfo){
 					}); 
 					break;
 				}
-				
 			}
+	       }
+	   },"1","");
+	   
+	uni.request({
+		url:this.SendSmsUrl,
+		header: {
+	             "Content-Type": "application/x-www-form-urlencoded"							 
+	    },
+	    data: {
+			
+	    },
+	    method: "get",
+		success: (res) => {
+			
 		}
 	});	
 }
@@ -573,6 +584,117 @@ Vue.prototype.ScanAudio = function(mp3_name){
 	music.src= "../../../static/music/"+mp3_name+".mp3"; //选择播放的音频
 	music.play(); //执行播放
 }
+
+//网络请求封装
+Vue.prototype.sendRequest = function(param, backtype,backpage){
+	var backpage = '';
+	if(backpage == '') {
+		backpage = '/pages/users/login/login';
+	}
+	
+	var _self = this,
+	url = param.url,
+	method = param.method,
+	header = {},
+	data = param.data || {}, 
+	token = "",
+	hideLoading = param.hideLoading || false;        
+        
+    //拼接完整请求地址
+    var requestUrl = url;
+    //固定参数:仅仅在小程序绑定页面通过code获取token的接口默认传递了参数token = login
+    if(!data.token){//其他业务接口传递过来的参数中无token
+        token = uni.getStorageSync(this.USERS_KEY);//参数中无token时在本地缓存中获取
+        console.log("当前token:" + token);
+        if(!token){//本地无token需重新登录(退出时清缓存token)
+            _self.login(backpage, backtype);
+            return;
+        }else{
+            data.token = token;
+        }
+    }
+    var timestamp = Date.parse(new Date());//时间戳
+    data["timestamp"] = timestamp;
+    // #ifdef MP-WEIXIN
+    data["device"] = "wxapp";
+    data["ver"] = "1.1.30";
+    // #endif
+    // #ifdef APP-PLUS || H5
+    data["device"] = "iosapp";
+    data["ver"] = "1.0.0";
+    // #endif
+    //请求方式:GET或POST(POST需配置header: {'content-type' : "application/x-www-form-urlencoded"},)
+    if(method){
+        method = method.toUpperCase();//小写改为大写
+		header = {'content-type' : "application/x-www-form-urlencoded"};
+        /* if(method=="POST"){
+            header = {'content-type' : "application/x-www-form-urlencoded"};
+        }else{
+            header = {'content-type' : "application/json"};
+        } */
+    }else{
+        method = "GET";
+        header = {'content-type' : "application/json"};
+    }
+    //用户交互:加载圈
+    if (!hideLoading) {
+        uni.showLoading({title:'加载中...'});
+    }
+    
+    console.log("网络请求start");
+    //网络请求
+    uni.request({
+        url: requestUrl,
+        method: method,
+        header: header,
+        data: data,
+        success: res => {
+            //console.log("网络请求success:" + JSON.stringify(res));
+            if (res.statusCode && res.statusCode != 200) {//api错误
+                uni.showModal({
+                    content:"" + res.errMsg
+                });
+                return;
+            }
+            if (res.data.code) {//返回结果码code判断:0成功,1错误,-1未登录(未绑定/失效/被解绑)
+                if (res.data.code == "-1") { //未登录
+                    _self.login(backpage, backtype);
+                    return;
+                }
+                if (res.data.code != "0") { //错误
+                    uni.showModal({
+                        showCancel:false,
+                        content:"" + res.data.msg
+                    });
+                    return;
+                }
+            } /* else{
+                uni.showModal({
+                    showCancel:false,
+                    content:"No ResultCode:" + res.data.msg
+                });
+                return;
+            } */
+            typeof param.success == "function" && param.success(res.data);
+        },
+        fail: (e) => {
+            console.log("网络请求fail:" + JSON.stringify(e));
+            uni.showModal({
+                content:"" + e.errMsg
+            });
+            typeof param.fail == "function" && param.fail(e.data);
+        },
+        complete: () => {
+            console.log("网络请求complete");
+            if (!hideLoading) {
+                uni.hideLoading();
+            }
+            typeof param.complete == "function" && param.complete();
+            return;
+        }
+    });
+}
+
 
 App.mpType = 'app'
 

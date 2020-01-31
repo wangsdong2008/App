@@ -44,11 +44,14 @@
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	var _self;
+	
 	export default {
 	    components: {			
 			footerNav,uniGrid,uniGridItem,uniList,uniListItem
 		},
 		onLoad(){
+			_self = this;
 			this.checkLogin();
 		},
 		onReady() {
@@ -76,7 +79,7 @@
 		},
 		methods:{			
 			bindclick:function(num){
-				this.navigateTo(this.dataList[num].url);
+				_self.navigateTo(this.dataList[num].url);
 			},
 			show(){
 				let ret = this.getUserInfo();
@@ -87,28 +90,21 @@
 				this.getData(data);
 			},
 			getData(data){
-				let that = this;
-				uni.request({
-					url: that.getUsersInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						if(res.data){
-							let data = res.data;
+				this.sendRequest({
+				    url : _self.getUsersInfoUrl,
+				    method : "post",
+				    data : {"token":data.token,"guid":data.guid,"t":Math.random()},
+				    hideLoading : true,
+				    success:function (res) {
+						if(res){
+							let data = res;
 							if(data.status == 3){
-								that.userinfo = data.userinfo;
-								that.childface = that.PicUrl + 'users' + data.userinfo.face;
+								_self.userinfo = data.userinfo;
+								_self.childface = _self.PicUrl + 'users' + data.userinfo.face;
 							}
 						}
-					}
-				});
+				    }
+				},"1","");
 			},
 			upload(){
 				var _self = this;

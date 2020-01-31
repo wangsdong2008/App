@@ -88,7 +88,6 @@
 				    },
 				    method: "get",
 					success: (res) => {
-						//debugger;
 					    if(res.data){
 					    	var data = res.data.childlist; 
 							if(parseInt(res.data.status) == 3){

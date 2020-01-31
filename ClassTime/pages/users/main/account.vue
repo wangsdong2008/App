@@ -37,15 +37,19 @@
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	
+	var _self;
+	
 	export default {
 	    components: {			
 			mInput,footerNav,uniList,uniListItem,uniSection
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady() {
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -56,74 +60,63 @@
 			}
 		},
 		methods:{
-			bindsaveuserinfo(){
-				let that = this;
-				if(that.nick_name.trim() == '' || that.nick_name.trim().length == 0){
+			bindsaveuserinfo(){				
+				if(_self.nick_name.trim() == '' || _self.nick_name.trim().length == 0){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请填写昵称'
 					});
 					return;
-				}
-				let ret = this.getUserInfo();
-				uni.request({
-					url: that.ModifyUserInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,	
-						"nick_name":this.nick_name,
-						"status":0,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						let data = res.data;
-						if(parseInt(data.status) == 3){
-							this.userinfo = data.userinfo;
-							uni.showToast({
-							    icon: 'none',
-							    title: '修改成功'
-							});
-						}
-						
-					}
-				});				
+				}			
+				let ret = _self.getUserInfo();
+				 _self.sendRequest({
+				        url : _self.ModifyUserInfoUrl,
+				        method : "post",
+				        data : {
+							"guid": ret.guid,
+							"token": ret.token,	
+							"nick_name":_self.nick_name,
+							"status":0,
+							"t":Math.random()
+						},
+				        hideLoading : false,
+				        success:function (res) {
+							let data = res;
+							if(parseInt(data.status) == 3){
+								_self.userinfo = data.userinfo;
+								uni.showToast({
+								    icon: 'none',
+								    title: '修改成功'
+								});
+							}
+				        }
+				    },"1");
 			},
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.getUsersInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						if(res.data){
-							let data = res.data;
+				let ret = _self.getUserInfo();
+				_self.sendRequest({
+					url : _self.getUsersInfoUrl,
+				    method : "post",
+				    data : {"token":ret.token,"guid":ret.guid,"t":Math.random()},
+				    hideLoading : true,
+				    success:function (res) {
+						if(res){
+							let data = res;
 							if(data.status == 3){
-								this.userinfo = data.userinfo;
-								this.nick_name = this.userinfo.nick_name;
-								
+								_self.userinfo = data.userinfo;
+								_self.nick_name = _self.userinfo.nick_name;
 							}
-							
 						}
-					}
-				});
+				    }
+				},"1");				
 			}
 			
 		}
