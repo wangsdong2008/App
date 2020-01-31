@@ -13,8 +13,8 @@
 				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" />
 			</uni-list>
 			<uni-list>
-				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				   <uni-list-item title="权限管理" thumb="../../../static/img/power.png" />
-				<uni-list-item title="退出" thumb="../../../static/img/quit.png" @tap="bindquit"></uni-list-item>
+				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				 
+				<uni-list-item title="权限管理" thumb="../../../static/img/power.png" />
 			</uni-list>
 		</view>
 		<view class="footer">
@@ -57,11 +57,7 @@
 			},
 			bindCategory:function(){
 				this.navigateTo('category');
-			},
-			bindquit:function(){
-				this.quit();
-			}
-			
+			}			
 		}
 	}
 </script>
