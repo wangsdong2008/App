@@ -214,7 +214,7 @@
 		methods: {
 			getServerData() {
 				let ret = this.getUserInfo();				
-				 this.sendRequest({
+					this.sendRequest({
 				        url : this.getTestUrl,
 				        method : "post",
 				        data : {

@@ -72,11 +72,10 @@
 					{"text":"修改密码","url":"modifypassword","image":"password.png"},
 					{"text":"更换手机","url":"modifymobile","image":"mobile5.png"},
 					{"text":"升级账号","url":"upgrade","image":"upgrade.png"},
-					{"text":"推荐好友","url":"tjgoodsfriend","image":"tj.png"},
+					{"text":"会员续费","url":"pay","image":"xf.png"}, 	
 				],
 				dataList2:[
-					{"text":"系统管理","url":"system","image":"system.png"},	
-					{"text":"会员续费","url":"pay","image":"xf.png"}, 	
+					
 				],
 				footer: 'mine',
 				data_ctgy:[  

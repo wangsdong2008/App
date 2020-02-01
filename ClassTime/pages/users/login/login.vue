@@ -47,11 +47,10 @@
 	            providerList: [],
 				hasProvider: false,
 	            account: '13816141685',
-	            password: '123456',
+	            password: '123123',
 	            positionTop: 0
 	        }
-	    },
-		
+	    },		
 		computed: mapState(['forcedLogin']),
 		methods: {
 		    ...mapMutations(['login']),

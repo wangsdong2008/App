@@ -204,6 +204,16 @@
 			"style": {				
 				"navigationBarTitleText": "会员续费"
 			}
+		},{
+			"path": "pages/users/pay/alipay",
+			"style": {				
+				"navigationBarTitleText": "会员续费"
+			}
+		},{
+			"path": "pages/users/pay/wxpay",
+			"style": {				
+				"navigationBarTitleText": "会员续费"
+			}
 		}
 		
 	],

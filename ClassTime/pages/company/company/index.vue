@@ -5,14 +5,15 @@
 				<view class="title">今日上课 </view>
 				<view class="studentlist">
 					<!-- 包含图片 -->					
-					<uni-list v-for="(item,index) in dataList">
+					<uni-list v-for="(item,index) in dataList" :index="index" :key="item.com_id">
 						<uni-list-item v-if="parseInt(item.category_num) > 0" class="list-title" :title="item.com_name" :show-arrow="false" :show-badge="true" thumb="../../../static/img/company.png" ></uni-list-item>
 						<uni-list-item :show-arrow="false" :show-badge="true">
-							<uni-list v-if="parseInt(item2.students_num) > 0" v-for="(item2,index2) in item.categorylist"> 
+							<uni-list v-if="parseInt(item2.students_num) > 0" v-for="(item2,index2) in item.categorylist" :index="index2" :key="item2.cat_id"> 
 								<uni-list-item class="list-title2" :show-arrow="false" :show-badge="true" :title="'【'+item2.cat_name+'】'" thumb="../../../static/img/course.png"></uni-list-item>
 								<uni-list-item :show-arrow="false" :show-badge="false" >
 									<uni-list>
-										<uni-list-item class="studentsclass" v-for="(item3,index3) in item2.studentslist" :title="item3.uname" :note="item3.detail" :show-arrow="false" :show-badge="true" :scroll-y="true" :badge-text="item3.time" :thumb="item3.sex_img">                                  </uni-list-item>
+										<uni-list-item class="studentsclass" v-for="(item3,index3) in item2.studentslist" :title="item3.uname" :note="item3.detail" :show-arrow="false" :show-badge="true" :scroll-y="true" :badge-text="item3.time" :thumb="item3.sex_img" :index="index3" :key="item3.uid">
+										</uni-list-item> 
 									</uni-list>
 								</uni-list-item>
 							</uni-list>

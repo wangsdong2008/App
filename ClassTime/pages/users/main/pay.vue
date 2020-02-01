@@ -3,7 +3,7 @@
 		<view class="h500 content">
 			<view class="main-body header">
 				<ul>
-					<li class="imgs"><image src="../../../static/img/qq.png"></image></li>
+					<li class="imgs"><image class="headimgsize" :src="childface" mode=""></image></li>
 					<li class="header_title">
 						<ul class="header_txt">
 							<li>{{userinfo.nick_name}}</li>
@@ -22,27 +22,52 @@
 					    有效期
 					</view>
 					<view class="cell-right">
-						{{userinfo.starttime}}~{{userinfo.endtime}}
+						{{userinfo.endtime}}
 					</view>
 				</li>				
 			</ul>
-			<button type="primary" class="btn" @tap="bindsaveuserinfo">保存</button>
 		</view>
+		
+		<view class="main-body write lists2">
+			<ul>
+				<li>续费</li>
+				<li class="li30 grids">
+					<uni-grid :column="4" :show-border="true" @change="even">
+					    <uni-grid-item v-for="(item, index) in dataList" :index="index" :key="index">
+							<view :class="{
+								'grid-item-box':true,
+								'active':item.activer
+							}">
+								<text class="gemmologist-title">{{item.monthid}}个月</text>
+								<text class="gemmologist-name">￥{{item.monthtext}}</text>
+							</view>
+					    </uni-grid-item>
+					</uni-grid>
+				</li>				
+			</ul>
+		</view>
+		
+		<view class="main-body write lists2">
+			<ul>
+				<li>支付方式</li>
+				<li class="li40 wx" @tap="bindpay(1)">微信</li>		
+				<li class="li40 alipay" @tap="bindpay(2)">支付宝</li>				
+			</ul>
+		</view>		
 	</view>
 </template>
 
 <script>
 	import mInput from '../../../components/m-input.vue'
 	import footerNav from "@/components/footer/footer_nav.vue"
-	import uniSection from '@/components/uni-section/uni-section.vue'
-	import uniList from '@/components/uni-list/uni-list.vue'
-	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	import uniGrid from "@/components/uni-grid/uni-grid.vue"
+	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	
 	var _self;
 	
 	export default {
 	    components: {			
-			mInput,footerNav,uniList,uniListItem,uniSection
+			mInput,footerNav,uniGrid,uniGridItem
 		},
 		onLoad(){
 			_self = this;
@@ -58,10 +83,44 @@
 				nick_name:'',
 				starttime:'',
 				endtime:'',
-				user_identity:0
+				childface:'',
+				user_identity:0,
+				num:0
 			}
 		},
 		methods:{
+			bindpay(id){
+				let payid = id;
+				let nums = _self.num;
+				var url = '';
+				switch(payid){
+					case 1:{
+						url = '../pay/wxpay';
+						break;
+					}
+					case 2:{
+						url = '../pay/alipay';
+						break;
+					}
+				}
+				//_self.navigateTo(url);
+				debugger;
+				let ret = this.getUserInfo();
+				if(!ret){
+					return;
+				}
+				//待完成支付功能
+			},
+			even(e){
+				let num = e.detail.index;
+				_self.num = num;
+				let list = _self.dataList;
+				for(let i = 0;i<list.length; i++){
+					list[i].activer = false;
+				}
+				list[num].activer = true;
+				_self.dataList = list;				
+			},
 			bindsaveuserinfo(){				
 				if(_self.nick_name.trim() == '' || _self.nick_name.trim().length == 0){
 					uni.showToast({
@@ -117,6 +176,26 @@
 								let userinfo2 = data.userinfo;
 								_self.userinfo = userinfo2;
 								_self.nick_name = userinfo2.nick_name;
+								_self.childface = _self.PicUrl + 'users' + userinfo2.face;
+								let list = [];
+								switch(parseInt(userinfo2.user_identity )){
+									case 1:{
+										list.push({"monthid":"1","monthtext":"5","activer":true});
+										list.push({"monthid":"3","monthtext":"15","activer":false});
+										list.push({"monthid":"6","monthtext":"30","activer":false});
+										list.push({"monthid":"12","monthtext":"50","activer":false});
+										break;
+									}
+									case 2:{
+										list.push({"monthid":"1","monthtext":"50","activer":true});
+										list.push({"monthid":"3","monthtext":"150","activer":false});
+										list.push({"monthid":"6","monthtext":"300","activer":false});
+										list.push({"monthid":"12","monthtext":"500","activer":false});
+										break;
+									}
+								}
+								_self.dataList = list;
+								_self.num = 0;
 							}
 						}
 				    }
@@ -128,7 +207,16 @@
 		
 </script>
 
-<style>
+<style>		
+	.lists2 ul li.grids{
+		clear: both;
+		padding: 0upx;
+		/* border: 1px solid #f00; */
+	}
+	.lists ul li.grids>view{
+		float:none;
+	}
+	
 	.header{}
 	.header ul,.main-body ul{ margin: 0upx; padding:0upx; list-style-type: none; }
 	.header ul li{
@@ -141,6 +229,7 @@
 		height: 130upx;
 		text-align: center;
 		border-radius: 80upx;
+		overflow: hidden;
 	}
 	.imgs image{
 		height: 100upx;
@@ -174,14 +263,9 @@
 		display: block;
 		height: 45upx;
 		line-height: 45upx;
-		font-size: 25upx;
-		
+		font-size: 25upx;		
 	}
-	.grid-item-box{
-		text-align: center;		
-		margin-top: 25upx;
-		height: 45upx;
-	}
+	
 	image.identify-head{
 		width: 80upx;
 		height: 80upx;
@@ -192,12 +276,22 @@
 		padding-top: 120upx;
 	}
 	.btn{
-		margin-top: 80upx;
 		clear: both;
 	}
-	.lists ul li{
-		padding: 25upx 20upx;	
-		
+	.lists{
+		margin-bottom:120upx;
+	}
+	.lists2{
+		margin-bottom:30upx;
+	}
+	.lists ul li,.lists2 ul li{
+		padding: 25upx 20upx;
+	}	
+	.lists ul li:first-child,.lists2 ul li:first-child{
+		background-color: #66ccff;
+		border-top-left-radius:25upx ;
+		border-top-right-radius:25upx ;
+		color:#fff;
 	}
 	.lists ul li.li30{
 		margin-bottom: 30upx;
@@ -220,5 +314,46 @@
 	.m-input{
 		height: 55upx;
 		line-height: 55upx;
+	}
+	.grid-item-box{
+		text-align: center;	
+		padding-top: 25upx;
+		height: 180upx;
+	}
+	.active{
+		border:1px solid #007AFF;
+	}
+	
+	.grid-item-box text{
+		line-height: 60upx;
+		
+	}
+	.gemmologist-title{
+		border-bottom: 1px solid #66ccff;
+		width: 100%;
+		font-size: 35upx;
+		
+	}
+	.gemmologist-name{
+		font-weight: bold;
+		font-size: 54upx;
+	}
+	.li40{
+		line-height: 45upx;
+		padding:0upx;
+		
+	}
+	.lists2 ul li.li40{
+		padding-left: 80upx;
+	}
+	.wx{
+		background:url(../../../static/img/weixinpay.png) 10upx 20upx no-repeat;
+		-webkit-background-size: 60upx 60upx;
+		background-size: 60upx 60upx;
+	}
+	.alipay{
+		background:url(../../../static/img/alipay.png) 10upx 20upx no-repeat;
+		-webkit-background-size: 60upx 60upx;
+		background-size: 60upx 60upx;
 	}
 </style>
