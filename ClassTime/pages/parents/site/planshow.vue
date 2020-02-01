@@ -19,11 +19,18 @@
 					<view class="uni-input">{{course_dataList[course_index]}}</view>
 				</picker>
 			</view>
-			<view class="register_account_input">
+			<view class="register_account_input weeklist">
 				<view class="uni-list-cell-left">
 				    选择周几
 				</view>
-				<picker @change="WeekPickerChange($event)" :value="week_index" :range="week_dataList">
+				<view v-if="plan_id == 0" class="cell-right weeks">
+					<checkbox-group @change="checkboxChange">
+			    		<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in week_dataList" :index="index" :key="item.weekid">
+			    			<checkbox :value="item.weekid" /><text>{{item.weektext}}</text>
+			    		</label>
+			    	</checkbox-group>
+			    </view>
+				<picker v-if="plan_id > 0" @change="WeekPickerChange($event)" :value="week_index" :range="week_dataList">
 					<view class="uni-input">{{week_dataList[week_index]}}</view>
 				</picker>
 			</view>
@@ -62,6 +69,7 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			service,
@@ -69,19 +77,20 @@
 			mInput
 		},
 		onLoad(options){
-			this.checkLogin();
-			this.plan_id = options['id'];
-			if(this.plan_id == undefined){
-				this.plan_id = 0;
+			_self = this;
+			_self.checkLogin();
+			_self.plan_id = options['id'];
+			if(_self.plan_id == undefined){
+				_self.plan_id = 0;
 			}
-			if(this.plan_id == 0){
-				this.headermsg = "添加上课安排,Class Plan Add";
+			if(_self.plan_id == 0){
+				_self.headermsg = "添加上课安排,Class Plan Add";
 			}else{
-				this.headermsg = "上课安排编辑,Class Plan Edit";
+				_self.headermsg = "上课安排编辑,Class Plan Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -105,12 +114,9 @@
 				
 				week_id:0,
 				week_index:0,
-				week_dataList:['==请选择==','星期一','星期二','星期三','星期四','星期五','星期六','星期日'],
-				week_dataIDList:['-1','1','2','3','4','5','6','0'],
-				
-				p_time:'12:00',
-				
-				
+				week_dataList:[],
+				week_dataIDList:[],				
+				p_time:'12:00',				
 				items: [
 					{
 						value: '1',
@@ -124,40 +130,70 @@
 			}
 		},
 		methods:{
-			bindTimeChange: function(e) {
-			    this.p_time = e.target.value;
+			checkboxChange: function (e) {
+				//debugger;
+				var items = _self.week_dataList;
+			    var values = e.detail.value;
+				let list = [];
+			    for (var i = 0; i <  items.length; i++) {
+			        let item = items[i];
+			        if(values.includes(item.weekid)){
+						list.push(item.weekid);
+			            this.$set(item,'checked',true);
+			        }else{
+			            this.$set(item,'checked',false);
+			        }
+			    }
+				_self.week_dataIDList = list;
 			},
-			show(){
-			//if(this.plan_id == 0 ) return;  //考虑添加功能,允许等于0
-				let ret = uni.getStorageSync(this.USERS_KEY);
+			bindTimeChange: function(e) {
+			    _self.p_time = e.target.value;
+			},
+			show(){			  
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.plan_id
+					id:_self.plan_id
 				};
-				if(this.plan_id == 0) this.btntxt="添加"; else this.btntxt = '修改';
-				this.getData(data);
+				if(_self.plan_id == 0){
+					_self.btntxt="添加"; 
+					_self.week_dataList = [					
+						{"weektext":'一',"weekid":'1'},
+						{"weektext":'二',"weekid":'2'},
+						{"weektext":'三',"weekid":'3'},
+						{"weektext":'四',"weekid":'4'},
+						{"weektext":'五',"weekid":'5'},
+						{"weektext":'六',"weekid":'6'},
+						{"weektext":'日',"weekid":'0'},
+					];
+				}
+				else{
+					_self.btntxt = '修改';
+					_self.week_dataList = ['周一','周二','周三','周四','周五','周六','周日'];
+					_self.week_dataIDList = ['1','2','3','4','5','6','0'];
+					
+				}
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.ShowChildPlanUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
-							"guid": data.guid,
-							"token":data.token,
-							"id":data.id,
-							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						   if(res.data){
+				this.sendRequest({
+				       url : this.ShowChildPlanUrl,
+				       method : "post",
+				       data : {
+						  "guid": data.guid,
+						  "token":data.token,
+						  "id":data.id,
+						  "t":Math.random()
+					   },
+				       hideLoading : true,
+				       success:function (res) {
+						if(res){
 							   //所有孩子
-							   var childlist = res.data.childlist;
+							   var childlist = res.childlist;
 							   var list = [];
 							   var idlist = [];
 							   list.push("==请选择==");
@@ -167,12 +203,12 @@
 									list.push(item.child_name);
 									idlist.push(item.child_id);
 							   }								
-							   this.child_dataList = list;
-							   this.child_dataIDList = idlist;
+							   _self.child_dataList = list;
+							   _self.child_dataIDList = idlist;
 							   
 							   //所有课程
 							   //debugger;
-							   var courselist = res.data.courselist;
+							   var courselist = res.courselist;
 							   list = [];
 							   idlist = [];
 							   list.push("==请选择==");
@@ -182,98 +218,108 @@
 									list.push(item.c_name);
 									idlist.push(item.c_id);
 							   }								
-							   this.course_dataList = list;
-							   this.course_dataIDList = idlist;
+							   _self.course_dataList = list;
+							   _self.course_dataIDList = idlist;
 							   
 							   
-							    								
-								if(parseInt(res.data.status)==3){
+							    
+							   if(parseInt(res.status) == 3){
+									var planlist = res.planlist; 
+									_self.child_id = planlist.child_id;
+									var j = _self.child_dataIDList.findIndex(i => i == _self.child_id);
+									_self.child_index = j;
 									
-									var planlist = res.data.planlist; 
-									this.child_id = planlist.child_id;
-									var j = this.child_dataIDList.findIndex(i => i == this.child_id);
-									this.child_index = j;
+									_self.course_id = planlist.c_id;
+									j = _self.course_dataIDList.findIndex(i => i == _self.course_id);
+									_self.course_index = j;
 									
-									this.course_id = planlist.c_id;
-									j = this.course_dataIDList.findIndex(i => i == this.course_id);
-									this.course_index = j;
+									_self.week_id = planlist.p_week;
+									j = _self.week_dataIDList.findIndex(i => i == _self.week_id);
+									_self.week_index = j;
 									
-									this.week_id = planlist.p_week;
-									j = this.week_dataIDList.findIndex(i => i == this.week_id);
-									this.week_index = j;
-									
-									this.p_time = planlist.p_time;
-									this.p_id = planlist.p_id;
-									this.p_num = planlist.p_num.toString();
-									this.p_numed = planlist.p_numed.toString();
+									_self.p_time = planlist.p_time;
+									_self.p_id = planlist.p_id;
+									_self.p_num = planlist.p_num.toString();
+									_self.p_numed = planlist.p_numed.toString();
 									
 								}
 							}
-						}
-					})
+						
+				       }
+				   },"1","");
 			},
 			ChildPickerChange: function(e) {
-			    console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.child_dataList[e.target.value] + this.child_dataIDList[e.target.value]);
-				this.child_id = this.child_dataIDList[e.target.value];
-				this.child_index = e.target.value;
+			    console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.child_dataList[e.target.value] + _self.child_dataIDList[e.target.value]);
+				_self.child_id = _self.child_dataIDList[e.target.value];
+				_self.child_index = e.target.value;
 			},
 			CoursePickerChange:function(e){
-				console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.course_dataList[e.target.value] + this.course_dataIDList[e.target.value]);
-				this.course_id = this.course_dataIDList[e.target.value];
-				this.course_index = e.target.value;
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.course_dataList[e.target.value] + _self.course_dataIDList[e.target.value]);
+				_self.course_id = _self.course_dataIDList[e.target.value];
+				_self.course_index = e.target.value;
 			},
 			WeekPickerChange:function(e){
-				console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.week_dataList[e.target.value] + this.week_dataIDList[e.target.value]);
-				this.week_id = this.week_dataIDList[e.target.value];
-				this.week_index = e.target.value;
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.week_dataList[e.target.value] + _self.week_dataIDList[e.target.value]);
+				_self.week_id = _self.week_dataIDList[e.target.value];
+				_self.week_index = e.target.value;
 			},
 			bindmodify(){
-				let that = this;
-				if(that.child_id == 0){
+				if(_self.child_id == 0){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请选择孩子'
 					});
 					return;
 				}
-			    if(that.course_id == 0){
+			    if(_self.course_id == 0){
 			    	uni.showToast({
 			    	    icon: 'none',
 			    	    title: '请选择课程'
 			    	});
 					return;
 			    }
-				if(that.week_id == -1){
-			    	uni.showToast({
-			    	    icon: 'none',
-			    	    title: '请选择周几'
-			    	});
-					return;
-			    }
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				if(_self.plan_id  == 0){
+					if(_self.week_dataIDList.length == 0){
+						uni.showToast({
+							icon: 'none',
+							title: '请选择周几'
+						});
+						return;
+					}
+					_self.week_id = _self.week_dataIDList;
+				}else{
+					if(_self.week_id == -1){
+						uni.showToast({
+						    icon: 'none',
+						    title: '请选择周几'
+						});
+						return;
+					}
+				}
+				
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				uni.request({
-					url: that.ModifyChildPlanUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				
+				this.sendRequest({
+				    url : this.ModifyChildPlanUrl,
+				    method : "post",
+				    data : {
 						"guid": ret.guid,
 						"token": ret.token,
-						"id": this.plan_id,
-						"child_id": this.child_id,
-						"course_id":this.course_id,
-						"week_id":this.week_id,
-						"p_time":this.p_time,
-						"p_num":this.p_num,
-						"p_numed":this.p_numed,
+						"id": _self.plan_id,
+						"child_id": _self.child_id,
+						"course_id":_self.course_id,
+						"week_id":_self.week_id,
+						"p_time":_self.p_time,
+						"p_num":_self.p_num,
+						"p_numed":_self.p_numed,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						let status = res.data.status;
+					},
+				    hideLoading : true,
+				    success:function (res) {
+						let status = res.status;
 						status = parseInt(status);
 						let str = '';
 						switch(status){
@@ -286,34 +332,35 @@
 								break;
 							}
 							case 3:{
-								if(this.plan_id == 0){
+								if(_self.plan_id == 0){
 									str = '添加成功';
-									this.child_id = 0;
-									this.course_id = 0;
-									this.week_id = 0;
-									this.child_index = 0;
-									this.course_index = 0;
-									this.week_index = 0;
-									this.p_time = "12:00";
-									this.p_num = '';
-									this.p_numed = '';
+									_self.child_id = 0;
+									_self.course_id = 0;
+									_self.week_id = 0;
+									_self.child_index = 0;
+									_self.course_index = 0;
+									_self.week_index = 0;
+									_self.p_time = "12:00";
+									_self.p_num = '';
+									_self.p_numed = '';
+									
+									
+									
 								}else{
 									str = '修改成功';
-									//this.show();
-	;							}
-								
+									//_self.show();
+								}
 								break;
-							}							
+							}												
 						}
 						uni.showToast({
 							title: str,
 							icon: 'none',
 							duration:2000
 						});
-						
-						
-					}
-			    });	
+				    }
+				},"1","");
+				
 		    }
 		}
     }
@@ -390,7 +437,6 @@
 		background:url(../../../static/img/mail.png) no-repeat;	
 		width:53%;
 		float: left;
-		/* border:1px solid #ff0000; */
 	}
 	
 	.register-input-password{
@@ -435,5 +481,17 @@
 	}
 	.btn-row{
 		margin-bottom: 60upx;
+	}
+	.weeks{
+		font-size: 30upx;
+		text-align: left;
+		height: 120upx;
+		border:0upx;
+	}	
+	.weeklist{
+		height: 110upx;
+	}
+	.weeks label{
+		margin-right: 15upx;
 	}
 </style> 
