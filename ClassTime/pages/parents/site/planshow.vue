@@ -342,9 +342,7 @@
 									_self.week_index = 0;
 									_self.p_time = "12:00";
 									_self.p_num = '';
-									_self.p_numed = '';
-									
-									
+									_self.p_numed = '';				
 									
 								}else{
 									str = '修改成功';
@@ -353,10 +351,23 @@
 								break;
 							}												
 						}
-						uni.showToast({
+						/* uni.showToast({
 							title: str,
 							icon: 'none',
 							duration:2000
+						}); */
+						uni.showModal({
+						    title: str,
+						    content: '请选择返回的页面',
+							cancelText:'留在本页',
+							confirmText:'返回前页',
+						    success: function (res) {
+						        if (res.confirm) {
+									_self.navigateTo('plan');
+						        } else if (res.cancel) {
+						            _self.navigateTo('planshow?id='+_self.plan_id);
+						        }
+						    }
 						});
 				    }
 				},"1","");
