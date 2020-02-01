@@ -97,13 +97,13 @@
 					});
 					return;
 				}
-				if(!service.checkNull(_self.organname)){
+				/* if(!service.checkNull(_self.organname)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '机构名不能为空'
 					});
 					return;
-				}
+				} */
 				if(_self.c_order == "" || _self.c_order == undefined){
 					_self.c_order = 1;
 				}else{
