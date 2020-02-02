@@ -7,6 +7,7 @@
 				<uni-list-item title="课程设置"   thumb="../../../static/img/couse.png" @tap="bindCourse" />
 				<uni-list-item title="孩子管理" thumb="../../../static/img/userHL.png" @tap="bindChild" />
 				<uni-list-item title="上课计划" thumb="../../../static/img/plan.png" @tap="bindPlan" />
+				<uni-list-item title="查找机构" thumb="../../../static/img/company.png" @tap="bindcompany" />
 			</uni-list>
 		</view>
 		<view class="footer">
@@ -49,7 +50,10 @@
 			},
 			bindPlan:function(){
 				this.navigateTo('plan');
-			}			
+			},
+			bindcompany:function(){
+				this.navigateTo('/pages/index/index/search');
+			}
 		}
 	}
 </script>

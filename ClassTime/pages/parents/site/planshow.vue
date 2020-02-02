@@ -47,6 +47,14 @@
 			</view>
 			<view class="register_account_input">
 			    <view class="uni-list-cell-left">
+			        每课时间
+			    </view>
+				<view class="cell-right">
+					<m-input class="m-input" type="text" clearable  v-model="p_pertime" placeholder="每节课时间(分)"></m-input>	
+				</view>
+			</view>
+			<view class="register_account_input">
+			    <view class="uni-list-cell-left">
 			        总节数
 			    </view>
 				<view class="cell-right">
@@ -104,6 +112,7 @@
 				plan_id:0,
 				p_num:'',
 				p_numed:'',
+				p_pertime:'',
 				
 				child_id:0,	
 				child_index:0,
@@ -244,7 +253,7 @@
 									_self.p_id = planlist.p_id;
 									_self.p_num = planlist.p_num.toString();
 									_self.p_numed = planlist.p_numed.toString();
-									
+									_self.p_pertime = planlist.p_pertime.toString();
 								}
 							}
 						
@@ -318,6 +327,7 @@
 						"p_time":_self.p_time,
 						"p_num":_self.p_num,
 						"p_numed":_self.p_numed,
+						"p_pertime":_self.p_pertime,
 						"t":Math.random()
 					},
 				    hideLoading : true,

@@ -16,16 +16,14 @@
 						<uni-collapse>					
 						    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :index="index" :key="item.child_id" :open="true" :show-arrow="false" :thumb="'../../../static/img/'+(item.sex == '1'?'p_boy.png':'p_gril.png')" :showAnimation="true" class="classlist"  >
 								<uni-list>
-									<uni-list-item v-for="(item2,index2) in item.courselist" :index="index2" :key="item2.cat_id" :show-arrow="false" :title="'【' + item2.c_name + '】--'+item2.organname+'--'+item2.c_address">
-										<view class="statuslist">{{item2.p_time}}</view>
+									<uni-list-item v-for="(item2,index2) in item.courselist" :index="index2" :key="item2.cat_id" :show-arrow="false" :title="'【' + item2.c_name + '】--'+item2.organname+'--'+item2.c_address" :show-badge="true" :badge-text="item2.p_time" :show-extra-icon="item2.class_status" :extra-icon="extra1">
 									</uni-list-item>
+									
 								</uni-list>	
 						    </uni-collapse-item>
 						</uni-collapse>
 					</view>
 				</view>
-				
-				
 		</view>
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
@@ -52,6 +50,17 @@
 			footerNav,
 			headerNav
 		},
+		data(){
+			return{
+				dataList:[],	
+				headermsg:'今日提醒,Remind today',
+				footer: 'family',
+				currenttime:'',
+				extra1:{
+					color: '#F00',size: '15',type: 'spinner'
+				}
+			}
+		},
 		onLoad(){
 			this.checkLogin();
 		},
@@ -61,15 +70,31 @@
 			this.currenttime = str;
 			this.getData();
 		},
-		data(){
-			return{
-				dataList:[],	
-				headermsg:'今日提醒,Remind today',
-				footer: 'family',
-				currenttime:''
-			}
-		},
+		created() {
+		    //this.currentTime();    
+	    },		
 		methods: {
+			 // 销毁定时器
+			beforeDestroy: function() {
+			    if (this.getDate) {
+			        console.log("销毁定时器")
+			        clearInterval(this.getDate); // 在Vue实例销毁前，清除时间定时器
+			    }
+			},
+			currentTime(){
+			    setInterval(this.getTime,60000);
+			},
+			getTime:function(){
+			      /* var _this = this;
+			      let yy = new Date().getFullYear();
+			      let mm = new Date().getMonth()+1;
+			      let dd = new Date().getDate();
+			      let hh = new Date().getHours();
+			      let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
+			      let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
+			      _this.gettime = hh+':'+mf; */
+				  this.getData();
+			},
 			getData() {
 				let ret = uni.getStorageSync(this.USERS_KEY);
 				uni.request({
@@ -82,7 +107,6 @@
 				    },
 				    method: "get",
 					success: (res) => {
-						//debugger;
 						var data = res.data.list;
 						switch(parseInt(res.data.status)){
 							case 1:{
