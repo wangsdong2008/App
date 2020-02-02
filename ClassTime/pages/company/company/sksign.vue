@@ -4,12 +4,12 @@
 		<view class="center100 content">	
 				<view class="studentlist">
 					<checkbox-group  @change="checkboxChange"> 
-					<uni-list v-for="(item,index) in dataList">
+					<uni-list v-for="(item,index) in dataList" :index="index" :key="item.com_id">
 						<uni-list-item v-if="parseInt(item.category_num) > 0" class="list-title" :title="item.com_name" :show-arrow="false" :show-badge="true" thumb="../../../static/img/school.png" ></uni-list-item>
 						<uni-list-item :show-arrow="false" :show-badge="true">
-							<uni-list v-if="parseInt(item2.students_num) > 0" v-for="(item2,index2) in item.categorylist"> 
+							<uni-list v-if="parseInt(item2.students_num) > 0" v-for="(item2,index2) in item.categorylist" :index="index2" :key="item2.cat_id"> 
 								<uni-list-item class="list-title2" :show-arrow="false" :show-badge="true" :title="'【'+item2.cat_name+'】'"  thumb="../../../static/img/course.png"></uni-list-item>
-								<uni-list-item v-for="(item3,index3) in item2.studentslist" :show-arrow="false" :show-badge="true" :scroll-y="true">
+								<uni-list-item v-for="(item3,index3) in item2.studentslist" :index="index3" :key="item3.uid" :show-arrow="false" :show-badge="true" :scroll-y="true">
 									<view>
 										<label class="checkbox">
 											<checkbox :value="item.com_id.toString()+'-'+item2.cat_id.toString()+'-'+item3.uid.toString()" :checked="ulist.indexOf(item.com_id+'-'+item2.cat_id+'-'+item3.uid)>=0" />
@@ -30,10 +30,10 @@
 									<checkbox value="1" :checked="isCheckedAll"/>全选
 								</label>
 							</view>							
-							<button type="primary" @tap="bindclick(1)" v-if="parseInt(this.dataList_num ) > 0">签到</button>
-							<button type="primary" @tap="bindclick(2)" v-if="parseInt(this.dataList_num ) > 0">请假</button>
-							<button type="primary" disabled="false" v-if="parseInt(this.dataList_num ) == 0">签到</button>
-							<button type="primary" disabled="true" v-if="parseInt(this.dataList_num ) == 0">请假</button>
+							<button type="primary" @tap="bindclick(1)" v-if="parseInt(_self.dataList_num ) > 0">签到</button>
+							<button type="primary" @tap="bindclick(2)" v-if="parseInt(_self.dataList_num ) > 0">请假</button>
+							<button type="primary" disabled="false" v-if="parseInt(_self.dataList_num ) == 0">签到</button>
+							<button type="primary" disabled="true" v-if="parseInt(_self.dataList_num ) == 0">请假</button>
 							
 						</checkbox-group> 
 					  </view>
@@ -50,7 +50,7 @@
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import headerNav from "@/components/header/company_header.vue"
-
+	var _self;
 	export default {
 	    components: {uniList,uniListItem,uniGrid,uniGridItem,headerNav},
 		data(){
@@ -64,14 +64,15 @@
 			}
 		},
 		onReady:function(){
-			this.show();
+			_self.show();
 		},
 		onLoad:function() {
-			this.checkLogin();			
+			_self = this;
+			_self.checkLogin();			
 		},
 		methods: {
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);				
+				let ret = _self.getUserInfo();				
 				if(!ret){
 					return false;
 				}
@@ -79,29 +80,22 @@
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetCurrentStudents,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				_self.sendRequest({
+				    url : _self.GetCurrentStudents,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.list; 
-							if(parseInt(res.data.status)==0){
-								uni.showToast({
-									title: '无数据1',
-									icon: 'none',
-								});		
-							}else{	
+					},
+				    hideLoading : true,
+				    success:function (res) {
+						if(res){
+					    	var data = res.list; 
+							if(parseInt(res.status) == 3){
 								if(data.length > 0){
 									let list = [];
 									let str = '';
@@ -120,51 +114,52 @@
 										}								
 										
 									}								
-									this.dataList = list;
-									this.dataList_num = num;
+									_self.dataList = list;
+									_self.dataList_num = num;
 									if(str != ''){
 										str = str.substr(0,str.length-1);
 									}
 								}
-							}					    	
+							}			    	
 					    }
-					}
-				})
+					
+				    }
+				},"1","");
 			},
 			bindSelectAll:function(){
 				//debugger;
 				let str = ''
-				this.isCheckedAll = !this.isCheckedAll
-				if (this.isCheckedAll) {
+				_self.isCheckedAll = !_self.isCheckedAll
+				if (_self.isCheckedAll) {
 					// 全选时
-					this.ulist = [];					
-				    this.dataList.forEach(function (item) {						
+					_self.ulist = [];					
+				    _self.dataList.forEach(function (item) {						
 						var categorylist = item.categorylist;
 						for(var j = 0; j < categorylist.length; j++ ){
 							var studentslist = categorylist[j].studentslist;
 							for(var k = 0; k < studentslist.length; k++){
 								var value = item.com_id + '-' + categorylist[j].cat_id + '-' + studentslist[k].uid;
 								str += value + ",";
-								this.ulist.push(value);
+								_self.ulist.push(value);
 							}
 						}
-					}, this);				  
+					}, _self);				  
 				} else {
-				  this.ulist = [];
+				  _self.ulist = [];
 				}
 				if(str != ''){
 					str = str.substr(0,str.length-1);					
 				}
-				this.selectid = str;
+				_self.selectid = str;
 			},
 			checkboxChange: function (e) {
-				var items = this.dataList;
+				var items = _self.dataList;
 				var	values = e.detail.value;
 				var str = '';
 				var num = 0;				
 				let companylist = items;
 				//debugger;
-				this.ulist = [];
+				_self.ulist = [];
 				for (var i = 0; i < companylist.length; i++) {
 					let item = companylist[i];
 					let categorylist = item.categorylist;
@@ -175,7 +170,7 @@
 							if(values.includes(value)){
 								str = values + ",";	
 								num ++;
-								this.ulist.push(value);
+								_self.ulist.push(value);
 							}
 						}
 					}
@@ -183,20 +178,20 @@
 				if(str != ''){
 					str = str.substr(0,str.length-1);					
 				}
-				if(this.ulist.length == 0){
-					this.isCheckedAll = false;
+				if(_self.ulist.length == 0){
+					_self.isCheckedAll = false;
 				}else{
-					if(num == this.dataList_num){
-						this.isCheckedAll = true;
+					if(num == _self.dataList_num){
+						_self.isCheckedAll = true;
 					}else{
-						this.isCheckedAll = false;
+						_self.isCheckedAll = false;
 					}
 				}
-				this.selectid = str;
+				_self.selectid = str;
 				
 			},			
 			bindclick(sid){
-				if( this.selectid.toString() == '') {
+				if( _self.selectid.toString() == '') {
 					uni.showToast({
 						title: '请选择学生',
 						icon: 'none'
@@ -204,7 +199,7 @@
 					return false;
 				}
 				//调用签到函数
-				this.setSign(1,sid,this.selectid.toString(),'sksign');
+				_self.setSign(1,sid,_self.selectid.toString(),'sksign');
 			}
 		}
 	}
@@ -217,6 +212,7 @@
 		border-top:2px solid #eeeeee;
 		padding-top: 40upx;
 		width: 100%;
+		height:140upx;
 	}
 	.btnlist button{
 		float: left;
@@ -226,6 +222,7 @@
 	.btnlist view{
 		float: left;
 		width: 20%;
+		margin-left: 20upx;
 	}
 	.item-active{
 		background-color: #66ccff;

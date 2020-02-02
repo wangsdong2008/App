@@ -10,7 +10,7 @@
 						
 					</view>
 					<view class="btn">
-						<button type="primary" class="primary" @tap="bindsearch">搜索</button>
+						<button type="primary" class="primary" @tap="bindsearch">搜机构</button>
 					</view>
 					
 				</view>

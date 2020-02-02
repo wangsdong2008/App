@@ -21,6 +21,7 @@
 	import headerNav from "@/components/header/company_header.vue"
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
+	var _self = _self;
 	
 	export default {
 	    components: {
@@ -39,74 +40,73 @@
 			}
 		},
 		onLoad(options){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 			if(options == undefined) return false;
-			this.id = options['id']; //id=1为上课统计
-			this.cid = options['cid'];  //课程id
-			this.uid = options['uid']; //学生
-			this.d = options['d']; //日期
-			switch(parseInt(this.id)){
+			_self.id = options['id']; //id=1为上课统计
+			_self.cid = options['cid'];  //课程id
+			_self.uid = options['uid']; //学生
+			_self.d = options['d']; //日期
+			switch(parseInt(_self.id)){
 				case 1:{
-					this.headermsg = '上课统计,Statistics';
+					_self.headermsg = '上课统计,Statistics';
 					break;
 				}
 				case 2:{
-					this.headermsg = '吃饭统计,Statistics';
+					_self.headermsg = '吃饭统计,Statistics';
 					break;
 				}
 				case 3:{
-					this.headermsg = '员工统计,Statistics';
+					_self.headermsg = '员工统计,Statistics';
 					break;
 				}
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		methods:{
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetStudentssign,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"uid":this.uid,
-						"cid":this.cid,
-						"d":this.d,
-						"id":this.id,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){					    	
-							if(parseInt(res.data.status) == 3){								
-								this.cat_name = res.data.categorylist.cat_name;
-								var data = res.data;
-								if(parseInt(res.data.status) == 3){
-									//所有签到记录
-									let list = [];
-									let signlist = data['signlist'];
-									for (var i = 0; i < signlist.length; i++) {
-										var item = signlist[i];									
-										list.push(item);
-									}									
-									this.selected = list;
-								}								
-							}			    	
-					    }
-					}
-				})
+				this.sendRequest({
+				        url : this.GetStudentssign,
+				        method : "post",
+				        data : {
+							"guid": data.guid,
+							"token":data.token,
+							"uid":_self.uid,
+							"cid":_self.cid,
+							"d":_self.d,
+							"id":_self.id,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    if(res){					    	
+				        			if(parseInt(res.status) == 3){								
+				        				_self.cat_name = res.categorylist.cat_name;
+				        				var data = res;
+				        				if(parseInt(res.status) == 3){
+				        					//所有签到记录
+				        					let list = [];
+				        					let signlist = data['signlist'];
+				        					for (var i = 0; i < signlist.length; i++) {
+				        						var item = signlist[i];									
+				        						list.push(item);
+				        					}									
+				        					_self.selected = list;
+				        				}								
+				        			}			    	
+				        	    }
+				        	}				        
+				    },"1","");
 			}	
 			
 		}

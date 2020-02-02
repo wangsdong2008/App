@@ -33,6 +33,7 @@
 	import service from '@/service.js';
 	import mInput from '@/components/m-input.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	var _self = this;
 	import {
 	    mapState,
 	    mapMutations
@@ -77,59 +78,58 @@
 			}
 		},
 		onLoad(options){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 			var pid = options['id'];
 			 if(pid == '') pid = 1;
-			this.id =  pid;
+			_self.id =  pid;
 			switch(parseInt(pid)){
 				case 1:{
-					this.headermsg = '上课统计,Statistics';
+					_self.headermsg = '上课统计,Statistics';
 					break;
 				}
 				case 2:{
-					this.headermsg = '吃饭统计,Statistics';
+					_self.headermsg = '吃饭统计,Statistics';
 					break;
 				}
 				case 3:{
-					this.headermsg = '员工统计,Statistics';
+					_self.headermsg = '员工统计,Statistics';
 					break;
 				}
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		methods:{
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			bindclick(){
-				var uid = this.cid;
-				var d = this.dateid;
-				this.navigateTo('statisticsresult?uid='+uid+"&d="+d+"&cid="+this.c_id+"&id="+this.id);
+				var uid = _self.cid;
+				var d = _self.dateid;
+				_self.navigateTo('statisticsresult?uid='+uid+"&d="+d+"&cid="+_self.c_id+"&id="+_self.id);
 			},
 			getData(data){
 				let data1 = data;
-				uni.request({
-					url: this.GetAllStudents,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				this.sendRequest({
+					url : this.GetAllStudents,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.studentslist; 
-							if(parseInt(res.data.status) == 0){
+					},
+				    hideLoading : true,
+				    success: (res) => {
+						if(res){
+							var data = res.studentslist; 
+							if(parseInt(res.status) == 0){
 								uni.showToast({
 									title: '无数据1',
 									icon: 'none',
@@ -146,97 +146,95 @@
 										uid = item.uid;
 									}
 								}								
-								this.dataList = list;
-								this.dataIDList = idlist;
-								if(this.id == 1){
+								_self.dataList = list;
+								_self.dataIDList = idlist;
+								if(_self.id == 1){
 									if(uid > 0){
 										data1['uid'] = uid;
-										this.getStudentsCategory(data1);
+										_self.getStudentsCategory(data1);
 									}
-								}
+								}							
 								
-								/* list = [];
-								var dlist = res.data.datelist;
-								for(var i = dlist.length-1; i > 0; i--){
-									var item = dlist[i];
-									list.push(item.d);
-								} */
-								this.dateList = this.GetStudyMonth();
-								this.cid = this.dataIDList[0];
-								this.dateid = this.dateList[0];
+								_self.dateList = _self.GetStudyMonth();
+								_self.cid = _self.dataIDList[0];
+								_self.dateid = _self.dateList[0];
 							}					    	
-					    }
-					}
-				})
+						}	    
+				    }
+				    
+				},"1","");
+				
+				
 			},
 			getStudentsCategory:function(data){	
-				var id = this.id;
-				uni.request({
-					url: this.GetStudentsCategory,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				var id = _self.id;
+				this.sendRequest({
+					url : this.GetStudentsCategory,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
-						"id":this.id,
+						"id":_self.id,
 						"uid":data.uid,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-							var data = res.data.categorylist;
-							if(parseInt(res.data.status) == 3){
-								let list = [];
-								let idlist = [];
-								let catid = 0;
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];									
-									list.push(item.cat_name);
-									idlist.push(item.cat_id);
-									if(i == 0){
-										catid = item.cat_id;
-									}
-								}
-								this.c_id = catid;
-								this.cList = list;
-								this.cIDList = idlist;
-							}else{
-								uni.showToast({
-									title: '无数据2',
-									icon: 'none',
-								});	
-							}
-						}
 					},
-				});
+				    hideLoading : true,
+				    success: (res) => {
+				    	    if(res){
+				    			var data = res.categorylist;
+				    			if(parseInt(res.status) == 3){
+				    				let list = [];
+				    				let idlist = [];
+				    				let catid = 0;
+				    				for (var i = 0; i < data.length; i++) {
+				    					var item = data[i];									
+				    					list.push(item.cat_name);
+				    					idlist.push(item.cat_id);
+				    					if(i == 0){
+				    						catid = item.cat_id;
+				    					}
+				    				}
+				    				_self.c_id = catid;
+				    				_self.cList = list;
+				    				_self.cIDList = idlist;
+				    			}else{
+				    				uni.showToast({
+				    					title: '无数据2',
+				    					icon: 'none',
+				    				});	
+				    			}
+				    		}
+				    	},
+				    
+				},"1","");
+				
+				
 			},
 			pickerChange: function(e) {
-			    console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.dataList[e.target.value] + this.dataIDList[e.target.value]);
-				this.cid = this.dataIDList[e.target.value];
-				this.index = e.target.value;
-				//this.navigateTo('statisticsresult?id='+this.cid);
-				let ret = this.getUserInfo();
+			    console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.dataList[e.target.value] + _self.dataIDList[e.target.value]);
+				_self.cid = _self.dataIDList[e.target.value];
+				_self.index = e.target.value;
+				//_self.navigateTo('statisticsresult?id='+_self.cid);
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					uid:this.dataIDList[e.target.value]
+					uid:_self.dataIDList[e.target.value]
 				};
-				if(this.id == 1){
-					this.getStudentsCategory(data);
+				if(_self.id == 1){
+					_self.getStudentsCategory(data);
 				}
 				
 			},
 			pickerDateChange:function(e){
-				//console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.dateList[e.target.value]);
-				this.dateid = this.dateList[e.target.value];
-				this.dindex = e.target.value; 
+				//console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.dateList[e.target.value]);
+				_self.dateid = _self.dateList[e.target.value];
+				_self.dindex = e.target.value; 
 			},
 			pickerCourseChange:function(e){
-				console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.cList[e.target.value] + this.cIDList[e.target.value]);
-				this.c_id = this.cIDList[e.target.value];
-				this.cindex = e.target.value; 
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
+				_self.c_id = _self.cIDList[e.target.value];
+				_self.cindex = e.target.value; 
 			}
 			
 		}

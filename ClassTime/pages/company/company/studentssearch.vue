@@ -20,6 +20,7 @@
 	import service from '@/service.js';
 	import mInput from '@/components/m-input.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	import {
 	    mapState,
 	    mapMutations
@@ -38,60 +39,60 @@
 			}
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady(){			
-			this.show();
+			_self.show();
 		},
 		methods:{
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetAllStudents,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.studentslist; 
-							if(parseInt(res.data.status) == 0){
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});		
-							}else{	
-								let list = [];
-								let idlist = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];									
-									list.push(item.uname);
-									idlist.push(item.uid);
-								}								
-								this.dataList = list;
-								this.dataIDList = idlist;
-							}					    	
-					    }
-					}
-				})
+				this.sendRequest({
+					url : this.GetAllStudents,
+					    method : "post",
+					    data : {
+							"guid": data.guid,
+							"token":data.token,
+							"t":Math.random()
+						},
+					    hideLoading : true,
+					    success: (res) => {
+					    	    if(res){
+					    	    	var data = res.studentslist; 
+					    			if(parseInt(res.status) == 0){
+					    				uni.showToast({
+					    					title: '无数据',
+					    					icon: 'none',
+					    				});		
+					    			}else{	
+					    				let list = [];
+					    				let idlist = [];
+					    				for (var i = 0; i < data.length; i++) {
+					    					var item = data[i];									
+					    					list.push(item.uname);
+					    					idlist.push(item.uid);
+					    				}								
+					    				_self.dataList = list;
+					    				_self.dataIDList = idlist;
+					    			}					    	
+					    	    }
+					    	}
+					    
+					},"1","");
 			},
 			pickerChange: function(e) {
-			    //console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.dataList[e.target.value] + this.dataIDList[e.target.value]);
-				this.cid = this.dataIDList[e.target.value];
-				this.index = e.target.value;
-				this.navigateTo('studentsshow?id='+this.cid);
+			    //console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.dataList[e.target.value] + _self.dataIDList[e.target.value]);
+				_self.cid = _self.dataIDList[e.target.value];
+				_self.index = e.target.value;
+				_self.navigateTo('studentsshow?id='+_self.cid);
 				
 			}			
 			

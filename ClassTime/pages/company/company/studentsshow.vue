@@ -92,6 +92,7 @@
 	import service from '@/service.js';
 	import mInput from '@/components/m-input.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	import {
 	    mapState,
 	    mapMutations
@@ -113,28 +114,29 @@
 			}
 		},
 		onLoad:function(options){
-			this.checkLogin();	
+			_self = this;
+			_self.checkLogin();	
 			var sid = options['id'];
 			if(sid == undefined) sid = 0;
-			this.id = sid;
+			_self.id = sid;
 		},
 		onReady:function(){
-			this.show();
+			_self.show();
 		},
 		methods:{
 			show(){				
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					uid:this.id
+					uid:_self.id
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			callphone(){
 			 	uni.makePhoneCall({
 					// 手机号
-					phoneNumber:this.mtel,
+					phoneNumber:_self.mtel,
 					// 成功回调
 					success: (res) => {
 						console.log('调用成功!')	
@@ -146,49 +148,44 @@
 				 });
 			},
 			getData(data){
-				uni.request({
-					url: this.GetStudentsDetail,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+				this.sendRequest({
+					url : this.GetStudentsDetail,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
 						"id":data.uid,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.studentslist; 
-							if(parseInt(res.data.status) == 3){
-								this.dataList = data;
-								this.mtel = data['mtel'];
-								
-								this.school_name = data['schoolinfo']['school_name'];
-								this.grade_name = data['gradeinfo']['grade_name'] + data['classinfo']['class_name'];
-								
-								//所有课程
-								let list = [];
-								let course_data = data['CourseInfo'];
-								for (var i = 0; i < course_data.length; i++) {
-									var item = course_data[i];									
-									list.push(item);
-								}								
-								this.courseList = list;
-								
-								
-							}else{
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});
-							}					    	
-					    }
-					}
-				})
+					},
+				    hideLoading : true,
+				    success: (res) => {
+				   	    if(res){
+				   	    	var data = res.studentslist; 
+				   			if(parseInt(res.status) == 3){
+				   				_self.dataList = data;
+				   				_self.mtel = data['mtel'];
+				   				
+				   				_self.school_name = data['schoolinfo']['school_name'];
+				   				_self.grade_name = data['gradeinfo']['grade_name'] + data['classinfo']['class_name'];
+				   				
+				   				//所有课程
+				   				let list = [];
+				   				let course_data = data['CourseInfo'];
+				   				for (var i = 0; i < course_data.length; i++) {
+				   					var item = course_data[i];									
+				   					list.push(item);
+				   				}								
+				   				_self.courseList = list;				   				
+				   			}else{
+				   				uni.showToast({
+				   					title: '无数据',
+				   					icon: 'none',
+				   				});
+				   			}					    	
+				   	    }
+				   	}
+				},"1","");				
 			}
-			
 		}
 	}
 	

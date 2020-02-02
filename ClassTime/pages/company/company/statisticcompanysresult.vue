@@ -3,7 +3,7 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<uni-section :title="cat_name" type="line"></uni-section>
-			<uni-list v-for="(item,index) in dataList">
+			<uni-list v-for="(item,index) in dataList" :index="index" :key="item.date">
 				<uni-list-item :title="item.date" :show-badge="true" :badge-text="item.num.toString()" :show-arrow="false"></uni-list-item>
 			</uni-list>
 		</view>
@@ -17,6 +17,7 @@
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from "@/components/uni-list/uni-list.vue"
 	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
+	var _self;
 	
 	export default {
 	    components: {
@@ -35,81 +36,81 @@
 			}
 		},
 		onLoad(options){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 			if(options == undefined) return false;
-			this.id = options['id']; //id=1为上课统计
-			this.cid = options['cid'];  //课程id
-			this.comid = options['com_id']; //公司
-			this.d = options['d']; //日期
-			switch(parseInt(this.id)){
+			_self.id = options['id']; //id=1为上课统计
+			_self.cid = options['cid'];  //课程id
+			_self.comid = options['com_id']; //公司
+			_self.d = options['d']; //日期
+			switch(parseInt(_self.id)){
 				case 1:{
-					this.headermsg = '上课统计,Statistics';
+					_self.headermsg = '上课统计,Statistics';
 					break;
 				}
 				case 2:{
-					this.headermsg = '吃饭统计,Statistics';
+					_self.headermsg = '吃饭统计,Statistics';
 					break;
 				}
 				case 3:{
-					this.headermsg = '员工统计,Statistics';
+					_self.headermsg = '员工统计,Statistics';
 					break;
 				}
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		methods:{
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetCompanyStatisticUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"comid":this.comid,
-						"cid":this.cid,
-						"d":this.d,
-						"id":this.id,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){					   
-							//debugger;
-							if(parseInt(res.data.status) == 3){								
-								this.cat_name = res.data.categorylist.cat_name;
-								var data = res.data;
-								if(parseInt(res.data.status) == 3){
-									//所有签到记录
-									let list = [];
-									let signlist = data['signlist'];
-									//debugger;
-									for (var i = 0; i < signlist.length; i++) {
-										var item = signlist[i];									
-										list.push(item);
-									}									
-									this.dataList = list;
-								}								
-							}else{
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});
-							}				    	
-					    }
-					}
-				})
+				this.sendRequest({
+				        url : this.GetCompanyStatisticUrl,
+				        method : "post",
+				        data : {
+							"guid": data.guid,
+							"token":data.token,
+							"comid":_self.comid,
+							"cid":_self.cid,
+							"d":_self.d,
+							"id":_self.id,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    if(res){					   
+				        			//debugger;
+				        			if(parseInt(res.status) == 3){								
+				        				_self.cat_name = res.categorylist.cat_name;
+				        				var data = res;
+				        				if(parseInt(res.status) == 3){
+				        					//所有签到记录
+				        					let list = [];
+				        					let signlist = data['signlist'];
+				        					//debugger;
+				        					for (var i = 0; i < signlist.length; i++) {
+				        						var item = signlist[i];									
+				        						list.push(item);
+				        					}									
+				        					_self.dataList = list;
+				        				}								
+				        			}else{
+				        				uni.showToast({
+				        					title: '无数据',
+				        					icon: 'none',
+				        				});
+				        			}				    	
+				        	    }
+				        	}
+				        
+				    },"1","");				
 			}	
 			
 		}
