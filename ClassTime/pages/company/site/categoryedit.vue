@@ -28,26 +28,28 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			service,
 			headerNav,
 			mInput
 		},
-		onLoad(options){
-			this.checkLogin();
-			this.cat_id = options['id'];
-			if(this.cat_id == undefined){
-				this.cat_id = 0;
+		onLoad(options){	
+			_self = this;
+			_self.checkLogin();
+			_self.cat_id = options['id'];
+			if(_self.cat_id == undefined){
+				_self.cat_id = 0;
 			}
-			if(this.cat_id == 0){
-				this.headermsg = "添加新分类,Category Add";
+			if(_self.cat_id == 0){
+				_self.headermsg = "添加新分类,Category Add";
 			}else{
-				this.headermsg = "分类编辑,Category Edit";
+				_self.headermsg = "分类编辑,Category Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -66,166 +68,165 @@
 		},
 		methods:{
 			pickerCompanyChange:function(e){
-				console.log('picker发送选择改变，携带值为', e.target.value+"===="+this.cList[e.target.value] + this.cIDList[e.target.value]);
-				this.com_id = this.cIDList[e.target.value];
-				this.cindex = e.target.value; 
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
+				_self.com_id = _self.cIDList[e.target.value];
+				_self.cindex = e.target.value; 
 			},
 			bindmodify(){
-				let that = this;
-				//debugger;
-				if(!service.checkNull(that.cat_name)){
+				if(!service.checkNull(_self.cat_name)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '分类名称不能为空'
 					});
 					return;
 				}
-				if(that.com_id == 0){
+				if(_self.com_id == 0){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请选择公司'
 					});
 					return;
 				}
-				if(!service.checkNum(that.cat_order)){
+				if(!service.checkNum(_self.cat_order)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请填写顺序'
 					});
 					return;
 				}
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				uni.request({
-					url: that.UpdateCategoryInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,
-						"id": this.cat_id,
-						"name": this.cat_name,
-						"content": this.cat_content,
-						"sorder":this.cat_order,
-						"comid":this.com_id,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						//debugger;
-						let status = res.data.status;
-						let str = '';
-						switch(status){
-							case 0:{
-								str = '数据填写错误';
-								break;
-							}
-							case 2:{
-								str = '分类名已经存在';
-								break;
-							}
-							case 3:{
-								if(that.cat_id > 0){
-									str = '修改成功';
-									that.cat_id = 0;
-									that.cat_name = '';
-									that.cat_order = '';	
-									that.cat_content = '';
-									that.cindex = 0;
-									that.com_id = 0;
-									that.cList = array();
-									that.cIDList = array();
-									this.show();
-								}
-								else{
-									str = '添加成功';
-								}
-								break;
-							}							
-						}
-						
-						uni.showToast({
-							title: str,
-							icon: 'none',
-							duration:2000
-						});	
-						/* if(status == 3){
-							this.navigateTo('category');
-						}*/
-					}
-			    });	
-			
+				this.sendRequest({
+				        url : this.UpdateCategoryInfoUrl,
+				        method : "post",
+				        data : {
+							"guid": ret.guid,
+							"token": ret.token,
+							"id": _self.cat_id,
+							"name": _self.cat_name,
+							"content": _self.cat_content,
+							"sorder":_self.cat_order,
+							"comid":_self.com_id,
+							"t":Math.random()
+						},
+				        hideLoading : false,
+				        success: (res) => {
+				        		let status = res.status;
+				        		let str = '';
+				        		switch(status){
+				        			case 0:{
+				        				str = '数据填写错误';
+				        				break;
+				        			}
+				        			case 2:{
+				        				str = '分类名已经存在';
+				        				break;
+				        			}
+				        			case 3:{
+				        				if(_self.cat_id == 0){
+				        					str = '添加成功';
+				        					_self.cat_id = 0;
+				        					_self.cat_name = '';
+				        					_self.cat_order = '';	
+				        					_self.cat_content = '';
+				        					_self.cindex = 0;
+				        					_self.com_id = 0;
+				        					_self.cList = array();
+				        					_self.cIDList = array();
+				        				}
+				        				else{
+				        					
+											str = '修改成功';
+				        				}
+				        				break;
+				        			}							
+				        		}
+				        		
+				        		uni.showModal({
+									title: str,
+									content: '请选择返回的页面',
+									cancelText:'留在本页',
+									confirmText:'返回前页',
+									success: function (res) {
+										if (res.confirm) {
+											_self.navigateTo('category');
+										} else if (res.cancel) {
+											_self.navigateTo('categoryedit?id='+_self.cat_id);
+										}
+									}
+								});
+				        	}
+				        
+				    },"1","");		
 			},
 			show(){
-				//if(this.cat_id == 0 ) return;  //考虑添加功能,允许等于0
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				//if(_self.cat_id == 0 ) return;  //考虑添加功能,允许等于0
+				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.cat_id
+					id:_self.cat_id
 				};
-				if(this.cat_id == 0) this.btntxt="添加"; else this.btntxt = '修改';
-				this.getData(data);
+				if(_self.cat_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
+				_self.getData(data);
 			},
-			getData(data){
-				uni.request({
-					url: this.GetCategoryInfoUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
+			getData(data){			
+					this.sendRequest({
+				        url : this.GetCategoryInfoUrl,
+				        method : "post",
+				        data : {
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
 							"comid":data.comid,
 							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						    if(res.data){
-								//debugger;
-								
-						    	var data = res.data.subcompanylist; 
-								if(parseInt(res.data.status) == 3){									
-									let list = [];
-									let idlist = [];
-									list.push("==请选择==");
-									idlist.push(0);
-									for (var i = 0; i < data.length; i++) {
-										var item = data[i];									
-										list.push(item.com_name);
-										idlist.push(item.com_id);
-									}								
-									this.cList = list;
-									this.cIDList = idlist;
-									
-									if(this.cat_id > 0){
-										data = res.data.categorylist;									
-										this.cat_name = data.cat_name;									
-										this.cat_order = data.cat_order.toString();
-										this.cat_content = data.cat_content;
-										this.com_id = data.com_id;
-										if(this.cIDList != undefined){
-											this.cindex = this.cIDList.findIndex(i => i == data.com_id);
-										}
-									}
-								}
-								else{
-									uni.showToast({
-										title: '无数据为空',
-										icon: 'none',
-									});		
-									
-								}
-						    }
-						}
-					})
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    if(res){
+				        			//debugger;
+				        			
+				        	    	var data = res.subcompanylist; 
+				        			if(parseInt(res.status) == 3){									
+				        				let list = [];
+				        				let idlist = [];
+				        				list.push("==请选择==");
+				        				idlist.push(0);
+				        				for (var i = 0; i < data.length; i++) {
+				        					var item = data[i];									
+				        					list.push(item.com_name);
+				        					idlist.push(item.com_id);
+				        				}								
+				        				_self.cList = list;
+				        				_self.cIDList = idlist;
+				        				
+				        				if(_self.cat_id > 0){
+				        					data = res.categorylist;									
+				        					_self.cat_name = data.cat_name;									
+				        					_self.cat_order = data.cat_order.toString();
+				        					_self.cat_content = data.cat_content;
+				        					_self.com_id = data.com_id;
+				        					if(_self.cIDList != undefined){
+				        						_self.cindex = _self.cIDList.findIndex(i => i == data.com_id);
+				        					}
+				        				}
+				        			}
+				        			else{
+				        				uni.showToast({
+				        					title: '无数据为空',
+				        					icon: 'none',
+				        				});		
+				        				
+				        			}
+				        	    }
+				        	}
+				        
+				    },"1","");	
 			}
 		}
     }
@@ -252,7 +253,7 @@
 	}
 	
 	.btn-row{
-		margin-top: 40upx;	
+		margin: 40upx 0upx;	
 		padding: 0upx;
 	}
 	

@@ -7,7 +7,7 @@
 			</view>
 			<view>
 				<uni-list>
-					<uni-list-item v-for="(item,index) in dataList" :show-arrow="false" :title="item.com_name" :note="item.com_address" :extra-icon="{color: '#4cd964',size: '45'}">
+					<uni-list-item v-for="(item,index) in dataList" :show-arrow="false" :title="item.com_name" :note="item.com_address" :index="index" :key="item.com_id" >
 						<view class="statuslist"><span @tap="companyedit(item.com_id)">修改</span><span @tap="companydel(item.com_id)">删除</span></view>
 						</uni-list-item>
 				</uni-list>	
@@ -23,6 +23,7 @@
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			uniList,
@@ -30,10 +31,11 @@
 			headerNav,
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -43,13 +45,13 @@
 		},
 		methods:{
 			companyadd(){
-				this.navigateTo('companyedit');
+				_self.navigateTo('companyedit');
 			},
 			companyedit(id){				
-				this.navigateTo('companyedit?id='+id);
+				_self.navigateTo('companyedit?id='+id);
 			},
 			companydel(id){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
@@ -58,42 +60,40 @@
 				    token: ret.token,
 					id:id
 				};
-				this.delData(data);
+				_self.delData(data);
 			},
 			delData(data){
-				uni.request({
-					url: this.DelCompanyInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"id":data.id,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){					    	
-							if(parseInt(res.data.status) == 3){
-								this.show();
-								uni.showToast({
-									title: '删除公司成功',
-									icon: 'none',
-								});	
-							}
-							else{
-								uni.showToast({
-									title: '删除失败，请检查此公司是否删除干净',
-									icon: 'none',
-								});	
-							}
-					    }
-					},
-				});					
+				this.sendRequest({
+				        url : this.DelCompanyInfoUrl,
+				        method : "post",
+				        data : {
+							"guid": data.guid,
+							"token":data.token,
+							"id":data.id,
+							"t":Math.random()
+						},
+				        hideLoading : false,
+				        success: (res) => {
+				        	    if(res){					    	
+				        			if(parseInt(res.status) == 3){
+				        				_self.show();
+				        				uni.showToast({
+				        					title: '删除公司成功',
+				        					icon: 'none',
+				        				});	
+				        			}
+				        			else{
+				        				uni.showToast({
+				        					title: '删除失败，请检查此公司是否删除干净',
+				        					icon: 'none',
+				        				});	
+				        			}
+				        	    }
+				        	},
+				    },"1","");
 			},
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
@@ -101,43 +101,42 @@
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetAllSubCompanyUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.subcompanylist; 
-							if(parseInt(res.data.status) == 3){
-								if(data.length > 0){
-									let list = [];
-									for (var i = 0; i < data.length; i++) {
-										var item = data[i];
-										list.push(item);
-									}								
-									this.dataList = list;
-								}
-							}
-							else{
-								uni.showToast({
-									title: '无数据为空',
-									icon: 'none',
-								});		
-								
-							}
-					    }
-					}
-				})
+				this.sendRequest({
+				        url : this.GetAllSubCompanyUrl,
+				        method : "post",
+				        data : {
+							"guid": data.guid,
+							"token":data.token,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    if(res){
+				        	    	var data = res.subcompanylist; 
+				        			if(parseInt(res.status) == 3){
+				        				if(data.length > 0){
+				        					let list = [];
+				        					for (var i = 0; i < data.length; i++) {
+				        						var item = data[i];
+				        						list.push(item);
+				        					}								
+				        					_self.dataList = list;
+				        				}
+				        			}
+				        			else{
+				        				uni.showToast({
+				        					title: '无数据为空',
+				        					icon: 'none',
+				        				});		
+				        				
+				        			}
+				        	    }
+				        	}
+				        
+				    },"1","");
 			}
 		}
 	}
@@ -145,6 +144,9 @@
 </script>
 
 <style>
+	.disable{
+		color:#f00;
+	}
 	.content{
 		width:96%;
 		margin: 0 auto;

@@ -23,6 +23,7 @@
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			uniList,
@@ -30,10 +31,11 @@
 			headerNav,
 		},
 		onLoad(){
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -43,13 +45,13 @@
 		},
 		methods:{
 			schooladd(){
-				this.navigateTo('schooledit');
+				_self.navigateTo('schooledit');
 			},
 			schooledit(id){				
-				this.navigateTo('schooledit?id='+id);
+				_self.navigateTo('schooledit?id='+id);
 			},
 			schooldel(id){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
 				}
@@ -58,42 +60,40 @@
 				    token: ret.token,
 					id:id
 				};
-				this.delData(data);
+				_self.delData(data);
 			},
-			delData(data){
-				uni.request({
-					url: this.DelSchoolInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
+			delData(data){			
+				this.sendRequest({
+				    url : this.DelSchoolInfoUrl,
+				    method : "post",
+				    data : {
 						"guid": data.guid,
 						"token":data.token,
 						"id":data.id,
 						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){					    	
-							if(parseInt(res.data.status) == 3){
-								this.show();
-								uni.showToast({
-									title: '删除学校成功',
-									icon: 'none',
-								});	
-							}
-							else{
-								uni.showToast({
-									title: '删除失败，请检查此学校是否还有学生',
-									icon: 'none',
-								});	
-							}
-					    }
 					},
-				});					
+				    hideLoading : false,
+				    success: (res) => {
+				    	if(res){
+				    		if(parseInt(res.status) == 3){
+				    			_self.show();
+				    			uni.showToast({
+				    				title: '删除学校成功',
+				    				icon: 'none',
+				    			});	
+				    		}
+				    		else{
+				    			uni.showToast({
+				    				title: '删除失败，请检查此学校是否还有学生',
+				    				icon: 'none',
+				    			});	
+				    		}
+				    	}    
+				    },
+				},"1","");
 			},
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
 				}
@@ -101,43 +101,43 @@
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
-			getData(data){
-				uni.request({
-					url: this.GetAllSchoolUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": data.guid,
-						"token":data.token,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-					    if(res.data){
-					    	var data = res.data.schoollist; 
-							if(parseInt(res.data.status) == 3){
-								if(data.list.length > 0){
-									let list = [];
-									for (var i = 0; i < data.list.length; i++) {
-										var item = data.list[i];
-										list.push(item);
-									}								
-									this.dataList = list;
-								}
-							}
-							else{
-								uni.showToast({
-									title: '无数据为空',
-									icon: 'none',
-								});		
-								
-							}
-					    }
-					}
-				})
+			getData(data){				
+					this.sendRequest({
+				        url : this.GetAllSchoolUrl,
+				        method : "post",
+				        data : {
+							"guid": data.guid,
+							"token":data.token,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				      	    if(res){
+				      	    	var data = res.schoollist; 
+				      			if(parseInt(res.status) == 3){
+				      				if(data.list.length > 0){
+				      					let list = [];
+				      					for (var i = 0; i < data.list.length; i++) {
+				      						var item = data.list[i];
+				      						list.push(item);
+				      					}								
+				      					_self.dataList = list;
+				      				}
+				      			}
+				      			else{
+				      				uni.showToast({
+				      					title: '无数据为空',
+				      					icon: 'none',
+				      				});		
+				      				
+				      			}
+				      	    }
+				      	}				      
+				    },"1","");				
+				
+				
 			}
 		}
 	}

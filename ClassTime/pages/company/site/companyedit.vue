@@ -62,6 +62,7 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			service,
@@ -69,19 +70,20 @@
 			mInput
 		},
 		onLoad(options){
-			this.checkLogin();
-			this.com_id = options['id'];
-			if(this.com_id == undefined){
-				this.com_id = 0;
+			_self = this;
+			_self.checkLogin();
+			_self.com_id = options['id'];
+			if(_self.com_id == undefined){
+				_self.com_id = 0;
 			}
-			if(this.com_id == 0){
-				this.headermsg = "添加新公司,Company Add";
+			if(_self.com_id == 0){
+				_self.headermsg = "添加新公司,Company Add";
 			}else{
-				this.headermsg = "公司编辑,Company Edit";
+				_self.headermsg = "公司编辑,Company Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -110,7 +112,7 @@
 		methods:{
 			radioChange: function(evt) {
 				var current = evt.detail.value;
-				this.gps_status = current;
+				_self.gps_status = current;
 				if(current == 1){
 					uni.getLocation({
 					  // 默认为 wgs84 返回 gps 坐标，
@@ -118,18 +120,18 @@
 					  type: 'wgs84',
 					  geocode: true,
 					  success: (data) => {					    
-						this.gps_x = data.latitude;
-						this.gps_y = data.longitude;
+						_self.gps_x = data.latitude;
+						_self.gps_y = data.longitude;
 					  },
 					  fail: (err) => {
 					    console.log(err)
-					    // this.$api.msg('获取定位失败');
+					    // _self.$api.msg('获取定位失败');
 					  }
 					});
 				}
 			},
 			bindmodify(){
-				let that = this;
+				let that = _self;
 				//debugger;
 				if(!service.checkName(that.com_name)){
 					uni.showToast({
@@ -145,107 +147,105 @@
 					});
 					return;
 				}
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				uni.request({
-					url: that.UpdateCompanyInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,
-						"id": this.com_id,
-						"name": this.com_name,
-						"address": this.com_address,
-						"sorder":this.com_order,
-						"tel":this.com_tel,
-						"gps_status":this.gps_status,
-						"gps_x":this.gps_x,
-						"gps_y":this.gps_y,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						let status = res.data.status;
-						let str = '';
-						switch(status){
-							case 0:{
-								str = '数据填写错误';
-								break;
-							}
-							case 2:{
-								str = '公司名已经存在';
-								break;
-							}
-							case 3:{
-								str = '修改成功';
-								
-								break;
-							}							
-						}
+				this.sendRequest({
+				        url : this.UpdateCompanyInfoUrl,
+				        method : "post",
+				        data : {
+							"guid": ret.guid,
+							"token": ret.token,
+							"id": _self.com_id,
+							"name": _self.com_name,
+							"address": _self.com_address,
+							"sorder":_self.com_order,
+							"tel":_self.com_tel,
+							"gps_status":_self.gps_status,
+							"gps_x":_self.gps_x,
+							"gps_y":_self.gps_y,
+							"t":Math.random()
+						},
+				        hideLoading : false,
+				        success: (res) => {
+				        		let status = res.status;
+				        		let str = '';
+				        		switch(status){
+				        			case 0:{
+				        				str = '数据填写错误';
+				        				break;
+				        			}
+				        			case 2:{
+				        				str = '公司名已经存在';
+				        				break;
+				        			}
+				        			case 3:{
+				        				str = '修改成功';
+				        				
+				        				break;
+				        			}							
+				        		}
+				        		uni.showModal({
+									title: str,
+				        		    content: '请选择返回的页面',
+				        			cancelText:'留在本页',
+				        			confirmText:'返回前页',
+				        		    success: function (res) {
+				        		        if (res.confirm) {
+				        					_self.navigateTo('company');
+				        		        } else if (res.cancel) {
+				        		            _self.navigateTo('companyedit?id='+_self.com_id);
+				        		        }
+				        		    }
+				        		});
+				        		
+				        	}
+				        
+				    },"1","");	
 						
-						uni.showToast({
-							title: str,
-							icon: 'none',
-							duration:2000
-						});	
-						/* if(status == 3){
-							this.navigateTo('company');
-						} */
-					}
-			    });				
 			},
 			show(){	
-				if(this.com_id == 0 ) return;
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				if(_self.com_id == 0 ) return;
+				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.com_id
+					id:_self.com_id
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				uni.request({
-					url: this.GetCompanyInfoUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
+					this.sendRequest({
+				        url : this.GetCompanyInfoUrl,
+				        method : "post",
+				        data : {
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
 							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						    if(res.data){
-						    	var data = res.data.companylist; 
-								if(parseInt(res.data.status) == 3){
-									this.com_name = data.com_name;
-									this.com_address = data.com_address;
-									this.com_tel = data.com_tel;
-									this.com_order = data.com_order.toString();
-									this.gps_status = data.gps_status;
-									this.gps_x = data.latitude;
-									this.gps_y = data.longitude;
-								}
-								else{
-									uni.showToast({
-										title: '无数据为空',
-										icon: 'none',
-									});		
-									
-								}
-						    }
-						}
-					})
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    if(res){
+				        	    	var data = res.companylist; 
+				        			if(parseInt(res.status) == 3){
+				        				_self.com_name = data.com_name;
+				        				_self.com_address = data.com_address;
+				        				_self.com_tel = data.com_tel;
+				        				_self.com_order = data.com_order.toString();
+				        				_self.gps_status = data.gps_status;
+				        				_self.gps_x = data.latitude;
+				        				_self.gps_y = data.longitude;
+				        			}
+				        	    }
+				        	}
+				        
+				    },"1","");	
+				
 			}
 		}
     }

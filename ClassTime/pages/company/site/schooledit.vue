@@ -26,6 +26,7 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	var _self;
 	export default {
 	    components: {
 			service,
@@ -33,19 +34,20 @@
 			mInput
 		},
 		onLoad(options){
-			this.checkLogin();
-			this.school_id = options['id'];
-			if(this.school_id == undefined){
-				this.school_id = 0;
+			_self = this;
+			_self.checkLogin();
+			_self.school_id = options['id'];
+			if(_self.school_id == undefined){
+				_self.school_id = 0;
 			}
-			if(this.school_id == 0){
-				this.headermsg = "添加新学校,School Add";
+			if(_self.school_id == 0){
+				_self.headermsg = "添加新学校,School Add";
 			}else{
-				this.headermsg = "学校编辑,School Edit";
+				_self.headermsg = "学校编辑,School Edit";
 			}
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -59,7 +61,7 @@
 		},
 		methods:{
 			bindmodify(){
-				let that = this;
+				let that = _self;
 				//debugger;
 				if(!service.checkName(that.school_name)){
 					uni.showToast({
@@ -68,98 +70,101 @@
 					});
 					return;
 				}
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
-				}
-				uni.request({
-					url: that.UpdateSchoolInfoUrl,
-					header: {
-				        "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-						"guid": ret.guid,
-						"token": ret.token,
-						"id": this.school_id,
-						"name": this.school_name,
-						"address": this.school_address,
-						"sorder":this.school_order,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						let status = res.data.status;
-						let str = '';
-						switch(status){
-							case 0:{
-								str = '数据填写错误';
-								break;
-							}
-							case 2:{
-								str = '学校名已经存在';
-								break;
-							}
-							case 3:{
-								str = '修改成功';
-								break;
-							}							
-						}
-						
-						uni.showToast({
-							title: str,
-							icon: 'none',
-							duration:2000
-						});	
-						if(status == 3){
-							this.navigateTo('school');
-						}
-					}
-			    });				
+				}			
+					this.sendRequest({
+				        url : this.UpdateSchoolInfoUrl,
+				        method : "post",
+				        data : {
+							"guid": ret.guid,
+							"token": ret.token,
+							"id": _self.school_id,
+							"name": _self.school_name,
+							"address": _self.school_address,
+							"sorder":_self.school_order,
+							"t":Math.random()
+						},
+				        hideLoading : false,
+				       success: (res) => {
+				       		let status = res.status;
+				       		let str = '';
+				       		switch(status){
+				       			case 0:{
+				       				str = '数据填写错误';
+				       				break;
+				       			}
+				       			case 2:{
+				       				str = '学校名已经存在';
+				       				break;
+				       			}
+				       			case 3:{
+				       				str = '修改成功';
+				       				break;
+				       			}							
+				       		}
+				       		
+				       	uni.showModal({
+				       		title: str,
+				       		content: '请选择返回的页面',
+				       		cancelText:'留在本页',
+				       		confirmText:'返回前页',
+				       		success: function (res) {
+				       			if (res.confirm) {
+				       				_self.navigateTo('school');
+				       			} else if (res.cancel) {
+				       				_self.navigateTo('schooledit?id='+_self.school_id);
+				       			}
+				       		}
+				       	});
+				       	}
+				       
+				    },"1","");
 			},
 			show(){	
-				if(this.school_id == 0 ) return;
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				if(_self.school_id == 0 ) return;
+				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:this.school_id
+					id:_self.school_id
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
-			getData(data){
-				uni.request({
-					url: this.GetSchoolInfoUrl,
-						header: {
-					        "Content-Type": "application/x-www-form-urlencoded"							 
-					    },
-					    data: {
-							"guid": data.guid,
-							"token":data.token,
-							"id":data.id,
-							"t":Math.random()
-					    },
-					    method: "get",
-						success: (res) => {
-						    if(res.data){
-						    	var data = res.data.schoollist; 
-								if(parseInt(res.data.status) == 3){
-									this.school_name = data.school_name;
-									this.school_address = data.school_address;
-									this.school_order = data.school_order.toString();
-								}
-								else{
-									uni.showToast({
-										title: '无数据为空',
-										icon: 'none',
-									});		
-									
-								}
-						    }
-						}
-					})
+			getData(data){			
+				this.sendRequest({
+				    url : this.GetSchoolInfoUrl,
+				    method : "post",
+				    data : {
+						"guid": data.guid,
+						"token":data.token,
+						"id":data.id,
+						"t":Math.random()
+					},
+				    hideLoading : true,
+				    success: (res) => {
+				    	    if(res){
+				    	    	var data = res.schoollist; 
+				    			if(parseInt(res.status) == 3){
+				    				_self.school_name = data.school_name;
+				    				_self.school_address = data.school_address;
+				    				_self.school_order = data.school_order.toString();
+				    			}
+				    			else{
+				    				uni.showToast({
+				    					title: '无数据为空',
+				    					icon: 'none',
+				    				});		
+				    				
+				    			}
+				    	    }
+				    	}
+				    
+				},"1","");				
 			}
 		}
     }
