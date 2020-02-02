@@ -317,7 +317,7 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 	};
 		
 	uni.request({
-		url: this.SetsignUrl,
+		url: that.SetsignUrl,
 		header: {
 	        "Content-Type": "application/x-www-form-urlencoded"							 
 	    },
@@ -346,18 +346,17 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 							icon: 'none',
 						});
 					}
-					case 3:{		
-						//隔天处理
+					case 3:{
 						//debugger;
-						var items = this.ulist;
+						var items = that.ulist;
 						var v1,v2,com_id,category_id,uid;
 						var num;
 						//debugger;
 						for(var i = 0;i < items.length;i++){
 							v1 = items[i];
-							for(var j = 0;j<this.dataList.length;j++){
-								com_id = this.dataList[j].com_id;
-								let categorylist = this.dataList[j].categorylist;			
+							for(var j = 0;j<that.dataList.length;j++){
+								com_id = that.dataList[j].com_id;
+								let categorylist = that.dataList[j].categorylist;			
 								for(var jj = 0; jj < categorylist.length; jj++){
 									category_id = categorylist[jj].cat_id;
 									let studentslist = categorylist[jj].studentslist;
@@ -367,22 +366,37 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 										v2 = com_id + '-' + category_id +'-' + uid;
 										num ++;
 										if(v1 == v2){
-											this.dataList_num -- ;
-											this.dataList[j].categorylist[jj].studentslist.splice(num, 1);
+											that.dataList_num -- ;
+											that.dataList[j].categorylist[jj].studentslist.splice(num, 1);
 										}
 									}
 								}
 							}
 						}
-						if(num == this.dataList_num && this.dataList_num > 0){
-							this.isCheckedAll = true;
+						//debugger;
+						if(num == that.dataList_num && that.dataList_num > 0){
+							that.isCheckedAll = true;
 						}else{
-							this.isCheckedAll = false;
+							that.isCheckedAll = false;
 						}
 						/* uni.showToast({
 							title: '操作成功',
 							icon: 'none',
 						}); */
+						uni.showModal({
+						    title: "签到成功",
+						    content: '请选择返回的页面',
+							cancelText:'留在本页',
+							confirmText:'返回主页',
+						    success: function (res) {
+						        if (res.confirm) {
+									that.navigateTo('/pages/company/company/index');
+									
+						        } else if (res.cancel) {
+						            //this.navigateTo('planshow?id='+_self.plan_id);
+						        }
+						    }
+						});
 						
 					}
 				}
