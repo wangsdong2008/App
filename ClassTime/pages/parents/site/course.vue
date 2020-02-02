@@ -8,7 +8,9 @@
 			<view>
 				<!-- 一般用法 -->
 				<uni-collapse>					
-				    <uni-collapse-item v-for="(item,index) in dataList" :title="'【'+item.c_name+'】'" thumb="../../../static/img/course.png" :open="false" >
+				    <uni-collapse-item v-for="(item,index) in dataList" :title="'【'+item.c_name+'】'" thumb="../../../static/img/course.png" :open="false" :class="{
+						'showclass':(item.is_show == 0)						
+					}">
 						<uni-list>
 							<uni-list-item :show-arrow="false" :title="item.organname" thumb="../../../static/img/mechanismHL.png"></uni-list-item>
 							<uni-list-item :show-arrow="false" :title="'地址：'+item.c_address" thumb="../../../static/img/addressHL.png">	</uni-list-item>
@@ -174,6 +176,9 @@
 </script>
 
 <style>
+	.showclass{
+		color:#999;
+	}
 	.content{
 		width:96%;
 		margin: 0 auto;

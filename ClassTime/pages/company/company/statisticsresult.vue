@@ -103,12 +103,7 @@
 									}									
 									this.selected = list;
 								}								
-							}else{
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});
-							}				    	
+							}			    	
 					    }
 					}
 				})

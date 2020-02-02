@@ -19,7 +19,10 @@
 					<view class="uni-input">{{course_dataList[course_index]}}</view>
 				</picker>
 			</view>
-			<view class="register_account_input weeklist">
+			<view :class="{
+				'register_account_input':true,
+				 'weeklist':(plan_id == 0)
+				}">
 				<view class="uni-list-cell-left">
 				    选择周几
 				</view>

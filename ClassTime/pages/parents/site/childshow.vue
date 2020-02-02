@@ -175,11 +175,19 @@
 							}							
 						}
 						
-						uni.showToast({
-							title: str,
-							icon: 'none',
-							duration:2000
-						});	
+						uni.showModal({
+						    title: str,
+						    content: '请选择返回的页面',
+							cancelText:'留在本页',
+							confirmText:'返回前页',
+						    success: function (res) {
+						        if (res.confirm) {
+									_self.navigateTo('child');
+						        } else if (res.cancel) {
+						            _self.navigateTo('childshow?id='+_self.child_id);
+						        }
+						    }
+						});
 				       }
 				   },"1","");			
 			},
