@@ -9,40 +9,11 @@
 	 
 	 <!-- //'uni-calendar-item__weeks-box-circle':selected && weeks.extraInfo.status == 1,
 	 //'uni-calendar-item__weeks-box-red-circle':selected && weeks.extraInfo.status == 2, -->
-		<view class="uni-calendar-item__weeks-box-item" v-if="weeks.extraInfo == undefined">
-			<text class="uni-calendar-item__weeks-box-text" :class="{
-				'uni-calendar-item--isDay-text': weeks.isDay,
-				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
-				'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && !weeks.isDay,
-				'uni-calendar-item--multiple': weeks.multiple,
-				'uni-calendar-item--disable':weeks.disable,
-				}">{{weeks.date}}</text>
-			<text v-if="!lunar&&!weeks.extraInfo && weeks.isDay" class="uni-calendar-item__weeks-lunar-text" :class="{
-				'uni-calendar-item--isDay-text':weeks.isDay,
-				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
-				'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && !weeks.isDay,
-				'uni-calendar-item--multiple': weeks.multiple,
-				}">今天</text>
-			<text v-if="lunar&&!weeks.extraInfo" class="uni-calendar-item__weeks-lunar-text" :class="{
-				'uni-calendar-item--isDay-text':weeks.isDay,
-				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
-				'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && !weeks.isDay,
-				'uni-calendar-item--multiple': weeks.multiple,
-				'uni-calendar-item--disable':weeks.disable,
-				}">{{weeks.isDay?'今天': (weeks.lunar.IDayCn === '初一'?weeks.lunar.IMonthCn:weeks.lunar.IDayCn)}}</text>
-			<text v-if="weeks.extraInfo&&weeks.extraInfo.info" class="uni-calendar-item__weeks-lunar-text" :class="{
-				'uni-calendar-item--extra':weeks.extraInfo.info,
-				'uni-calendar-item--isDay-text':weeks.isDay,
-				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
-				'uni-calendar-item--checked':calendar.fullDate === weeks.fullDate && !weeks.isDay,
-				'uni-calendar-item--multiple': weeks.multiple,
-				'uni-calendar-item--disable':weeks.disable,
-				}">{{weeks.extraInfo.info}}</text>
-		</view>
-		<view class="uni-calendar-item__weeks-box-item" v-if="weeks.extraInfo != undefined" :class="{
-			'uni-calendar-item__weeks-box-circle':selected && weeks.extraInfo.status == '1',
-			'uni-calendar-item__weeks-box-red-circle':selected && weeks.extraInfo.status == '2'
-			}">
+		<view :class="{
+			'uni-calendar-item__weeks-box-item':true,
+			'uni-calendar-item__weeks-box-circle':weeks.extraInfo != undefined && selected && weeks.extraInfo.status == '1',
+			'uni-calendar-item__weeks-box-red-circle':weeks.extraInfo != undefined && selected && weeks.extraInfo.status == '2'
+		}">
 			<text class="uni-calendar-item__weeks-box-text" :class="{
 				'uni-calendar-item--isDay-text': weeks.isDay,
 				'uni-calendar-item--isDay':calendar.fullDate === weeks.fullDate && weeks.isDay,
