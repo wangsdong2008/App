@@ -155,6 +155,18 @@
 				"navigationBarTitleText": "编辑分类"
 			}
 		},{
+			"path": "pages/company/site/studentsedit",
+			"style": {
+				"navigationBarTitleText": "编辑学生信息"
+			}
+		},
+		{
+			"path": "pages/company/site/students",
+			"style": {
+				"navigationBarTitleText": "全体学生信息"
+			}
+		},
+		{
 			"path": "pages/index/index/search",
 			"style": {
 				"navigationBarTitleText": "查找"

@@ -9,7 +9,7 @@
 				<uni-list-item title="学校管理" thumb="../../../static/img/school.png" @tap="bindShcool" />
 				<uni-list-item title="年级管理" thumb="../../../static/img/grade.png" />
 				<uni-list-item title="班级管理" thumb="../../../static/img/classs.png" />
-				<uni-list-item title="学生管理" thumb="../../../static/img/students.png" />
+				<uni-list-item title="学生管理" thumb="../../../static/img/students.png" @tap="bindstudent" />
 				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" />
 			</uni-list>
 			<uni-list>
@@ -49,15 +49,18 @@
 			this.checkLogin();
 		},
 		methods:{
-			bindCompany:function(){
+			bindCompany:function(){ //子公司管理
 				this.navigateTo('company');
 			},
-			bindShcool:function(){
+			bindShcool:function(){ //学校管理
 				this.navigateTo('school');
 			},
-			bindCategory:function(){
+			bindCategory:function(){ //分类管理
 				this.navigateTo('category');
-			}			
+			},
+			bindstudent:function(){ //学生管理
+				this.navigateTo('students');
+			}
 		}
 	}
 </script>

@@ -86,6 +86,14 @@ Vue.prototype.GetSchoolInfoUrl = Vue.prototype.CompanyUrl + "getschoolinfo" //�
 Vue.prototype.UpdateSchoolInfoUrl = Vue.prototype.CompanyUrl + "updateschoolinfo" //修改学校信息
 Vue.prototype.DelSchoolInfoUrl = Vue.prototype.CompanyUrl + "delschoolinfo" //删除学校信息
 
+Vue.prototype.GetAllStudentsUrl = Vue.prototype.CompanyUrl + "getallstudentslist" //获取所有学生
+Vue.prototype.GetStudentsInfoUrl = Vue.prototype.CompanyUrl + "getstudentsinfo" //获取学生信息
+Vue.prototype.UpdateStudentsInfoUrl = Vue.prototype.CompanyUrl + "updatestudentsinfo" //修改学生信息
+Vue.prototype.DelStudentsInfoUrl = Vue.prototype.CompanyUrl + "delstudentsinfo" //删除学生信息
+
+Vue.prototype.GetAllGradeUrl = Vue.prototype.CompanyUrl + "getallgradelist" //获取年级
+
+
 //常用函数
 //获取月份
 Vue.prototype.GetStudyMonth = function () {	
