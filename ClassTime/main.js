@@ -13,6 +13,7 @@ Vue.prototype.Temp_KEY = "tempinfo";
 Vue.prototype.temp_status = 0; //临时状态,调试用,=1时,debugger起作用
 
 Vue.prototype.STUDYTIME = "2019-06-01";
+Vue.prototype.Method = "post"; //请求方式
 
 //图片地址
 Vue.prototype.WebUrl = "http://192.168.1.103/";
@@ -618,8 +619,8 @@ Vue.prototype.sendRequest = function(param, backtype,backpage){
     //拼接完整请求地址
     var requestUrl = url;
     //固定参数:仅仅在小程序绑定页面通过code获取token的接口默认传递了参数token = login
-    if(!data.token){//其他业务接口传递过来的参数中无token
-        token = uni.getStorageSync(this.USERS_KEY);//参数中无token时在本地缓存中获取
+   /* if(!data.token){//其他业务接口传递过来的参数中无token
+        token = uni.getStorageSync(_self.USERS_KEY);//参数中无token时在本地缓存中获取
         console.log("当前token:" + token);
         if(!token){//本地无token需重新登录(退出时清缓存token)
             _self.login(backpage, backtype);
@@ -627,7 +628,7 @@ Vue.prototype.sendRequest = function(param, backtype,backpage){
         }else{
             data.token = token;
         }
-    }
+    } */
     var timestamp = Date.parse(new Date());//时间戳
     data["timestamp"] = timestamp;
     // #ifdef MP-WEIXIN

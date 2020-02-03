@@ -8,7 +8,7 @@
 					<!-- 带描述信息 -->
 					<uni-list>
 						
-					    <uni-list-item v-for="(item,index) in dataList" :title="item.cat_name" :note="'【'+item.com_name + '】 ' + item.com_address + ' 距离' + item.distance + '米'" :show-arrow="true" :show-badge="false" badge-text="12" :thumb="'../../../static/img/course.png'"></uni-list-item>
+					    <uni-list-item v-for="(item,index) in dataList" :index="index" :key="item.cat_id" :title="item.cat_name" :note="'【'+item.com_name + '】 ' + item.com_address + ' 距离' + item.distance + '米'" :show-arrow="true" :show-badge="false" badge-text="12" :thumb="'../../../static/img/course.png'"></uni-list-item> 
 						
 					</uni-list>
 					

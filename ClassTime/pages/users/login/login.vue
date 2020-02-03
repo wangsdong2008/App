@@ -32,6 +32,7 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue'
 	import headerNav from "@/components/header/company_header.vue";
+	var _self;
 	import {
 	    mapState,
 	    mapMutations
@@ -41,12 +42,15 @@
 	    components: {
 	        mInput,headerNav
 	    },
+		onLoad(){
+			_self = this;
+		},
 	    data() {
 	        return {
 				headermsg:'登录,login',
 	            providerList: [],
 				hasProvider: false,
-	            account: '13816141685',
+	            account: '13816141683',
 	            password: '123123',
 	            positionTop: 0
 	        }
@@ -55,24 +59,24 @@
 		methods: {
 		    ...mapMutations(['login']),
 			getsession(){
-				this.getcurrentsession();	
+				_self.getcurrentsession();	
 			},
 			bindRegister(){
-				this.navigateTo('../reg/reg');
+				_self.navigateTo('../reg/reg');
 			},
 			bindLogin() {
                 /**
                  * 客户端对账号信息进行一些必要的校验。
                  * 实际开发中，根据业务需要进行处理，这里仅做示例。
                  */
-                if (this.account.length < 5) {
+                if (_self.account.length < 5) {
                     uni.showToast({
                         icon: 'none',
                         title: '账号最短为 5 个字符'
                     });
                     return;
                 }
-                if (this.password.length < 6) {
+                if (_self.password.length < 6) {
                     uni.showToast({
                         icon: 'none',
                         title: '密码最短为 6 个字符'
@@ -85,118 +89,116 @@
                  * 实际开发中，使用 uni.request 将账号信息发送至服务端，客户端在回调函数中获取结果信息。
                  */
                 const data = {
-                    username: this.account,
-                    password: this.password
+                    username: _self.account,
+                    password: _self.password
                 };
                 /* const validUser = service.getUsers().some(function (user) {
                     return data.account === user.account && data.password === user.password;
                 });
                 if (validUser) {
-                    this.toMain(this.account);
+                    _self.toMain(_self.account);
                 } else {
                     uni.showToast({
                         icon: 'none',
                         title: '用户账号或密码不正确',
                     });
                 } */
-				this.userLogin(data);
+				_self.userLogin(data);
             },
             initPosition() {
                 /**
                  * 使用 absolute 定位，并且设置 bottom 值进行定位。软键盘弹出时，底部会因为窗口变化而被顶上来。
                  * 反向使用 top 进行定位，可以避免此问题。
                  */
-                this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
+                _self.positionTop = uni.getSystemInfoSync().windowHeight - 100;
             },
 			userLogin(data){
-				//清空缓存
-				var self = this;				
+				//清空缓存			
 				let name = data.username,password = data.password;
-				console.log(self.LoginUrl);
+				console.log(_self.LoginUrl);
+				
+				_self.sendRequest({
+				        url : _self.LoginUrl,
+				        method : "post",
+				        data : {
+							"username": name,
+							"password": password
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        	    var data = res;
+				        	    if(data.status == 3){
+				        			//清空原来的缓存
+				        			try {
+				        				uni.clearStorageSync();  
+				        			} 
+				        			catch (e) {  
+				        			}
+				        			
+				        			var d = {
+				        				id:data.id,
+				        				mobile:data.mobile,
+				        				username:data.username,
+				        				token:data.token,
+				        				guid:data.guid,
+				        				time:data.time,
+				        				identity:data.user_identity,
+				        				is_brithday:data.is_brithday
+				        			}
+				        			
+				        			let url = '';
+				        			switch(parseInt(data.user_identity))
+				        			{
+				        				case 1:{
+				        					url = 'parents/parents/index';
+				        					break;
+				        				}
+				        				case 2:{
+				        					url = 'company/company/index';
+				        					break;
+				        				}
+				        				case 3:{
+				        					url = 'teacher/teacher/index';
+				        					break;
+				        				}
+				        			}
+				        			url = '../../' + url;
+				        			
+				        			uni.setStorage({
+				        				key:_self.USERS_KEY,
+				        				data:d
+				        			});
+				        			
+				        			uni.showToast({
+				        				title: '登录成功!',
+				        				mask: true,
+				        				duration: 1500,
+				        				success: function(){
+				        					
+				        				    uni.reLaunch({  
+				        				        url: url  
+				        				    }); 
+				        					
+				        				}  
+				        			});	
+				        			
+				        			
+				        		}else{
+				        			uni.showToast({
+				        				icon: 'none',
+				        				title: '用户账号或密码不正确',
+				        			});
+				        		}
+				        	}
+				        
+				    },"1","");
 				//debugger;
-				uni.request({
-					url: self.LoginUrl,
-					header: {
-				             "Content-Type": "application/x-www-form-urlencoded"							 
-				    },
-				    data: {
-				        "username": name,
-				        "password": password
-				    },
-				    method: "get",
-					success: (res) => {
-					    var data = res.data;
-					    if(data.status == 3){
-							//清空原来的缓存
-							try {
-								uni.clearStorageSync();  
-							} 
-							catch (e) {  
-							}
-							
-							var d = {
-								id:data.id,
-								mobile:data.mobile,
-								username:data.username,
-								token:data.token,
-								guid:data.guid,
-								time:data.time,
-								identity:data.user_identity,
-								is_brithday:data.is_brithday
-							}
-							
-							let url = '';
-							switch(parseInt(data.user_identity))
-							{
-								case 1:{
-									url = 'parents/parents/index';
-									break;
-								}
-								case 2:{
-									url = 'company/company/index';
-									break;
-								}
-								case 3:{
-									url = 'teacher/teacher/index';
-									break;
-								}
-							}
-							url = '../../' + url;
-							
-							uni.setStorage({
-								key:this.USERS_KEY,
-								data:d
-							});
-							
-							uni.showToast({
-								title: '登录成功!',
-								mask: true,
-								duration: 1500,
-								success: function(){
-									
-								    uni.reLaunch({  
-								        url: url  
-								    }); 
-									
-								}  
-							});	
-							
-							
-						}else{
-							uni.showToast({
-								icon: 'none',
-								title: '用户账号或密码不正确',
-							});
-						}
-					}
-				})
-			},
-			
+			},			
 		},
         onReady() {
-            this.initPosition();
-            /* this.initProvider(); */
-			this.getsession();
+            _self.initPosition();
+            /* _self.initProvider(); */
+			_self.getsession();
         }
 	}
 </script>

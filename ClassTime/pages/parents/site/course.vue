@@ -8,7 +8,7 @@
 			<view>
 				<!-- 一般用法 -->
 				<uni-collapse>					
-				    <uni-collapse-item v-for="(item,index) in dataList" :title="'【'+item.c_name+'】'" thumb="../../../static/img/course.png" :open="false" :class="{
+				    <uni-collapse-item v-for="(item,index) in dataList" :index="index" :key="item.cat_id" :title="'【'+item.c_name+'】'" thumb="../../../static/img/course.png" :open="false" :class="{
 						'showclass':(item.is_show == 0)						
 					}">
 						<uni-list>

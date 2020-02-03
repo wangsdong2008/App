@@ -7,7 +7,7 @@
 			</view>
 			<view>
 				<uni-list>
-					<uni-list-item v-for="(item,index) in dataList" :show-arrow="false" :title="item.school_name" :note="item.school_address" :extra-icon="{color: '#4cd964',size: '45'}">
+					<uni-list-item v-for="(item,index) in dataList" :show-arrow="false" :title="item.school_name" :note="item.school_address" :extra-icon="{color: '#4cd964',size: '45'}" :index="index" :key="item.school_id">
 						<view class="statuslist"><span @tap="schooledit(item.school_id)">修改</span><span @tap="schooldel(item.school_id)">删除</span></view>
 						</uni-list-item>
 				</uni-list>	
