@@ -119,7 +119,7 @@
 				
 				_self.sendRequest({
 				        url : _self.LoginUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"username": name,
 							"password": password

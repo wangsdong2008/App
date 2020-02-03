@@ -13,7 +13,7 @@ Vue.prototype.Temp_KEY = "tempinfo";
 Vue.prototype.temp_status = 0; //临时状态,调试用,=1时,debugger起作用
 
 Vue.prototype.STUDYTIME = "2019-06-01";
-Vue.prototype.Method = "post"; //请求方式
+Vue.prototype.Method = "get"; //请求方式
 
 //图片地址
 Vue.prototype.WebUrl = "http://192.168.1.103/";
@@ -165,7 +165,7 @@ Vue.prototype.quit = function(){
 //检查用户登录状态
 Vue.prototype.checkLogin = function(){	
 	let that = this;
-	let ret = uni.getStorageSync(that.USERS_KEY);
+	let ret = that.getUserInfo();
 	if(ret == undefined || ret == "" || ret.identity == undefined || ret.identity == ""){
 		uni.reLaunch({
 		    url: '/pages/users/login/login',
@@ -183,46 +183,46 @@ Vue.prototype.checkLogin = function(){
 	
 	var ret_time = ret.time
 	if(ret_time != time){ //去服务器上验证一次
-		uni.request({
-			url: that.CheckTokenUrl,
-			header: {
-		             "Content-Type": "application/x-www-form-urlencoded"							 
-		    },
-		    data: {
-		        "token": ret.token,
-		        "guid": ret.guid,
-				"username":ret.username,
-				"t":Math.random()
-		    },
-		    method: "post",
-			success: (res) => {
-				var data = res.data;
-				if(data.status == 1){
-					try {
-						uni.removeStorageSync(that.USERS_KEY);
-					} catch (e) {
-						
-					}           
-					uni.setStorage({
-						key:that.USERS_KEY,
-						data:{
-							id:ret.id,
-							mobile:ret.mobile,
-							username:ret.username,
-							guid:ret.guid,
-							token:ret.token,
-							time:time,
-							identity:ret.user_identity,
-							is_brithday:data.is_brithday
-						}
-					});					
-				}else{
-					uni.reLaunch({
-					    url: '/pages/users/login/login',
-					});
-				}				
-			}
-		});
+		that.sendRequest({
+				        url : that.CheckTokenUrl,
+				        method :that.Method,
+				        data : {
+							"token": ret.token,
+							"guid": ret.guid,
+							"username":ret.username,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				        success: (res) => {
+				        		var data = res;
+				        		if(data.status == 1){
+				        			try {
+				        				uni.removeStorageSync(that.USERS_KEY);
+				        			} catch (e) {
+				        				
+				        			}           
+				        			uni.setStorage({
+				        				key:that.USERS_KEY,
+				        				data:{
+				        					id:ret.id,
+				        					mobile:ret.mobile,
+				        					username:ret.username,
+				        					guid:ret.guid,
+				        					token:ret.token,
+				        					time:time,
+				        					identity:ret.user_identity,
+				        					is_brithday:data.is_brithday
+				        				}
+				        			});					
+				        		}else{
+				        			uni.reLaunch({
+				        			    url: '/pages/users/login/login',
+				        			});
+				        		}				
+				        	}
+				        
+				    },"1","");
+	
 	}	
 }
 Vue.prototype.addUsers = function(userInfo){
@@ -516,7 +516,7 @@ Vue.prototype.sendsms = function (userInfo) {
 Vue.prototype.sendsms2 = function(datainfo){
 	this.sendRequest({
 	       url : this.SendSmsUrl,
-	       method : "post",
+	       method : _self.Method,
 	       data : {
 			"token":datainfo.token,
 			"mobile":datainfo.mobile,

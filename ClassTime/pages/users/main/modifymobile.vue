@@ -240,7 +240,7 @@
 				let ret = _self.getUserInfo();
 				 _self.sendRequest({
 				        url : _self.ModifyUserInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
@@ -303,7 +303,7 @@
 			getData(data) {
 				this.sendRequest({
 					url : this.getUsersInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token": data.token,

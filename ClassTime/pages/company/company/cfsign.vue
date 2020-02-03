@@ -88,7 +88,7 @@
 			getData(data){
 				_self.sendRequest({
 				    url : _self.GetCurrentCFStudents,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,

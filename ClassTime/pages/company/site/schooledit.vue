@@ -76,7 +76,7 @@
 				}			
 					this.sendRequest({
 				        url : this.UpdateSchoolInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
@@ -138,7 +138,7 @@
 			getData(data){			
 				this.sendRequest({
 				    url : this.GetSchoolInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,

@@ -153,7 +153,7 @@
 				}
 				this.sendRequest({
 				        url : this.UpdateCompanyInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
@@ -221,7 +221,7 @@
 			getData(data){
 					this.sendRequest({
 				        url : this.GetCompanyInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,

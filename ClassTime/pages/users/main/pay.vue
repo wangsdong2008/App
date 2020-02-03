@@ -132,7 +132,7 @@
 				let ret = _self.getUserInfo();
 				 _self.sendRequest({
 				        url : _self.ModifyUserInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,	
@@ -165,7 +165,7 @@
 				let ret = _self.getUserInfo();
 				_self.sendRequest({
 					url : _self.getUsersInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {"token":ret.token,"guid":ret.guid,"t":Math.random()},
 				    hideLoading : true,
 				    success:function (res) {

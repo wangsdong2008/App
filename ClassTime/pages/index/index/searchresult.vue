@@ -24,6 +24,7 @@
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	var _self;
 	
 	export default {
 	    components: {
@@ -34,12 +35,13 @@
 			mInput
 		},
 		onLoad(options) {
-			this.course_name = options['keyword'];
-			this.longitude = options['longitude'];
-			this.latitude = options['latitude'];			
+			_self = this;
+			_self.course_name = options['keyword'];
+			_self.longitude = options['longitude'];
+			_self.latitude = options['latitude'];			
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		data(){
 			return{
@@ -52,55 +54,55 @@
 		},
 		methods:{
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					keyword:this.course_name,
-					longitude:this.longitude,
-					latitude:this.latitude
+					keyword:_self.course_name,
+					longitude:_self.longitude,
+					latitude:_self.latitude
 				};				
-				this.getData(data);
+				_self.getData(data);
 			},
-			getData(data){				
-				uni.request({
-					url: this.SearchCourseUrl,
-					header: {"Content-Type": "application/x-www-form-urlencoded"},
-				    data: {
-				        "token": data.token,
-				        "guid": data.guid,
-						"keyword":data.keyword,
-						"longitude":data.longitude,
-						"latitude":data.latitude,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						var data = res.data.courselist;
-						switch(parseInt(res.data.status)){
-							case 1:{
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});		
-								break;
-							}
-							case 3:{
-								let list = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];
-									list.push(item);
-								}								
-								this.dataList = list;
-								break;
-							}
-						}
-						
-					}
-				});
+			getData(data){
+				this.sendRequest({
+				        url : this.SearchCourseUrl,
+				        method : _self.Method,
+				        data : {
+							"token": data.token,
+							"guid": data.guid,
+							"keyword":data.keyword,
+							"longitude":data.longitude,
+							"latitude":data.latitude,
+							"t":Math.random()
+						},
+				        hideLoading : true,
+				       success: (res) => {
+				       		var data = res.courselist;
+				       		switch(parseInt(res.status)){
+				       			case 1:{
+				       				uni.showToast({
+				       					title: '无数据',
+				       					icon: 'none',
+				       				});		
+				       				break;
+				       			}
+				       			case 3:{
+				       				let list = [];
+				       				for (var i = 0; i < data.length; i++) {
+				       					var item = data[i];
+				       					list.push(item);
+				       				}								
+				       				_self.dataList = list;
+				       				break;
+				       			}
+				       		}
+				       		
+				       	}
+				    },"1","");
 			}
 		}
 	}

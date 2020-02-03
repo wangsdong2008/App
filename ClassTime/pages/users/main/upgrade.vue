@@ -94,7 +94,7 @@
 				}
 				_self.sendRequest({
 					url : _self.UpgradeUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {"token":ret.token,"guid":ret.guid,upgrade_id:_self.upgrade_id,"t":Math.random()},
 				    hideLoading : true,
 				    success:function (res) {
@@ -133,7 +133,7 @@
 				let ret = _self.getUserInfo();
 				_self.sendRequest({
 					url : _self.getUsersInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {"token":ret.token,"guid":ret.guid,"t":Math.random()},
 				    hideLoading : true,
 				    success:function (res) {

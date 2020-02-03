@@ -216,7 +216,7 @@
 				let ret = this.getUserInfo();				
 					this.sendRequest({
 				        url : this.getTestUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"token":ret.token,
 							"guid":ret.guid,

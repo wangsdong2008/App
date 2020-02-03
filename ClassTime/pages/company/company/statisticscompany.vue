@@ -111,7 +111,7 @@
 				let data1 = data;
 				this.sendRequest({
 				        url : this.GetAllSubCompanyUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,
@@ -165,7 +165,7 @@
 				var id = _self.id;
 				this.sendRequest({
 				        url : this.GetCompanyCategory,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,

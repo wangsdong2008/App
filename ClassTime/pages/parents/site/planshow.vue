@@ -194,7 +194,7 @@
 			getData(data){
 				this.sendRequest({
 				       url : this.ShowChildPlanUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 						  "guid": data.guid,
 						  "token":data.token,
@@ -316,7 +316,7 @@
 				
 				this.sendRequest({
 				    url : this.ModifyChildPlanUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": ret.guid,
 						"token": ret.token,

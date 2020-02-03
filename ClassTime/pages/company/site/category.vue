@@ -75,7 +75,7 @@
 			delData(data){
 				this.sendRequest({
 				        url : this.DelCategoryInfoUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,
@@ -117,7 +117,7 @@
 			getData(data){
 				this.sendRequest({
 				        url : this.GetAllSubCompanyCategoryUrl,
-				        method : "post",
+				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,

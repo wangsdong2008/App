@@ -119,7 +119,7 @@
 				let data1 = data;
 				this.sendRequest({
 					url : this.GetAllStudents,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,
@@ -170,7 +170,7 @@
 				var id = _self.id;
 				this.sendRequest({
 					url : this.GetStudentsCategory,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,

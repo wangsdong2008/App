@@ -74,7 +74,7 @@
 			getData(data){
 				this.sendRequest({
 					url : this.GetBirthdaytStudentsUrl,
-					method : "post",
+					method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,

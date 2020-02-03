@@ -110,7 +110,7 @@
 			getData(data){
 				this.sendRequest({
 				    url : _self.getUsersInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {"token":data.token,"guid":data.guid,"t":Math.random()},
 				    hideLoading : true,
 				    success:function (res) {

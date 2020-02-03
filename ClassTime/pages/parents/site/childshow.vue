@@ -133,7 +133,7 @@
 				
 				this.sendRequest({
 				       url : this.ModifyChildrenUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 							"guid": ret.guid,
 							"token": ret.token,
@@ -210,7 +210,7 @@
 			getData(data){
 				this.sendRequest({
 				       url : this.ShowChildrenUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 						"guid": data.guid,
 						"token":data.token,

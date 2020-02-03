@@ -78,7 +78,7 @@
 				};
 				this.sendRequest({
 					url : this.DelOrganUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : data2,
 				    hideLoading : false,
 				    success:function (res) {
@@ -147,7 +147,7 @@
 			getData(data){
 				this.sendRequest({
 				       url : this.AllOrganUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 						   "guid": data.guid,
 						   "token":data.token,

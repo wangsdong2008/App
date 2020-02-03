@@ -80,7 +80,7 @@
 			getData(data){
 				this.sendRequest({
 			       url : this.ChildWeekUrl,
-			       method : "post",
+			       method : _self.Method,
 			       data : {
 						"guid": data.guid,
 						"token":data.token,
@@ -122,7 +122,7 @@
 				};
 				this.sendRequest({
 				       url : this.DelChildPlanUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 						"guid": data.guid,
 						"token":data.token,

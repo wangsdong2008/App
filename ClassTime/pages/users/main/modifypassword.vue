@@ -167,7 +167,7 @@
 				
 				this.sendRequest({
 				    url : this.ModifyUserInfoUrl,
-				    method : "post",
+				    method : _self.Method,
 				    data : {
 						"guid": ret.guid,
 						"token": ret.token,	
@@ -214,7 +214,7 @@
 			getData(data){
 				this.sendRequest({
 			       url : this.getUsersInfoUrl,
-			       method : "post",
+			       method : _self.Method,
 			       data : {"token":data.token,"guid":data.guid},
 			       hideLoading : true,
 			       success:function (res) {

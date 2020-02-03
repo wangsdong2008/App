@@ -121,7 +121,7 @@
 				}
 				_self.sendRequest({
 				       url : _self.ModifyOrganUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 							"guid": ret.guid,
 							"token": ret.token,
@@ -199,7 +199,7 @@
 			getData(data){
 				this.sendRequest({
 				       url : this.OrganUrl,
-				       method : "post",
+				       method : _self.Method,
 				       data : {
 							"guid": data.guid,
 							"token":data.token,
