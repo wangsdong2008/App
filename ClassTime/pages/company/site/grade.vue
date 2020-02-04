@@ -3,22 +3,31 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="title">
-				<image src="../../../static/img/grade.png" mode=""></image>学生所在学校
+				<image src="../../../static/img/grade.png" mode=""></image>学校年级
 			</view>
 			<view>
 				<!-- 一般用法 -->
 				<uni-collapse>					
-				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.com_name" :open="true" thumb="../../../static/img/company.png" :index="index" :key="item.com_id" >
-						<uni-list>
-							<uni-list-item v-for="(item2,index2) in item.schoollist" :show-arrow="false" :title="item2.school_name" :index="index2" :key="item2.school_id" >
-							<view class="statuslist"><span @tap="schooledit(item2.school_id)">修改</span><span @tap="schooldel(item2.school_id)">删除</span></view>
-							</uni-list-item>
-						</uni-list>
+				    <uni-collapse-item v-for="(item,index) in dataList" :title="item.com_name" :open="(index == 0?true:false)" thumb="../../../static/img/company.png" :index="index" :key="item.com_id" >
+						
+						<uni-collapse>
+						    <uni-collapse-item v-for="(item2,index2) in item.schoollist" :title="item2.school_name" :index="index2" :open="(index2 == 0?true:false)" thumb="../../../static/img/school.png" :key="item2.school_id" >
+								
+								<uni-list>
+									<uni-list-item v-for="(item3,index3) in item2.gradelist" :show-arrow="false" :title="item3.grade_name" :index="index3" :key="item3.grade_id" >
+										<view class="statuslist"><span @tap="gradeedit(item3.grade_id)">修改</span><span @tap="gradedel(item3.grade_id)">删除</span></view>
+									</uni-list-item>
+								</uni-list>	
+								
+							</uni-collapse-item>
+						</uni-collapse>					
+						
 				    </uni-collapse-item>
+				   
 				</uni-collapse>
 			</view>
 			<view class="button-sp-area">
-				<button type="primary" plain="true" @tap="schooladd">添加学校</button>
+				<button type="primary" plain="true" @tap="gradeadd">添加年级</button>
 			</view>
 		</view>
 	</view>
@@ -48,17 +57,17 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'学校管理,School Manage'
+				headermsg:'年级管理,Grade Manage'
 			}
 		},
 		methods:{
-			schooladd(){
-				_self.navigateTo('schooledit');
+			gradeadd(){
+				_self.navigateTo('gradeedit');
 			},
-			schooledit(id){				
-				_self.navigateTo('schooledit?id='+id);
+			gradeedit(id){				
+				_self.navigateTo('gradeedit?id='+id);
 			},
-			schooldel(id){
+			gradedel(id){
 				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
@@ -72,7 +81,7 @@
 			},
 			delData(data){
 				this.sendRequest({
-				        url : this.DelSchoolInfoUrl,
+				        url : this.DelGradinfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
@@ -82,20 +91,20 @@
 						},
 				        hideLoading : false,
 				        success: (res) => {
-				        	    if(res){
-									if(parseInt(res.status) == 3){
-										_self.show();
-										uni.showToast({
-											title: '删除学校成功',
-											icon: 'none',
-										});	
-									}
-									else{
-										uni.showToast({
-											title: '删除失败，请检查此学校是否还有学生',
-											icon: 'none',
-										});	
-									}
+				        	    if(res){					    	
+				        			if(parseInt(res.status) == 3){
+				        				_self.show();
+				        				uni.showToast({
+				        					title: '删除年级成功',
+				        					icon: 'none',
+				        				});	
+				        			}
+				        			else{
+				        				uni.showToast({
+				        					title: '删除失败',
+				        					icon: 'none',
+				        				});	
+				        			}
 				        	    }
 				        	},
 				        
@@ -114,7 +123,7 @@
 			},
 			getData(data){
 				this.sendRequest({
-				        url : this.GetAllSchoolUrl,
+				        url : this.GetAllGradeUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
@@ -127,13 +136,13 @@
 				       	    	var data = res.subcompanylist; 
 				       			if(parseInt(res.status) == 3){
 				       				if(data.length > 0){
-				      					let list = [];
-				      					for (var i = 0; i < data.length; i++) {
-				      						var item = data[i];
-				      						list.push(item);
-				      					}								
-				      					_self.dataList = list;
-				      				}
+				       					let list = [];
+				       					for (var i = 0; i < data.length; i++) {
+				       						var item = data[i];
+				       						list.push(item);
+				       					}								
+				       					_self.dataList = list;
+				       				}
 				       			}
 				       			else{
 				       				uni.showToast({

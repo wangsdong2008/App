@@ -124,7 +124,10 @@
 			"style": {
 				"navigationBarTitleText": "生日提醒"
 			}
-		},{
+		},
+		
+		
+		{
 			"path": "pages/company/site/company",
 			"style": {
 				"navigationBarTitleText": "公司管理"
@@ -160,6 +163,31 @@
 				"navigationBarTitleText": "编辑学生信息"
 			}
 		},
+		{
+			"path": "pages/company/site/grade",
+			"style": {
+				"navigationBarTitleText": "年级管理"
+			}
+		},{
+			"path": "pages/company/site/gradeedit",
+			"style": {
+				"navigationBarTitleText": "年级管理"
+			}
+		},{
+			"path": "pages/company/site/classs",
+			"style": {
+				"navigationBarTitleText": "班级管理"
+			}
+		},{
+			"path": "pages/company/site/gradeedit",
+			"style": {
+				"navigationBarTitleText": "班级管理"
+			}
+		},
+		
+		
+		
+		
 		{
 			"path": "pages/company/site/students",
 			"style": {

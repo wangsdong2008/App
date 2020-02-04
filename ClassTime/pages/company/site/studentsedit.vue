@@ -64,7 +64,7 @@
 		</view>
 		<view class="button-sp-area">
 			<view>
-				<button type="primary" @tap="bindmodify">修改</button>
+				<button type="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>
 		</view>
 	</view>
@@ -103,6 +103,8 @@
 				class_index:0,
 				class_dataList:[],
 				class_dataIDList:[],
+				
+				btntxt:'',
 				
 				sex:1,
 				sex_items:[
@@ -143,8 +145,10 @@
 			}
 			if(_self.uid == 0){
 				_self.headermsg = "添加新学生,Student Add";
+				_self.btntxt = "添加";
 			}else{
 				_self.headermsg = "学生编辑,Student Edit";
+				_self.btntxt = "修改";
 			}
 		},
 		onReady(){
@@ -152,6 +156,93 @@
 		},
 		
 		methods:{
+			bindmodify(){
+				//debugger;
+				if(!service.checkNull(_self.uname)){
+					uni.showToast({
+					    icon: 'none',
+					    title: '学生名必须填写'
+					});
+					return;
+				}
+				let ret = this.getUserInfo();
+				if(!ret){
+					return false;
+				}			
+					this.sendRequest({
+				        url : this.UpdateStudentsInfoUrl,
+				        method : _self.Method,
+				        data : {
+							"guid": ret.guid,
+							"token": ret.token,							
+							"id": _self.uid,
+							"uname": _self.uname,
+							"sex": _self.sex,
+							"birthday": _self.birthday,
+							"mparent": _self.mparent,
+							"mtel": _self.mtel,
+							"teacher": _self.teacher,
+							"memo": _self.memo,
+							"fan_jkou": _self.fan_jkou,
+							
+							"school_id": _self.school_id,
+							"grade_id": _self.grade_id,
+							"class_id": _self.class_id,
+							
+							"is_show":_self.is_show,
+							
+							"t":Math.random()
+						},
+				       hideLoading : false,
+				       success: (res) => {
+				       		let status = res.status;
+				       		let str = '';
+				       		switch(status){
+				       			case 0:{
+				       				str = '数据填写错误';
+				       				break;
+				       			}
+				       			case 3:{
+									if(_self.uid == 0){
+										str = '添加成功';
+										 _self.uid = 0;
+										 _self.uname = '';
+										 _self.sex = 1;
+										 _self.birthday ="";
+										 _self.mparent = "";
+										 _self.mtel = "";
+										 _self.teacher = "";
+										 _self.memo = "";
+										 _self.fan_jko = "";
+										 _self.school_id = 0;
+										 _self.grade_id = 0;
+										 _self.class_id = 0;
+										 _self.is_show = 1;
+										
+									}else{
+										str = '修改成功';
+									}				       				
+				       				break;
+				       			}							
+				       		}
+				       		
+				       	uni.showModal({
+				       		title: str,
+				       		content: '请选择返回的页面',
+				       		cancelText:'留在本页',
+				       		confirmText:'返回前页',
+				       		success: function (res) {
+				       			if (res.confirm) {
+				       				_self.navigateTo('students');
+				       			} else if (res.cancel) {
+				       				_self.navigateTo('studentsedit?id='+_self.id);
+				       			}
+				       		}
+				       	});
+				       	}
+				       
+				    },"1","");
+			},
 			open(){
 			    _self.$refs.calendar.open(); //打开日历
 			},
@@ -312,8 +403,6 @@
 								_self.class_dataIDList = idlist;
 								if(_self.uid == 0)	_self.class_index = 0;
 								
-								
-								debugger;
 				    			if(parseInt(res.status) == 3){
 				    				_self.uname = data.uname;
 									_self.sex = data.sex;
@@ -346,67 +435,6 @@
 			sexChange: function(evt) {
 				var current = evt.detail.value;
 				_self.sex = current;	
-			},
-			bindmodify(){
-				//debugger;
-				if(!service.checkNull(_self.uname)){
-					uni.showToast({
-					    icon: 'none',
-					    title: '学生名必须填写'
-					});
-					return;
-				}
-				let ret = this.getUserInfo();
-				if(!ret){
-					return false;
-				}			
-					this.sendRequest({
-				        url : this.UpdateSchoolInfoUrl,
-				        method : _self.Method,
-				        data : {
-							"guid": ret.guid,
-							"token": ret.token,
-							"id": _self.school_id,
-							"name": _self.school_name,
-							"address": _self.school_address,
-							"sorder":_self.school_order,
-							"t":Math.random()
-						},
-				        hideLoading : false,
-				       success: (res) => {
-				       		let status = res.status;
-				       		let str = '';
-				       		switch(status){
-				       			case 0:{
-				       				str = '数据填写错误';
-				       				break;
-				       			}
-				       			case 2:{
-				       				str = '学校名已经存在';
-				       				break;
-				       			}
-				       			case 3:{
-				       				str = '修改成功';
-				       				break;
-				       			}							
-				       		}
-				       		
-				       	uni.showModal({
-				       		title: str,
-				       		content: '请选择返回的页面',
-				       		cancelText:'留在本页',
-				       		confirmText:'返回前页',
-				       		success: function (res) {
-				       			if (res.confirm) {
-				       				_self.navigateTo('school');
-				       			} else if (res.cancel) {
-				       				_self.navigateTo('schooledit?id='+_self.school_id);
-				       			}
-				       		}
-				       	});
-				       	}
-				       
-				    },"1","");
 			},
 			show(){	
 				//if(_self.uid == 0 ) return;

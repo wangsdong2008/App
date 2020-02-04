@@ -3,15 +3,23 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="register_account">学校信息</view>
-			<view class="register_account_input">				
+			<view class="register_account_input">
 				<m-input class="m-input" type="text" clearable focus v-model="school_name" placeholder="填写学校名"></m-input>
 			</view>	
 			<view class="register_account_input">
 				<m-input class="m-input" type="text" clearable v-model="school_address" placeholder="填写学校地址"></m-input>
 			</view>
-				<view class="register_account_input">
-					<m-input class="m-input" type="text" clearable v-model="school_order" placeholder="填写顺序"></m-input>
-				</view>	
+			
+			<view class="register_account_input">
+				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
+					<view class="uni-input">{{cList[cindex]}}</view>
+				</picker>
+			</view>
+			
+			<view class="register_account_input">
+				<m-input class="m-input" type="text" clearable v-model="school_order" placeholder="填写顺序"></m-input>
+			</view>	
+			
 			
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">修改</button>
@@ -55,11 +63,22 @@
 				school_name:'',
 				school_order:'1',
 				school_address:'',
-				dataList:[],				
+				dataList:[],	
+							
+				com_id:0,
+				cindex:0,
+				cList:[],
+				cIDList:[],
+				
 				headermsg:''
 			}
 		},
 		methods:{
+			pickerCompanyChange:function(e){
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
+				_self.com_id = _self.cIDList[e.target.value];
+				_self.cindex = e.target.value; 
+			},
 			bindmodify(){
 				let that = _self;
 				//debugger;
@@ -81,6 +100,7 @@
 							"guid": ret.guid,
 							"token": ret.token,
 							"id": _self.school_id,
+							"comid":_self.com_id,
 							"name": _self.school_name,
 							"address": _self.school_address,
 							"sorder":_self.school_order,
@@ -123,7 +143,6 @@
 				    },"1","");
 			},
 			show(){	
-				if(_self.school_id == 0 ) return;
 				let ret = uni.getStorageSync(_self.USERS_KEY);
 				if(!ret){
 					return false;
@@ -148,19 +167,33 @@
 				    hideLoading : true,
 				    success: (res) => {
 				    	    if(res){
-				    	    	var data = res.schoollist; 
+								//子公司
+								var data = res.subcompanylist;													
+								let list = [];
+								let idlist = [];
+								list.push("==请选择所属机构==");
+								idlist.push(0);
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.com_name);
+									idlist.push(item.com_id);
+								}								
+								_self.cList = list;
+								_self.cIDList = idlist;
+								if(_self.school_id == 0) _self.cindex = 0;
+								
+								var data = res.schoollist; 
 				    			if(parseInt(res.status) == 3){
 				    				_self.school_name = data.school_name;
 				    				_self.school_address = data.school_address;
-				    				_self.school_order = data.school_order.toString();
+				    				_self.school_order = data.school_order.toString();									
+									
+									_self.com_id = data.com_id;
+									let j = _self.cIDList.findIndex(i => i == _self.com_id);
+									_self.cindex = j;
+									
 				    			}
-				    			else{
-				    				uni.showToast({
-				    					title: '无数据为空',
-				    					icon: 'none',
-				    				});		
-				    				
-				    			}
+								
 				    	    }
 				    	}
 				    
