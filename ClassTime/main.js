@@ -92,7 +92,7 @@ Vue.prototype.UpdateStudentsInfoUrl = Vue.prototype.CompanyUrl + "updatestudents
 Vue.prototype.DelStudentsInfoUrl = Vue.prototype.CompanyUrl + "delstudentsinfo" //删除学生信息
 
 Vue.prototype.GetAllGradeUrl = Vue.prototype.CompanyUrl + "getallgradelist" //获取年级
-
+//Vue.prototype.GetAllClassUrl = Vue.prototype.CompanyUrl + "getallclasslist" //获取班级
 
 //常用函数
 //获取月份
