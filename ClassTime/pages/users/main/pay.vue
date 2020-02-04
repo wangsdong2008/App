@@ -38,8 +38,8 @@
 								'grid-item-box':true,
 								'active':item.activer
 							}">
-								<text class="gemmologist-title">{{item.monthid}}个月</text>
-								<text class="gemmologist-name">￥{{item.monthtext}}</text>
+								<text class="gemmologist-title">{{item.c_month}}个月</text>
+								<text class="gemmologist-name">￥{{item.c_price}}</text>
 							</view>
 					    </uni-grid-item>
 					</uni-grid>
@@ -177,23 +177,14 @@
 								_self.userinfo = userinfo2;
 								_self.nick_name = userinfo2.nick_name;
 								_self.childface = _self.PicUrl + 'users' + userinfo2.face;
-								let list = [];
-								switch(parseInt(userinfo2.user_identity )){
-									case 1:{
-										list.push({"monthid":"1","monthtext":"5","activer":true});
-										list.push({"monthid":"3","monthtext":"15","activer":false});
-										list.push({"monthid":"6","monthtext":"30","activer":false});
-										list.push({"monthid":"12","monthtext":"50","activer":false});
-										break;
-									}
-									case 2:{
-										list.push({"monthid":"1","monthtext":"50","activer":true});
-										list.push({"monthid":"3","monthtext":"150","activer":false});
-										list.push({"monthid":"6","monthtext":"300","activer":false});
-										list.push({"monthid":"12","monthtext":"500","activer":false});
-										break;
-									}
-								}
+								
+								let costdata = data.costlist;
+								let list = [];					
+								for (var i = 0; i < costdata.length; i++) {
+									var item = costdata[i];
+									list.push(item);
+									///idlist.push(item.class_id);
+								}								
 								_self.dataList = list;
 								_self.num = 0;
 							}
