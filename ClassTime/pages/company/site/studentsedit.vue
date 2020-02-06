@@ -47,6 +47,11 @@
 				<textarea class="m-textarea" v-model="fan_jkou" placeholder="忌口"></textarea>
 			</view>
 			<view class="register_account_input">
+				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
+					<view class="uni-input">{{cList[cindex]}}</view>
+				</picker>
+			</view>			
+			<view class="register_account_input">
 				<picker @change="SchoolPickerChange($event)" :value="school_index" :range="school_dataList">
 					<view class="uni-input">{{school_dataList[school_index]}}</view>
 				</picker>
@@ -103,6 +108,11 @@
 				class_index:0,
 				class_dataList:[],
 				class_dataIDList:[],
+				
+				com_id:0,
+				cindex:0,
+				cList:[],
+				cIDList:[],
 				
 				btntxt:'',
 				
@@ -168,7 +178,7 @@
 				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
-				}			
+				}	
 					this.sendRequest({
 				        url : this.UpdateStudentsInfoUrl,
 				        method : _self.Method,
@@ -184,7 +194,7 @@
 							"teacher": _self.teacher,
 							"memo": _self.memo,
 							"fan_jkou": _self.fan_jkou,
-							
+							"com_id":_self.com_id,
 							"school_id": _self.school_id,
 							"grade_id": _self.grade_id,
 							"class_id": _self.class_id,
@@ -217,7 +227,8 @@
 										 _self.school_id = 0;
 										 _self.grade_id = 0;
 										 _self.class_id = 0;
-										 _self.is_show = 1;
+										 _self.is_show = 1; 
+										 _self.com_id = 0;
 										
 									}else{
 										str = '修改成功';
@@ -246,6 +257,119 @@
 			open(){
 			    _self.$refs.calendar.open(); //打开日历
 			},
+			pickerCompanyChange:function(e){
+				console.log('公司picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
+				_self.com_id = _self.cIDList[e.target.value];
+				_self.cindex = e.target.value; 
+				
+				let ret = _self.getUserInfo();
+				this.sendRequest({
+				    url : this.GetAllCompanySchoolUrl,
+				    method : _self.Method,
+				    data : {
+						"guid": ret.guid,
+						"token":ret.token,
+						"com_id":_self.com_id,
+						"t":Math.random()
+					},
+				    hideLoading : true,
+				    success: (res) => {	
+				    	if(res){
+							var data = res.schoollist;
+							if(parseInt(res.status) == 3){
+								let uid = 0;
+								let list = [];
+								let idlist = [];
+								list.push("==请选择学校==");
+								idlist.push(0);
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.school_name);
+									idlist.push(item.school_id);
+									if(i == 0){
+										_self.school_id = item.com_id;
+									}
+								}
+								_self.school_dataList = list;
+								_self.school_dataIDList = idlist;
+								_self.school_index = 0;	
+								
+								//清空年级
+								list = [];
+								idlist = [];
+								list.push("==请选择年级==");
+								idlist.push(0);											
+								_self.grade_dataList = list;
+								_self.grade_dataIDList = idlist;
+								_self.grade_index = 0;
+								
+								//清空班级
+								list = [];
+								idlist = [];
+								list.push("==请选择班级==");
+								idlist.push(0);										
+								_self.class_dataList = list;
+								_self.class_dataIDList = idlist;
+								_self.class_index = 0;
+							}							
+						}
+					}
+				});	
+			},
+			SchoolPickerChange:function(e){
+				console.log('学校picker发送选择改变，携带值为', e.target.value+"===="+_self.school_dataList[e.target.value] + _self.school_dataIDList[e.target.value]);
+				var school_id = _self.school_dataIDList[e.target.value];
+				_self.school_id = school_id;
+				_self.school_index = e.target.value;
+				
+				let ret = _self.getUserInfo();
+				this.sendRequest({
+				    url : this.GetAllGradeUrl,
+				    method : _self.Method,
+				    data : {
+						"guid": ret.guid,
+						"token":ret.token,
+						"id":_self.school_id,
+						"t":Math.random()
+					},
+				    hideLoading : true,
+				    success: (res) => {	
+				    	if(res){
+							var gradelist = res.gradelist;
+							let list = [];
+							let idlist = [];
+							list.push("==请选择年级==");
+							idlist.push(0);
+							for (var i = 0; i < gradelist.length; i++) {
+								var item = gradelist[i];
+								list.push(item.grade_name);
+								idlist.push(item.grade_id);
+							}								
+							_self.grade_dataList = list;
+							_self.grade_dataIDList = idlist;
+							_self.grade_index = 0;
+							
+							//重新选择学校后，清空班级
+							list = [];
+							idlist = [];
+							list.push("==请选择班级==");
+							idlist.push(0);
+							var classlist = res.classlist;
+							for (var i = 0; i < classlist.length; i++) {
+								var item = classlist[i];
+								list.push(item.class_name);
+								idlist.push(item.class_id);
+							}								
+							_self.class_dataList = list;
+							_self.class_dataIDList = idlist;
+							_self.class_index = 0;
+							
+							
+						}
+					},
+				});
+			},
+			
 			GradePickerChange:function(e){
 				console.log('年级picker发送选择改变，携带值为', e.target.value+"===="+_self.grade_dataList[e.target.value] + _self.grade_dataIDList[e.target.value]);
 				let grade_id = _self.grade_dataIDList[e.target.value];
@@ -290,59 +414,6 @@
 				_self.class_id = _self.class_dataIDList[e.target.value];
 				_self.class_index = e.target.value;
 			},
-			SchoolPickerChange:function(e){
-				console.log('学校picker发送选择改变，携带值为', e.target.value+"===="+_self.school_dataList[e.target.value] + _self.school_dataIDList[e.target.value]);
-				var school_id = _self.school_dataIDList[e.target.value];
-				_self.school_id = school_id;
-				_self.school_index = e.target.value;
-				
-				let ret = _self.getUserInfo();
-				this.sendRequest({
-				    url : this.GetAllGradeUrl,
-				    method : _self.Method,
-				    data : {
-						"guid": ret.guid,
-						"token":ret.token,
-						"id":school_id,
-						"t":Math.random()
-					},
-				    hideLoading : true,
-				    success: (res) => {	
-				    	if(res){
-							var gradelist = res.gradelist;
-							let list = [];
-							let idlist = [];
-							list.push("==请选择年级==");
-							idlist.push(0);
-							for (var i = 0; i < gradelist.length; i++) {
-								var item = gradelist[i];
-								list.push(item.grade_name);
-								idlist.push(item.grade_id);
-							}								
-							_self.grade_dataList = list;
-							_self.grade_dataIDList = idlist;
-							_self.grade_index = 0;
-							
-							//重新选择学校后，清空班级
-							list = [];
-							idlist = [];
-							list.push("==请选择班级==");
-							idlist.push(0);
-							var classlist = res.classlist;
-							for (var i = 0; i < classlist.length; i++) {
-								var item = classlist[i];
-								list.push(item.class_name);
-								idlist.push(item.class_id);
-							}								
-							_self.class_dataList = list;
-							_self.class_dataIDList = idlist;
-							_self.class_index = 0;
-							
-							
-						}
-					},
-				});
-			},
 			statusChange: function(evt) {
 				var current = evt.detail.value;
 				_self.is_show = current;
@@ -360,10 +431,25 @@
 				    hideLoading : true,
 				    success: (res) => {	
 				    	    if(res){
-				    	    	var data = res.studentslist; 
-								var schoollist = res.schoollist;
+								//子公司
+								var data = res.subcompanylist;													
 								let list = [];
 								let idlist = [];
+								list.push("==请选择所属机构==");
+								idlist.push(0);
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.com_name);
+									idlist.push(item.com_id);
+								}								
+								_self.cList = list;
+								_self.cIDList = idlist;
+								if(_self.uid == 0) _self.cindex = 0;
+								
+				    	    	var data = res.studentslist; 
+								var schoollist = res.schoollist;
+								list = [];
+								idlist = [];
 								list.push("==请选择学校==");
 								idlist.push(0);
 								for (var i = 0; i < schoollist.length; i++) {
@@ -407,7 +493,15 @@
 				    				_self.uname = data.uname;
 									_self.sex = data.sex;
 									_self.teacher = data.teacher;
-									_self.birthday = data.birthday;
+									
+									
+									var birthday1 = data.birthday;
+									if(birthday1 == '1970-01-01'){
+										birthday1 = '';
+									}
+									
+									_self.birthday = birthday1;
+									
 									_self.mparent = data.mparent;
 									_self.mtel = data.mtel;
 									_self.memo = data.memo;
@@ -425,6 +519,10 @@
 									_self.class_id = data.class_id;
 									j = _self.class_dataIDList.findIndex(i => i == _self.class_id);
 									_self.class_index = j;
+									
+									_self.com_id = data.com_id;
+									j = _self.cIDList.findIndex(i => i == _self.com_id);
+									_self.cindex = j;
 				    			}						
 								
 				    	    }
