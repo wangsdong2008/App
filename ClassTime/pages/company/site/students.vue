@@ -5,7 +5,11 @@
 			<view class="title">
 				<image src="../../../static/img/students.png" mode=""></image>全部学生
 			</view>
-			<view>
+			<view class="search">		
+					<m-input class="m-input" type="text" clearable v-model="keyword"  placeholder="搜索学生"></m-input>
+					<button type="primary" class="searchbtn" plain="true" @tap="searchstudents">搜索</button>
+			</view>
+			<view class="searchlist">
 				<uni-list>
 					<uni-list-item v-for="(item,index) in dataList" :show-arrow="false" :title="item.uname" :index="index" :key="item.uid" :thumb="'../../../static/img/'+(item.sex==1?'boy':'gril')+'.png'" >
 						<view class="statuslist"><span @tap="studentsedit(item.uid)">修改</span><span @tap="studentsdel(item.uid)">删除</span></view>
@@ -25,6 +29,8 @@
 </template>
 
 <script>
+	import service from '../../../service.js';
+	import mInput from '@/components/m-input.vue';
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
@@ -35,7 +41,7 @@
 			uniList,
 			uniListItem,
 			headerNav,
-			uniPagination
+			uniPagination,mInput
 		},
 		data(){
 			return{
@@ -44,7 +50,8 @@
 				page:1,
 				current: 1,
 				total: 0,
-				pagesize: 10
+				pagesize: 10,
+				keyword:'',
 			}
 		},
 		onLoad(options){
@@ -64,6 +71,22 @@
 				//debugger;
 				_self.page = params.current;
 				_self.show();
+			},
+			searchstudents(){
+				
+				//查询功能
+				let ret = _self.getUserInfo();
+				if(!ret){
+					return false;
+				}
+				const data = {
+				    guid: ret.guid,
+				    token: ret.token,
+					"page":_self.page,
+					"pagesize":_self.pagesize,
+					"keyword":_self.keyword
+				};
+				_self.getData(data);
 			},
 			studentsadd(){
 				_self.navigateTo('studentsedit');
@@ -127,6 +150,7 @@
 				    token: ret.token,
 					"page":_self.page,
 					"pagesize":_self.pagesize,
+					"keyword":_self.keyword,
 				};
 				_self.getData(data);
 			},
@@ -139,6 +163,7 @@
 							"token":data.token,
 							"page":data.page,
 							"pagesize":data.pagesize,
+							"keyword":data.keyword,
 							"t":Math.random()
 						},
 				        hideLoading : true,
@@ -174,6 +199,32 @@
 </script>
 
 <style>
+	.search{
+		height: 60upx;
+		line-height: 60upx;	
+		background: url(../../../static/img/search.png) 15upx 20upx no-repeat;
+		background-size:40upx 40upx;
+		padding-left: 70upx;
+	}
+	.search .searchbtn{
+		width: 25%;
+		float: left;
+		height: 70upx;
+		line-height:70upx;
+		margin-left: 20upx;
+	}
+	.search .m-input{
+		border:1px solid #999;
+		width: 60%;
+		height: 70upx;
+		line-height:70upx;
+		text-align: center;
+		float: left;
+	}
+	.searchlist{
+		clear: both;
+		margin-top: 30upx;
+	}
 	.button-sp-area{
 		position: fixed;
 		bottom: 0upx;
