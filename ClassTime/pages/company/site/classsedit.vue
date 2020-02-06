@@ -2,7 +2,7 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="register_account">年级信息</view>
+			<view class="register_account">班级信息</view>
 			<view class="register_account_input">
 				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
 					<view class="uni-input">{{cList[cindex]}}</view>
@@ -15,11 +15,11 @@
 			</view>	
 			
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable focus v-model="grade_name" placeholder="填写年级名"></m-input>
+				<m-input class="m-input" type="text" clearable focus v-model="class_name" placeholder="填写班级名"></m-input>
 			</view>				
 			
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="grade_order" placeholder="填写顺序"></m-input>
+				<m-input class="m-input" type="text" clearable v-model="class_order" placeholder="填写顺序"></m-input>
 			</view>	
 			
 			
@@ -46,16 +46,16 @@
 		onLoad(options){
 			_self = this;
 			_self.checkLogin();
-			_self.grade_id = options['id'];
-			if(_self.grade_id == undefined){
-				_self.grade_id = 0;
+			_self.class_id = options['id'];
+			if(_self.class_id == undefined){
+				_self.class_id = 0;
 			}
-			if(_self.grade_id == 0){
+			if(_self.class_id == 0){
 				_self.btntxt = '添加'
-				_self.headermsg = "添加新年级,grade Add";
+				_self.headermsg = "添加新班级,class Add";
 			}else{
 				_self.btntxt="修改";
-				_self.headermsg = "年级编辑,grade Edit";
+				_self.headermsg = "班级编辑,class Edit";
 			}
 		},
 		onReady(){
@@ -63,10 +63,10 @@
 		},
 		data(){
 			return{
-				grade_id:0,
-				grade_name:'',
-				grade_order:'',
-				grade_address:'',
+				class_id:0,
+				class_name:'',
+				class_order:'',
+				class_address:'',
 				dataList:[],	
 							
 				com_id:0,
@@ -135,10 +135,10 @@
 			bindmodify(){
 				let that = _self;
 				//debugger;
-				if(!service.checkNull(that.grade_name)){
+				if(!service.checkNull(that.class_name)){
 					uni.showToast({
 					    icon: 'none',
-					    title: '年级名称必须是填写'
+					    title: '班级名称必须是填写'
 					});
 					return;
 				}
@@ -147,15 +147,15 @@
 					return false;
 				}				
 					_self.sendRequest({
-				        url : _self.UpdateGradeInfoUrl,
+				        url : _self.UpdateClassInfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
-							"grade_id": _self.grade_id,
+							"class_id": _self.class_id,
 							"com_id":_self.com_id,
-							"grade_name": _self.grade_name,
-							"grade_order":_self.grade_order,
+							"class_name": _self.class_name,
+							"class_order":_self.class_order,
 							"school_id":_self.school_id,
 							"t":Math.random()
 						},
@@ -169,15 +169,15 @@
 				       				break;
 				       			}
 				       			case 2:{
-				       				str = '年级名已经存在';
+				       				str = '班级名已经存在';
 				       				break;
 				       			}
 				       			case 3:{
-									if(_self.grade_id == 0){
-										_self.grade_id = 0;
+									if(_self.class_id == 0){
+										_self.class_id = 0;
 										_self.com_id = 0;
-										 _self.grade_name = '';
-										_self.grade_order = '';
+										 _self.class_name = '';
+										_self.class_order = '';
 										_self.school_id = '';
 										str = '添加成功';
 										
@@ -196,9 +196,9 @@
 				       		confirmText:'返回前页',
 				       		success: function (res) {
 				       			if (res.confirm) {
-				       				_self.navigateTo('grade');
+				       				_self.navigateTo('classs');
 				       			} else if (res.cancel) {
-				       				_self.navigateTo('gradeedit?id='+_self.grade_id);
+				       				_self.navigateTo('classedit?id='+_self.class_id);
 				       			}
 				       		}
 				       	});
@@ -214,13 +214,13 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:_self.grade_id
+					id:_self.class_id
 				};				
 				_self.getData(data);
 			},
 			getData(data){			
 				this.sendRequest({
-				    url : this.GetGradeInfoUrl,
+				    url : this.GetClassInfoUrl,
 				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
@@ -244,7 +244,7 @@
 								}								
 								_self.cList = list;
 								_self.cIDList = idlist;
-								if(_self.grade_id == 0) _self.cindex = 0;
+								if(_self.class_id == 0) _self.cindex = 0;
 								
 								var schoollist = res.schoollist;
 								list = [];
@@ -261,10 +261,10 @@
 								if(_self.uid == 0)	_self.school_index = 0;
 								
 								
-								var data = res.gradelist; 
+								var data = res.classlist; 
 				    			if(parseInt(res.status) == 3){
-				    				_self.grade_name = data.grade_name;
-				    				_self.grade_order = data.grade_order.toString();									
+				    				_self.class_name = data.class_name;
+				    				_self.class_order = data.class_order.toString();									
 									
 									_self.com_id = data.com_id;
 									let j = _self.cIDList.findIndex(i => i == _self.com_id);

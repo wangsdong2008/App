@@ -179,7 +179,7 @@
 				"navigationBarTitleText": "班级管理"
 			}
 		},{
-			"path": "pages/company/site/gradeedit",
+			"path": "pages/company/site/classsedit",
 			"style": {
 				"navigationBarTitleText": "班级管理"
 			}

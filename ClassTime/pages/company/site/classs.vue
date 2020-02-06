@@ -3,7 +3,7 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="title">
-				<image src="../../../static/img/grade.png" mode=""></image>学校年级
+				<image src="../../../static/img/class.png" mode=""></image>学校班级
 			</view>
 			<view>
 				<!-- 一般用法 -->
@@ -14,8 +14,8 @@
 						    <uni-collapse-item v-for="(item2,index2) in item.schoollist" :title="item2.school_name" :index="index2" :open="(index2 == 0?true:false)" thumb="../../../static/img/school.png" :key="item2.school_id" >
 								
 								<uni-list>
-									<uni-list-item v-for="(item3,index3) in item2.gradelist" :show-arrow="false" :title="item3.grade_name" :index="index3" :key="item3.grade_id" >
-										<view class="statuslist"><span @tap="gradeedit(item3.grade_id)">修改</span><span @tap="gradedel(item3.grade_id)">删除</span></view>
+									<uni-list-item v-for="(item3,index3) in item2.classlist" :show-arrow="false" :title="item3.class_name" :index="index3" :key="item3.class_id" >
+										<view class="statuslist"><span @tap="classedit(item3.class_id)">修改</span><span @tap="classdel(item3.class_id)">删除</span></view>
 									</uni-list-item>
 								</uni-list>	
 								
@@ -27,7 +27,7 @@
 				</uni-collapse>
 			</view>
 			<view class="button-sp-area">
-				<button type="primary" plain="true" @tap="gradeadd">添加年级</button>
+				<button type="primary" plain="true" @tap="classadd">添加班级</button>
 			</view>
 		</view>
 	</view>
@@ -57,17 +57,17 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'年级管理,Grade Manage'
+				headermsg:'班级管理,Class Manage'
 			}
 		},
 		methods:{
-			gradeadd(){
-				_self.navigateTo('gradeedit');
+			classadd(){
+				_self.navigateTo('classsedit');
 			},
-			gradeedit(id){				
-				_self.navigateTo('gradeedit?id='+id);
+			classedit(id){				
+				_self.navigateTo('classsedit?id='+id);
 			},
-			gradedel(id){
+			classdel(id){
 				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
@@ -81,7 +81,7 @@
 			},
 			delData(data){
 				this.sendRequest({
-				        url : this.DelGradeinfoUrl,
+				        url : this.DelClassinfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
@@ -95,7 +95,7 @@
 				        			if(parseInt(res.status) == 3){
 				        				_self.show();
 				        				uni.showToast({
-				        					title: '删除年级成功',
+				        					title: '删除班年级成功',
 				        					icon: 'none',
 				        				});	
 				        			}
@@ -123,7 +123,7 @@
 			},
 			getData(data){
 				this.sendRequest({
-				        url : this.GetAllGradelistUrl,
+				        url : this.GetAllClassUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
