@@ -2,20 +2,21 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="register_account">分类信息</view>
+			<view class="register_account">教室编辑</view>
 			<view class="register_account_input">
 				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
 					<view class="uni-input">{{cList[cindex]}}</view>
 				</picker>
 			</view>
 			<view class="register_account_input">				
-				<m-input class="m-input" type="text" clearable focus v-model="cat_name" placeholder="填写分类名"></m-input>
-			</view>			
-			<view class="textareainput">
-				<textarea class="textarea" v-model="cat_content" placeholder="请填写课程介绍" auto-height="true" ></textarea>
+				<m-input class="m-input" type="text" clearable focus v-model="classroom_name" placeholder="填写教室名"></m-input>
 			</view>
+			<view class="register_account_input">				
+				<m-input class="m-input" type="text" clearable v-model="classroom_url" placeholder="监控地址"></m-input>
+			</view>
+			
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="cat_order" placeholder="填写顺序"></m-input>
+				<m-input class="m-input" type="text" clearable v-model="classroom_order" placeholder="填写顺序"></m-input>
 			</view>
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
@@ -38,14 +39,14 @@
 		onLoad(options){	
 			_self = this;
 			_self.checkLogin();
-			_self.cat_id = options['id'];
-			if(_self.cat_id == undefined){
-				_self.cat_id = 0;
+			_self.classroom_id = options['id'];
+			if(_self.classroom_id == undefined){
+				_self.classroom_id = 0;
 			}
-			if(_self.cat_id == 0){
-				_self.headermsg = "添加新分类,Category Add";
+			if(_self.classroom_id == 0){
+				_self.headermsg = "添加新教室,Classroom Add";
 			}else{
-				_self.headermsg = "分类编辑,Category Edit";
+				_self.headermsg = "教室编辑,Classroom Edit";
 			}
 		},
 		onReady(){
@@ -53,13 +54,14 @@
 		},
 		data(){
 			return{
-				cat_id:0,
-				cat_name:'',
-				cat_order:'',	
-				cat_content:'',
+				classroom_id:0,
+				classroom_name:'',
+				classroom_order:'',	
+				classroom_url:'',
 				dataList:[],
 				headermsg:'',
 				cindex:0,
+				
 				com_id:0,
 				cList:[],
 				cIDList:[],
@@ -73,10 +75,10 @@
 				_self.cindex = e.target.value; 
 			},
 			bindmodify(){
-				if(!service.checkNull(_self.cat_name)){
+				if(!service.checkNull(_self.classroom_name)){
 					uni.showToast({
 					    icon: 'none',
-					    title: '分类名称不能为空'
+					    title: '教室名称不能为空'
 					});
 					return;
 				}
@@ -86,29 +88,21 @@
 					    title: '请选择公司'
 					});
 					return;
-				}
-				if(!service.checkNum(_self.cat_order)){
-					uni.showToast({
-					    icon: 'none',
-					    title: '请填写顺序'
-					});
-					return;
-				}
+				}				
 				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				this.sendRequest({
-				        url : this.UpdateCategoryInfoUrl,
+				        url : this.UpdateClassroomInfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
-							"id": _self.cat_id,
-							"name": _self.cat_name,
-							"content": _self.cat_content,
-							"sorder":_self.cat_order,
-							"comid":_self.com_id,
+							"classroom_id": _self.classroom_id,
+							"classroom_name": _self.classroom_name,
+							"classroom_order":_self.classroom_order,
+							"com_id":_self.com_id,
 							"t":Math.random()
 						},
 				        hideLoading : false,
@@ -121,20 +115,20 @@
 				        				break;
 				        			}
 				        			case 2:{
-				        				str = '分类名已经存在';
+				        				str = '教室名已经存在';
 				        				break;
 				        			}
 				        			case 3:{
-				        				if(_self.cat_id == 0){
+				        				if(_self.classroom_id == 0){
 				        					str = '添加成功';
-				        					_self.cat_id = 0;
-				        					_self.cat_name = '';
-				        					_self.cat_order = '';	
-				        					_self.cat_content = '';
+				        					_self.classroom_id = 0;
+				        					_self.classroom_name = '';
+				        					_self.classroom_order = '';	
+				        					_self.classroom_url = '';
 				        					_self.cindex = 0;
 				        					_self.com_id = 0;
-				        					_self.cList = array();
-				        					_self.cIDList = array();
+				        					_self.cList = [];
+				        					_self.cIDList = [];
 				        				}
 				        				else{
 				        					
@@ -151,9 +145,9 @@
 									confirmText:'返回前页',
 									success: function (res) {
 										if (res.confirm) {
-											_self.navigateTo('category');
+											_self.navigateTo('classroom');
 										} else if (res.cancel) {
-											_self.navigateTo('categoryedit?id='+_self.cat_id);
+											_self.navigateTo('classroomedit?id='+_self.classroom_id);
 										}
 									}
 								});
@@ -162,7 +156,7 @@
 				    },"1","");		
 			},
 			show(){
-				//if(_self.cat_id == 0 ) return;  //考虑添加功能,允许等于0
+				//if(_self.classroom_id == 0 ) return;  //考虑添加功能,允许等于0
 				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
@@ -170,52 +164,48 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:_self.cat_id
+					id:_self.classroom_id
 				};
-				if(_self.cat_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
+				if(_self.classroom_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
 				_self.getData(data);
 			},
 			getData(data){			
 					this.sendRequest({
-				        url : this.GetCategoryInfoUrl,
+				        url : this.GetClassroomInfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
-							"comid":data.comid,
 							"t":Math.random()
 						},
 				        hideLoading : true,
 				        success: (res) => {
-				        	    if(res){
-				        			//debugger;
-				        			
+				        	    if(res){				        			
 				        	    	var data = res.subcompanylist; 
-				        			if(parseInt(res.status) == 3){									
-				        				let list = [];
-				        				let idlist = [];
-				        				list.push("==请选择==");
-				        				idlist.push(0);
-				        				for (var i = 0; i < data.length; i++) {
-				        					var item = data[i];									
-				        					list.push(item.com_name);
-				        					idlist.push(item.com_id);
-				        				}								
-				        				_self.cList = list;
-				        				_self.cIDList = idlist;
-				        				
-				        				if(_self.cat_id > 0){
-				        					data = res.categorylist;									
-				        					_self.cat_name = data.cat_name;									
-				        					_self.cat_order = data.cat_order.toString();
-				        					_self.cat_content = data.cat_content;
-				        					_self.com_id = data.com_id;
-				        					if(_self.cIDList != undefined){
-				        						_self.cindex = _self.cIDList.findIndex(i => i == data.com_id);
-				        					}
+									let list = [];
+				        			let idlist = [];
+				        			list.push("==请选择所属机构==");
+				        			idlist.push(0);
+				        			for (var i = 0; i < data.length; i++) {
+				        				var item = data[i];									
+				        				list.push(item.com_name);
+				        				idlist.push(item.com_id);
+				        			}								
+				        			_self.cList = list;
+				        			_self.cIDList = idlist;	
+									
+				        			if(parseInt(res.status) == 3){
+				        				if(_self.classroom_id > 0){
+				        					data = res.classroomlist;									
+				        					_self.classroom_name = data.classroom_name;	
+				        					_self.classroom_order = data.classroom_order.toString();
+											
+											_self.com_id = data.com_id;
+											let j = _self.cIDList.findIndex(i => i == _self.com_id);
+											_self.cindex = j;
 				        				}
-				        			}
+				        			}				        			
 				        	    }
 				        	}
 				        

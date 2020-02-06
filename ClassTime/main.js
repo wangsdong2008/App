@@ -98,12 +98,21 @@ Vue.prototype.DelGradeinfoUrl = Vue.prototype.CompanyUrl + "delgradeinfo" //删�
 Vue.prototype.GetGradeInfoUrl = Vue.prototype.CompanyUrl + "getgradeinfo" //获取学生信息
 Vue.prototype.UpdateGradeInfoUrl = Vue.prototype.CompanyUrl + "updategradeinfo" //修改年级信息
 
+//班级
 Vue.prototype.GetAllClassUrl = Vue.prototype.CompanyUrl + "getallclass" //获取班级(列表)
 Vue.prototype.GetAllClassUrl = Vue.prototype.CompanyUrl + "getclasslist" //获取班级(下拉)
 Vue.prototype.DelClassinfoUrl = Vue.prototype.CompanyUrl + "delclassinfo" //删除班级
-
 Vue.prototype.GetClassInfoUrl = Vue.prototype.CompanyUrl + "getclassinfo" //获取班级信息
 Vue.prototype.UpdateClassInfoUrl = Vue.prototype.CompanyUrl + "updateclassinfo" //修改班级信息
+
+//教室
+Vue.prototype.GetAllClassroomUrl = Vue.prototype.CompanyUrl + "getallclassroom" //获取教室(列表)
+
+Vue.prototype.GetAllClassroomUrl = Vue.prototype.CompanyUrl + "getclassroomlist" //获取教室(下拉)
+Vue.prototype.DelClassroominfoUrl = Vue.prototype.CompanyUrl + "delclassroominfo" //删除教室
+Vue.prototype.GetClassroomInfoUrl = Vue.prototype.CompanyUrl + "getclassroominfo" //获取教室信息
+Vue.prototype.UpdateClassroomInfoUrl = Vue.prototype.CompanyUrl + "updateclassroominfo" //修改教室信息
+
 
 //常用函数
 //获取月份

@@ -150,12 +150,22 @@
 		},{
 			"path": "pages/company/site/category",
 			"style": {
-				"navigationBarTitleText": "编辑分类"
+				"navigationBarTitleText": "课程分类"
 			}
 		},{
 			"path": "pages/company/site/categoryedit",
 			"style": {
 				"navigationBarTitleText": "编辑分类"
+			}
+		},{
+			"path": "pages/company/site/classroom",
+			"style": {
+				"navigationBarTitleText": "所有教室"
+			}
+		},{
+			"path": "pages/company/site/classroomedit",
+			"style": {
+				"navigationBarTitleText": "教室编辑"
 			}
 		},{
 			"path": "pages/company/site/studentsedit",
