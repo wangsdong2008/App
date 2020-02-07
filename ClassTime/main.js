@@ -113,7 +113,11 @@ Vue.prototype.DelClassroominfoUrl = Vue.prototype.CompanyUrl + "delclassroominfo
 Vue.prototype.GetClassroomInfoUrl = Vue.prototype.CompanyUrl + "getclassroominfo" //获取教室信息
 Vue.prototype.UpdateClassroomInfoUrl = Vue.prototype.CompanyUrl + "updateclassroominfo" //修改教室信息
 
-
+//安排
+Vue.prototype.GetAllCompanyplanUrl = Vue.prototype.CompanyUrl + "getcompanyplanlist" //获取安排
+Vue.prototype.DelCompanyplaninfoUrl = Vue.prototype.CompanyUrl + "delcompanyplaninfo" //删除安排
+Vue.prototype.GetCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "getcompanyplaninfo" //获取安排信息
+Vue.prototype.UpdateCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyplaninfo" //修改安排信息
 //常用函数
 //获取月份
 Vue.prototype.GetStudyMonth = function () {	

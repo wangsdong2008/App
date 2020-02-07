@@ -11,7 +11,7 @@
 				<uni-list-item title="年级管理" thumb="../../../static/img/grade.png" @tap="bindgrade" />
 				<uni-list-item title="班级管理" thumb="../../../static/img/classs.png" @tap="bindclass" />
 				<uni-list-item title="学生管理" thumb="../../../static/img/students.png" @tap="bindstudent" />
-				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" />
+				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" @tap="bindcompanyplan"  />
 			</uni-list>
 			<uni-list>
 				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				 
@@ -71,6 +71,9 @@
 			},
 			bindstudent:function(){ //学生管理
 				this.navigateTo('students');
+			},
+			bindcompanyplan:function(){
+				this.navigateTo('companyplan');
 			}
 			
 		}

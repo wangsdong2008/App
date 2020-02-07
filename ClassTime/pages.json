@@ -193,10 +193,18 @@
 			"style": {
 				"navigationBarTitleText": "班级管理"
 			}
+		},{
+			"path": "pages/company/site/companyplan",
+			"style": {
+				"navigationBarTitleText": "上课安排"
+			}
+		},{
+			"path": "pages/company/site/companyplanedit",
+			"style": {
+				"navigationBarTitleText": "上课安排编辑"
+			}
 		},
-		
-		
-		
+			
 		
 		{
 			"path": "pages/company/site/students",

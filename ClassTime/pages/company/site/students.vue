@@ -7,6 +7,11 @@
 			</view>
 			<view class="search">		
 					<m-input class="m-input" type="text" clearable v-model="keyword"  placeholder="搜索学生"></m-input>
+					<view class="register_account_input">
+						<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
+							<view class="uni-input">{{cList[cindex]}}</view>
+						</picker>
+					</view>
 					<button type="primary" class="searchbtn" plain="true" @tap="searchstudents">搜索</button>
 			</view>
 			<view class="searchlist">
@@ -52,6 +57,12 @@
 				total: 0,
 				pagesize: 10,
 				keyword:'',
+				
+				com_id:0,
+				cList:[],
+				cIDList:[],
+				cindex:0,
+				btntxt:''
 			}
 		},
 		onLoad(options){
@@ -73,7 +84,6 @@
 				_self.show();
 			},
 			searchstudents(){
-				
 				//查询功能
 				let ret = _self.getUserInfo();
 				if(!ret){
@@ -84,9 +94,15 @@
 				    token: ret.token,
 					"page":_self.page,
 					"pagesize":_self.pagesize,
-					"keyword":_self.keyword
+					"keyword":_self.keyword,
+					"com_id":_self.com_id
 				};
 				_self.getData(data);
+			},
+			pickerCompanyChange:function(e){
+				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
+				_self.com_id = _self.cIDList[e.target.value];
+				_self.cindex = e.target.value; 
 			},
 			studentsadd(){
 				_self.navigateTo('studentsedit');
@@ -164,12 +180,27 @@
 							"page":data.page,
 							"pagesize":data.pagesize,
 							"keyword":data.keyword,
+							"com_id":data.com_id,
 							"t":Math.random()
 						},
 				        hideLoading : true,
 				        success: (res) => {
 				        	    if(res){
-				        	    	var data = res.studentslist.list; 
+									var data = res.subcompanylist;
+									let list = [];
+									let idlist = [];
+									list.push("=所属机构=");
+									idlist.push(0);
+									for (var i = 0; i < data.length; i++) {
+										var item = data[i];									
+										list.push(item.com_name);
+										idlist.push(item.com_id);
+									}								
+									_self.cList = list;
+									_self.cIDList = idlist;	
+									
+									
+				        	    	data = res.studentslist.list; 
 				        			if(parseInt(res.status) == 3){
 				        				if(data.length > 0){
 				        					let list = [];
@@ -199,12 +230,23 @@
 </script>
 
 <style>
+	.register_account_input{
+		border:1px solid #999;
+		float: left;
+		width: 35%;
+		height: 70upx;
+		line-height:70upx;
+		margin-left: 20upx;
+		text-align: center;
+		font-size: 35upx;
+		color:#999;
+	}
 	.search{
 		height: 60upx;
 		line-height: 60upx;	
 		background: url(../../../static/img/search.png) 15upx 20upx no-repeat;
 		background-size:40upx 40upx;
-		padding-left: 70upx;
+		padding-left: 55upx;
 	}
 	.search .searchbtn{
 		width: 25%;
@@ -215,7 +257,7 @@
 	}
 	.search .m-input{
 		border:1px solid #999;
-		width: 60%;
+		width: 25%;
 		height: 70upx;
 		line-height:70upx;
 		text-align: center;
