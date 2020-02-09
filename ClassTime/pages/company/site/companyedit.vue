@@ -37,7 +37,7 @@
 			</view>
 			<view class="register_account_input">
 			    <view class="uni-list-cell-left">
-			        使用定位
+			        使用位置
 			    </view>     
 				<radio-group @change="radioChange">
 					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in items" :key="item.value">
@@ -49,6 +49,19 @@
 				</radio-group>	
 			</view>		
 			
+			<view class="register_account_input">
+			    <view class="uni-list-cell-left">
+			        开启托班
+			    </view>     
+				<radio-group @change="wtradioChange">
+					<label class="uni-list-cell uni-list-cell-pd" v-for="(item2, index2) in wt_items" :index="index2" :key="item2.value">
+					<view>
+						<radio class="radios" :value="item2.value" :checked="parseInt(item2.value) == _self.wt_status" />
+					</view>
+					<view class="radio_text">{{item2.name}}</view>
+					</label>
+				</radio-group>	
+			</view>	
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">修改</button>
 			</view>			
@@ -60,7 +73,7 @@
 </template>
 <script>
 	import service from '../../../service.js';
-	import mInput from '../../../components/m-input.vue';
+	import mInput from '@/components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
 	var _self;
 	export default {
@@ -106,10 +119,25 @@
 						value: '0',
 						name: '不启用'
 					}
+				],
+				wt_status:0,
+				wt_items: [
+					{
+						value: '1',
+						name: '开启'
+					},
+					{
+						value: '0',
+						name: '禁用'
+					}
 				]
 			}
 		},
 		methods:{
+			wtradioChange: function(evt) {
+				var current = evt.detail.value;
+				_self.wt_status = current;
+			},
 			radioChange: function(evt) {
 				var current = evt.detail.value;
 				_self.gps_status = current;
@@ -165,6 +193,7 @@
 							"gps_status":_self.gps_status,
 							"gps_x":_self.gps_x,
 							"gps_y":_self.gps_y,
+							"wt_status":_self.wt_status,
 							"t":Math.random()
 						},
 				        hideLoading : false,
@@ -240,6 +269,7 @@
 				        				_self.gps_status = data.gps_status;
 				        				_self.gps_x = data.latitude;
 				        				_self.gps_y = data.longitude;
+										_self.wt_status = data.wt_status;
 				        			}
 				        	    }
 				        	}

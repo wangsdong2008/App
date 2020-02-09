@@ -12,7 +12,7 @@
 						
 						<uni-list>
 							<uni-list-item v-for="(item2,index2) in item.planlist" :show-arrow="false" :title="'【'+item2.cat_name+'】'+item2.uname" :index="index2" :key="item2.id" >
-								<view class="statuslist"><span @tap="companyplanedit(item2.id)">修改</span><span @tap="companyplandel(item2.id)">删除</span></view>
+								<view class="statuslist"><span @tap="companyplanedit(item2.uid,item2.cat_id)">修改</span><span @tap="companyplandel(item2.uid,item2.cat_id)">删除</span></view>
 								</uni-list-item>
 						</uni-list>	
 						
@@ -58,18 +58,19 @@
 			companyplanadd(){
 				_self.navigateTo('companyplanedit');
 			},
-			companyplanedit(id){				
-				_self.navigateTo('companyplanedit?id='+id);
+			companyplanedit(id,cat_id){				
+				_self.navigateTo('companyplanedit?id='+id+"&cat_id="+cat_id);
 			},
-			companyplandel(id){
-				let ret = uni.getStorageSync(_self.USERS_KEY);
+			companyplandel(id,cat_id){
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:id
+					id:id,
+					cat_id:cat_id
 				};
 				_self.delData(data);
 			},
@@ -81,6 +82,7 @@
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
+							"cat_id":data.cat_id,
 							"t":Math.random()
 						},
 				        hideLoading : false,

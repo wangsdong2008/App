@@ -2,25 +2,78 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="register_account">年级信息</view>
+			<view class="register_account">计划信息</view>
 			<view class="register_account_input">
 				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
 					<view class="uni-input">{{cList[cindex]}}</view>
 				</picker>
 			</view>
 			<view class="register_account_input">
-				<picker @change="SchoolPickerChange($event)" :value="school_index" :range="school_dataList">
-					<view class="uni-input">{{school_dataList[school_index]}}</view>
+				<picker @change="categoryPickerChange($event)" :value="category_index" :range="category_dataList">
+					<view class="uni-input">{{category_dataList[category_index]}}</view>
 				</picker>
-			</view>	
+			</view>
+			
+			<view :class="{
+				'register_account_input':true,
+				 'checkboxlist':(_self.com_id > 0)
+				}">
+				<view v-if="_self.com_id == 0">==请选择学生==</view>
+				<view v-if="_self.com_id > 0">
+					<checkbox-group @change="checkboxChange">
+						<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in students_dataList" :index="index" :key="item.uid">
+							<checkbox class="checkbox" :value="item.uid" /><text>{{item.uname}}</text>
+						</label>
+					</checkbox-group>
+				</view>
+			</view>
 			
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable focus v-model="grade_name" placeholder="填写年级名"></m-input>
-			</view>				
+				<view class="uni-list-cell-left">
+				    上课时间
+				</view>		
+			</view>
 			
-			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="grade_order" placeholder="填写顺序"></m-input>
-			</view>	
+			<view  class="register_account_input week-list" v-for="(witem,windex) in week_dataList" :index="windex" :key="witem.week_id">
+				<view class="left_txt">周{{witem.weektext}}</view>
+				<view class="week-list-time">
+					<view class="left_txt">上课时间:</view>
+					<view class="cell-right">
+						<picker mode="time" :value="'utime'+witem.weekid" start="00:01" end="23:59" @change="bindTimeChange">
+							<view class="uni-input">{{'utime'+witem.weekid}}</view>
+						</picker>
+					</view>					
+				</view>
+				<view class="week-list-time address">
+					<view class="left_txt">地址：</view>
+					<view class="cell-right">
+						<m-input class="m-input t2" type="text" clearable  v-model="uaddress1" placeholder=""></m-input>
+					</view>					
+				</view>
+				<view class="week-list-time">
+					<view class="left_txt">送机构时间:</view>
+					<view class="cell-right">
+						<picker mode="time" :value="'givetime'+witem.weekid" start="00:01" end="23:59" @change="bindTimeChange">
+							<view class="uni-input">{{'givetime'+witem.weekid}}</view>
+						</picker>
+					</view>					
+				</view>
+				<view class="week-list-time address">
+					<view class="left_txt">送地址：</view>
+					<view class="cell-right">
+						<m-input class="m-input t2" type="text" clearable  v-model="giveaddress1" placeholder=""></m-input>
+					</view>					
+				</view>
+				<view class="week-list-time">
+					<view class="left_txt">接回时间:</view>
+					<view class="cell-right">
+						<picker mode="time" :value="backtime1" start="00:01" end="23:59" @change="bindTimeChange">
+							<view class="uni-input">{{backtime1}}</view>
+						</picker>
+					</view>					
+				</view>
+				<view class="clear"></view>
+			</view>
 			
 			
 			<view class="btn-row">
@@ -46,16 +99,16 @@
 		onLoad(options){
 			_self = this;
 			_self.checkLogin();
-			_self.grade_id = options['id'];
-			if(_self.grade_id == undefined){
-				_self.grade_id = 0;
+			_self.uid = options['id'];
+			if(_self.uid == undefined){
+				_self.uid = 0;
 			}
-			if(_self.grade_id == 0){
+			if(_self.uid == 0){
 				_self.btntxt = '添加'
-				_self.headermsg = "添加新年级,grade Add";
+				_self.headermsg = "添加新计划,grade Add";
 			}else{
 				_self.btntxt="修改";
-				_self.headermsg = "年级编辑,grade Edit";
+				_self.headermsg = "计划编辑,grade Edit";
 			}
 		},
 		onReady(){
@@ -73,59 +126,102 @@
 				cindex:0,
 				cList:[],
 				cIDList:[],
+				cStatuslist:[],
 				
-				school_id:0,
-				school_index:0,
-				school_dataList:[],
-				school_dataIDList:[],
+				category_id:0,
+				category_index:0,
+				category_dataList:[],
+				category_dataIDList:[],
+				
+				//学生列表
+				uid:0,
+				students_dataList:[],
+								
+				
+				week_id:0,
+				week_index:0,
+				week_dataList:[],
+				week_dataIDList:[],	
+				
+				utime1:'15:00',
+				uaddress1:'接的地址',
+				givetime1:'',
+				giveaddress1:'送的地址',
+				backtime1:'',
 				
 				headermsg:'',
 				btntxt:''
 			}
 		},
 		methods:{
-			SchoolPickerChange:function(e){
-				console.log('学校picker发送选择改变，携带值为', e.target.value+"===="+_self.school_dataList[e.target.value] + _self.school_dataIDList[e.target.value]);
-				var school_id = _self.school_dataIDList[e.target.value];
-				_self.school_id = school_id;
-				_self.school_index = e.target.value;
+			checkboxChange: function (e) {
+				/*debugger;
+				var items = _self.students_dataList;
+			    var values = e.detail.value;
+				let list = [];
+			    for (var i = 0; i <  items.length; i++) {
+			        let item = items[i];
+			        if(values.includes(item.uid)){
+						list.push(item.uid);
+			            this.$set(item,'checked',true);
+			        }else{
+			            this.$set(item,'checked',false);
+			        }
+			    }
+				_self.students_dataList = list; */
+			},
+			categoryPickerChange:function(e){
+				console.log('学校picker发送选择改变，携带值为', e.target.value+"===="+_self.category_dataList[e.target.value] + _self.category_dataIDList[e.target.value]);
+				var category_id = _self.category_dataIDList[e.target.value];
+				_self.category_id = category_id;
+				_self.category_index = e.target.value;
 			},
 			pickerCompanyChange:function(e){
 				console.log('公司picker发送选择改变，携带值为', e.target.value+"===="+_self.cList[e.target.value] + _self.cIDList[e.target.value]);
 				_self.com_id = _self.cIDList[e.target.value];
+				_self.status = _self.cStatuslist[e.target.value];
 				_self.cindex = e.target.value; 
 				
+				//获取下属分类
 				let ret = _self.getUserInfo();
 				this.sendRequest({
-				    url : this.GetAllCompanySchoolUrl,
+				    url : this.GetAllSubCompanyCategoryByComidUrl,
 				    method : _self.Method,
 				    data : {
 						"guid": ret.guid,
 						"token":ret.token,
 						"com_id":_self.com_id,
+						"status":_self.status,
 						"t":Math.random()
 					},
 				    hideLoading : true,
 				    success: (res) => {	
 				    	if(res){
-							var data = res.schoollist;
 							if(parseInt(res.status) == 3){
+								var data = res.categorylist;
 								let uid = 0;
 								let list = [];
 								let idlist = [];
-								list.push("==请选择学校==");
+								list.push("==请选择课程==");
 								idlist.push(0);
 								for (var i = 0; i < data.length; i++) {
 									var item = data[i];									
-									list.push(item.school_name);
-									idlist.push(item.school_id);
-									if(i == 0){
-										_self.school_id = item.com_id;
-									}
+									list.push(item.cat_name);
+									idlist.push(item.cat_id);
 								}
-								_self.school_dataList = list;
-								_self.school_dataIDList = idlist;
-								_self.school_index = 0;	
+								_self.category_dataList = list;
+								_self.category_dataIDList = idlist;
+								_self.category_index = 0;
+								
+								//所有学生
+								data = res.studentslist;
+								list = [];
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item);
+								}
+								_self.students_dataList = list;
+								
 							}							
 						}
 					}
@@ -138,7 +234,7 @@
 				if(!service.checkNull(that.grade_name)){
 					uni.showToast({
 					    icon: 'none',
-					    title: '年级名称必须是填写'
+					    title: '计划名称必须是填写'
 					});
 					return;
 				}
@@ -156,7 +252,7 @@
 							"com_id":_self.com_id,
 							"grade_name": _self.grade_name,
 							"grade_order":_self.grade_order,
-							"school_id":_self.school_id,
+							"category_id":_self.category_id,
 							"t":Math.random()
 						},
 				        hideLoading : false,
@@ -169,7 +265,7 @@
 				       				break;
 				       			}
 				       			case 2:{
-				       				str = '年级名已经存在';
+				       				str = '计划名已经存在';
 				       				break;
 				       			}
 				       			case 3:{
@@ -178,7 +274,7 @@
 										_self.com_id = 0;
 										 _self.grade_name = '';
 										_self.grade_order = '';
-										_self.school_id = '';
+										_self.category_id = '';
 										str = '添加成功';
 										
 									}else{
@@ -215,12 +311,30 @@
 				    guid: ret.guid,
 				    token: ret.token,
 					id:_self.grade_id
-				};				
+				};		
+						
+				if(_self.uid == 0){
+					_self.week_dataList = [					
+						{"weektext":'一',"weekid":'1'},
+						{"weektext":'二',"weekid":'2'},
+						{"weektext":'三',"weekid":'3'},
+						{"weektext":'四',"weekid":'4'},
+						{"weektext":'五',"weekid":'5'},
+						{"weektext":'六',"weekid":'6'},
+						{"weektext":'日',"weekid":'0'},
+					];
+				}
+				else{
+					_self.week_dataList = ['周一','周二','周三','周四','周五','周六','周日'];
+					_self.week_dataIDList = ['1','2','3','4','5','6','0'];
+					
+				}
+				
 				_self.getData(data);
 			},
 			getData(data){			
 				this.sendRequest({
-				    url : this.GetGradeInfoUrl,
+				    url : this.GetCompanyplanInfoUrl,
 				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
@@ -230,49 +344,67 @@
 					},
 				    hideLoading : true,
 				    success: (res) => {
+							//子公司
+							var data = res.subcompanylist;
+							let list = [];
+							let idlist = [];
+							let statuslist = [];
+							list.push("==请选择所属机构==");
+							idlist.push(0);
+							statuslist.push(0)
+							for (var i = 0; i < data.length; i++) {
+								var item = data[i];									
+								list.push(item.com_name);
+								idlist.push(item.com_id);
+								statuslist.push(item.wt_status);
+							}								
+							_self.cList = list;
+							_self.cIDList = idlist;
+							_self.cStatuslist = statuslist;
+							if(_self.uid == 0) _self.cindex = 0;	
+							
+							
+							list = [];
+							idlist = [];
+							list.push("==请选择课程==");
+							idlist.push(0);
+							_self.category_dataList = list;
+							_self.category_dataIDList = idlist;
+							if(_self.uid == 0)	_self.category_index = 0; 
+						
 				    	    if(res){
-								//子公司
-								var data = res.subcompanylist;													
-								let list = [];
-								let idlist = [];
-								list.push("==请选择所属机构==");
-								idlist.push(0);
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];									
-									list.push(item.com_name);
-									idlist.push(item.com_id);
-								}								
-								_self.cList = list;
-								_self.cIDList = idlist;
-								if(_self.grade_id == 0) _self.cindex = 0;
 								
-								var schoollist = res.schoollist;
+								
+								/* var categorylist = res.categorylist;
 								list = [];
 								idlist = [];
-								list.push("==请选择学校==");
+								list.push("==请选择分类==");
 								idlist.push(0);
-								for (var i = 0; i < schoollist.length; i++) {
-									var item = schoollist[i];
-									list.push(item.school_name);
-									idlist.push(item.school_id);
+								for (var i = 0; i < categorylist.length; i++) {
+									var item = categorylist[i];
+									list.push(item.category_name);
+									idlist.push(item.category_id);
 								}								
-								_self.school_dataList = list;
-								_self.school_dataIDList = idlist;
-								if(_self.uid == 0)	_self.school_index = 0;
+								_self.category_dataList = list;
+								_self.category_dataIDList = idlist;
+								if(_self.uid == 0)	_self.category_index = 0; */
 								
+								//debugger;
 								
 								var data = res.gradelist; 
 				    			if(parseInt(res.status) == 3){
-				    				_self.grade_name = data.grade_name;
-				    				_self.grade_order = data.grade_order.toString();									
+				    				/* _self.grade_name = data.grade_name;
+				    				_self.grade_order = data.grade_order.toString();	 							
 									
 									_self.com_id = data.com_id;
 									let j = _self.cIDList.findIndex(i => i == _self.com_id);
-									_self.cindex = j;
+									_self.cindex = j;									
 									
-									_self.school_id = data.school_id;
-									j = _self.school_dataIDList.findIndex(i => i == _self.school_id);
-									_self.school_index = j;
+									_self.category_id = data.category_id;
+									j = _self.category_dataIDList.findIndex(i => i == _self.category_id);
+									_self.category_index = j;*/	
+									
+									
 									
 				    			}
 								
@@ -285,7 +417,86 @@
     }
 </script>
 
-<style>
+<style>	
+	.week-list{
+		padding-left: 40upx;
+		border:1px solid #ccc;
+		border-radius: 25upx;
+		margin-bottom: 40upx;
+	}	
+	.week-list picker{
+		width: 400upx;
+		height: 60upx;
+		line-height: 60upx;
+		text-align: left;
+		padding-left: 20upx;
+		border:1px solid #eee;
+	}
+	.week-list .week-list-time{
+		padding-left: 20upx;
+	}
+	.week-list .week-list-time.address{
+		clear: both;
+	}
+	.week-list .week-list-time view{
+		float: left;
+		margin-right: 20upx;
+		margin-bottom: 20upx;
+	}
+	.week-list .left_txt{
+		width:30%;
+	}	
+	.cell-right{
+		width:60%;
+		padding-right: 10upx;
+	}	
+	.week-list-time .cell-right .m-input{
+		border: 0upx;
+		border: 1px solid #eee;
+		line-height: 70upx;
+		height: 70upx;
+		font-size: 28upx;
+	}
+	.week-list view{
+		/* float: left;	 */	
+	}
+	.checkboxlist{
+		font-size: 30upx;
+		text-align: left;
+		height: 400upx;
+		overflow-y: auto;
+		padding: 20upx;
+	}
+	.checkboxlist label{
+		margin-right: 15upx;
+		width:180upx;
+		margin-bottom: 20upx;
+		height: 40upx;
+		line-height: 40upx;
+		display: block;
+	} 
+	picker{
+		font-size: 30upx;
+	}
+	view.txt{
+		font-size: 30upx;
+	}
+	.weeklist label{
+		margin-right: 10upx;
+		width:120upx;
+		margin-bottom: 20upx;
+		height: 40upx;
+		line-height: 40upx;
+		font-size: 30upx;
+	} 	
+	.checkboxlist .checkbox{
+		height: 40upx;
+		line-height: 40upx;
+	}
+	.weeklist{
+		height: 110upx;
+	}
+	
 	.content{
 		width:96%;
 		margin: 0 auto;
@@ -321,8 +532,7 @@
 		padding-top: 20upx;
 		padding-bottom: 10px;
 		border-bottom: 1px solid #eeeeee;
-		line-height: 60upx;
-		height: 60upx;
+		line-height: 60upx;		
 	}
 	.register_account{
 		font-size: 42upx;

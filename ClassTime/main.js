@@ -118,6 +118,7 @@ Vue.prototype.GetAllCompanyplanUrl = Vue.prototype.CompanyUrl + "getcompanyplanl
 Vue.prototype.DelCompanyplaninfoUrl = Vue.prototype.CompanyUrl + "delcompanyplaninfo" //删除安排
 Vue.prototype.GetCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "getcompanyplaninfo" //获取安排信息
 Vue.prototype.UpdateCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyplaninfo" //修改安排信息
+Vue.prototype.GetAllSubCompanyCategoryByComidUrl = Vue.prototype.CompanyUrl + "getsubcompanycategory"  //通过com_id获取子公司所有分类
 //常用函数
 //获取月份
 Vue.prototype.GetStudyMonth = function () {	
