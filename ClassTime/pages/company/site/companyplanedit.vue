@@ -18,11 +18,11 @@
 				'register_account_input':true,
 				 'checkboxlist':(_self.com_id > 0)
 				}">
-				<view v-if="_self.com_id == 0">==请选择学生==</view>
+				<view class="studentslist" v-if="_self.com_id == 0">==请选择学生==</view>
 				<view v-if="_self.com_id > 0">
 					<checkbox-group @change="checkboxChange">
-						<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in students_dataList" :index="index" :key="item.uid">
-							<checkbox class="checkbox" :value="item.uid" /><text>{{item.uname}}</text>
+						<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in students_dataList" :index="index" :key="item.uid.toString()">
+							<checkbox class="checkbox" :value="item.uid.toString()" /><text>{{item.uname}}</text>
 						</label>
 					</checkbox-group>
 				</view>
@@ -34,47 +34,60 @@
 				</view>		
 			</view>
 			
-			<view  class="register_account_input week-list" v-for="(witem,windex) in week_dataList" :index="windex" :key="witem.week_id">
-				<view class="left_txt">周{{witem.weektext}}</view>
+			<view  class="register_account_input week-list">				
+				<view class="week-list-time">
+					<view class="left_txt">星期</view>
+					<view class="cell-right">
+						<checkbox-group @change="weekcheckboxChange">
+							<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in week_dataList" :index="index" :key="item.weekid">
+								<checkbox :value="item.weekid" :checked="item.shower" /><text>{{item.weektext}}</text>
+							</label>
+						</checkbox-group>
+					</view>	
+				</view>
 				<view class="week-list-time">
 					<view class="left_txt">上课时间:</view>
 					<view class="cell-right">
-						<picker mode="time" :value="'utime'+witem.weekid" start="00:01" end="23:59" @change="bindTimeChange">
-							<view class="uni-input">{{'utime'+witem.weekid}}</view>
-						</picker>
+						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
+							<view :class="{
+								'texts':true,
+								'hidden':!item2.shower
+							}">周{{item2.weektext}}</view>
+							<picker mode="time" :value="item2.utime" start="00:01" end="23:59"  @change="bindTimeChange($event,item2.weekid)" :class="{
+							'a':true,
+								'hidden':!item2.shower
+							}">
+								<view class="uni-input">{{item2.utime}}</view>
+							</picker>	
+						</view>
+											
 					</view>					
 				</view>
 				<view class="week-list-time address">
-					<view class="left_txt">地址：</view>
+					<view class="left_txt">接的地址：</view>
 					<view class="cell-right">
-						<m-input class="m-input t2" type="text" clearable  v-model="uaddress1" placeholder=""></m-input>
-					</view>					
+						<m-input class="m-input t2" type="text" clearable v-model="uaddress1" placeholder="接的地址"></m-input></view>					
 				</view>
 				<view class="week-list-time">
-					<view class="left_txt">送机构时间:</view>
+					<view class="left_txt">送的时间:</view>
 					<view class="cell-right">
-						<picker mode="time" :value="'givetime'+witem.weekid" start="00:01" end="23:59" @change="bindTimeChange">
-							<view class="uni-input">{{'givetime'+witem.weekid}}</view>
-						</picker>
+						<m-input class="m-input t2" type="text" clearable  v-model="givetime1" placeholder="送的时间"></m-input>
 					</view>					
 				</view>
 				<view class="week-list-time address">
-					<view class="left_txt">送地址：</view>
+					<view class="left_txt">送的地址：</view>
 					<view class="cell-right">
-						<m-input class="m-input t2" type="text" clearable  v-model="giveaddress1" placeholder=""></m-input>
+						<m-input class="m-input t2" type="text" clearable  v-model="giveaddress1" placeholder="送的地址"></m-input>
 					</view>					
 				</view>
 				<view class="week-list-time">
 					<view class="left_txt">接回时间:</view>
 					<view class="cell-right">
-						<picker mode="time" :value="backtime1" start="00:01" end="23:59" @change="bindTimeChange">
-							<view class="uni-input">{{backtime1}}</view>
-						</picker>
+						<m-input class="m-input t2" type="text" clearable  v-model="backtime1" placeholder="接回时间"></m-input>
 					</view>					
 				</view>
 				<view class="clear"></view>
-			</view>
-			
+			</view>			
 			
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
@@ -85,6 +98,168 @@
 		</view>
 	</view>
 </template>
+<style>	
+	.texts{
+		font-size: 25upx;
+		margin-right: 20upx;
+	}
+	.hidden{
+		display: none;
+	}
+	.week-list label{
+		margin-right: 15upx;
+		margin-bottom:10upx;
+		font-size: 30upx;
+		width: 110upx;
+		display: block;
+		/* border:1px solid #f00; */
+		float: left;
+	}
+	.week-list .left_txt{
+		width:25%;
+		font-size: 30upx;
+	}	
+	.cell-right{
+		width:60%;
+		padding-right: 10upx;
+	}	
+	.week-list{
+		padding-left: 20upx;
+		border:1px solid #ccc;
+		border-radius: 25upx;		
+		margin-top: 20upx;
+	}		
+	picker,.studentslist{
+		font-size: 30upx;
+	}	
+	.week-list picker{
+		width: 300upx;
+		height: 60upx;
+		line-height: 60upx;
+		text-align: left;
+		margin-left: 70upx;
+		padding-left: 10upx;
+		border:1px solid #eee;
+		margin-bottom: 20upx;
+	}
+	.week-list .m-input{
+		width: 400upx;
+	}
+	
+	.week-list .week-list-time{
+		padding-left: 20upx;
+	}
+	.week-list .week-list-time.address{
+		clear: both;
+	}
+	.week-list .week-list-time view{
+		float: left;
+		margin-right: 20upx;
+		margin-bottom: 20upx;
+	}
+	.week-list .week-list-time view view{
+		margin-bottom: 0upx;
+	}
+	
+	.week-list-time .cell-right .m-input{
+		border: 0upx;
+		border: 1px solid #eee;
+		line-height: 70upx;
+		height: 70upx;
+		font-size: 28upx;
+	}
+	.week-list view{
+		/* float: left;	 */	
+	}
+	.checkboxlist{
+		font-size: 30upx;
+		text-align: left;
+		height: 400upx;
+		overflow-y: auto;
+		padding: 20upx;
+	}
+	.checkboxlist label{
+		margin-right: 15upx;
+		width:180upx;
+		margin-bottom: 20upx;
+		height: 40upx;
+		line-height: 40upx;
+		display: block;
+	} 
+	
+	view.txt{
+		font-size: 30upx;
+	}
+	.weeklist label{
+		margin-right: 10upx;
+		width:120upx;
+		margin-bottom: 20upx;
+		height: 40upx;
+		line-height: 40upx;
+		font-size: 30upx;
+	} 	
+	.checkboxlist .checkbox{
+		height: 40upx;
+		line-height: 40upx;
+	}
+	.weeklist{
+		height: 110upx;
+	}
+	
+	.content{
+		width:92%;
+		margin: 0 auto;
+	}
+	
+	.clear{
+		clear: both;
+	}
+	
+	.btn-row{
+		margin-top: 40upx;	
+		padding: 0upx;
+	}
+	
+	uni-button{
+		border-radius: 25upx;		
+	}
+	uni-button:after{
+		border: 0px;		
+	}
+	.remeber{
+		font-size: 28upx;
+		margin-top: 10upx;		
+	}
+	.remeber checkbox{
+		
+	}
+	.content{
+		background-color: #fff;		
+		padding-top: 10upx;
+	}
+	.register_account_input{
+		padding-top: 20upx;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #eeeeee;
+		line-height: 60upx;		
+	}
+	.register_account{
+		font-size: 42upx;
+		font-family: '黑体';
+		margin-top: 30upx;
+		margin-bottom: 20upx;
+	}
+	.m-input{
+		border: 0upx;
+		font-size: 28upx;
+	}
+	.register-input{		
+		width:90%;
+		line-height: 60upx;
+		height: 110upx;
+		padding-left: 90upx;
+	}	
+</style>
 <script>
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
@@ -139,21 +314,60 @@
 								
 				
 				week_id:0,
-				week_index:0,
+				week_index:0,				
 				week_dataList:[],
-				week_dataIDList:[],	
+				week_dataIDList:[],
 				
 				utime1:'15:00',
-				uaddress1:'接的地址',
+				uaddress1:'',
 				givetime1:'',
-				giveaddress1:'送的地址',
+				giveaddress1:'',
 				backtime1:'',
+				
+				utime2:'14:00',
+				uaddress2:'',
+				givetime2:'',
+				giveaddress2:'',
+				backtime2:'',
+				
+				utime3:'13:00',
+				uaddress3:'',
+				givetime3:'',
+				giveaddress3:'',
+				backtime4:'',
+				
+				ptime:"15:00",
 				
 				headermsg:'',
 				btntxt:''
 			}
 		},
 		methods:{
+			bindTimeChange: function(e,num) {
+				num = parseInt(num);
+				if(num == 0) num = 7;
+				_self.week_dataList[num-1].utime = e.target.value;				
+			},
+			weekcheckboxChange:function(e){
+				var items = _self.week_dataList;
+				var values = e.detail.value;
+				var time1 = '';
+				let list_utime = [];
+				/* let list_uaddress = [];
+				let list_givetime = [];
+				let list_giveaddress = [];
+				let list_fan = []; */
+				for (var i = 0; i <  items.length; i++) {
+				    let item = items[i];
+				    if(values.includes(item.weekid)){
+				        this.$set(item,'shower',true);
+				    }else{
+						this.$set(item,'shower',false);
+					}
+				}
+				//_self.week_dataIDList = list_utime;
+				
+			},
 			checkboxChange: function (e) {
 				/*debugger;
 				var items = _self.students_dataList;
@@ -207,7 +421,7 @@
 								for (var i = 0; i < data.length; i++) {
 									var item = data[i];									
 									list.push(item.cat_name);
-									idlist.push(item.cat_id);
+									idlist.push(item.cat_id.toString());
 								}
 								_self.category_dataList = list;
 								_self.category_dataIDList = idlist;
@@ -315,20 +529,21 @@
 						
 				if(_self.uid == 0){
 					_self.week_dataList = [					
-						{"weektext":'一',"weekid":'1'},
-						{"weektext":'二',"weekid":'2'},
-						{"weektext":'三',"weekid":'3'},
-						{"weektext":'四',"weekid":'4'},
-						{"weektext":'五',"weekid":'5'},
-						{"weektext":'六',"weekid":'6'},
-						{"weektext":'日',"weekid":'0'},
+						{"weektext":'一',"weekid":'1',"shower":true,"utime":_self.ptime},
+						{"weektext":'二',"weekid":'2',"shower":false,"utime":_self.ptime},
+						{"weektext":'三',"weekid":'3',"shower":false,"utime":_self.ptime},
+						{"weektext":'四',"weekid":'4',"shower":false,"utime":_self.ptime},
+						{"weektext":'五',"weekid":'5',"shower":false,"utime":_self.ptime},
+						{"weektext":'六',"weekid":'6',"shower":false,"utime":_self.ptime},
+						{"weektext":'日',"weekid":'0',"shower":false,"utime":_self.ptime},
 					];
 				}
 				else{
 					_self.week_dataList = ['周一','周二','周三','周四','周五','周六','周日'];
 					_self.week_dataIDList = ['1','2','3','4','5','6','0'];
 					
-				}
+				} 
+				
 				
 				_self.getData(data);
 			},
@@ -417,197 +632,3 @@
     }
 </script>
 
-<style>	
-	.week-list{
-		padding-left: 40upx;
-		border:1px solid #ccc;
-		border-radius: 25upx;
-		margin-bottom: 40upx;
-	}	
-	.week-list picker{
-		width: 400upx;
-		height: 60upx;
-		line-height: 60upx;
-		text-align: left;
-		padding-left: 20upx;
-		border:1px solid #eee;
-	}
-	.week-list .week-list-time{
-		padding-left: 20upx;
-	}
-	.week-list .week-list-time.address{
-		clear: both;
-	}
-	.week-list .week-list-time view{
-		float: left;
-		margin-right: 20upx;
-		margin-bottom: 20upx;
-	}
-	.week-list .left_txt{
-		width:30%;
-	}	
-	.cell-right{
-		width:60%;
-		padding-right: 10upx;
-	}	
-	.week-list-time .cell-right .m-input{
-		border: 0upx;
-		border: 1px solid #eee;
-		line-height: 70upx;
-		height: 70upx;
-		font-size: 28upx;
-	}
-	.week-list view{
-		/* float: left;	 */	
-	}
-	.checkboxlist{
-		font-size: 30upx;
-		text-align: left;
-		height: 400upx;
-		overflow-y: auto;
-		padding: 20upx;
-	}
-	.checkboxlist label{
-		margin-right: 15upx;
-		width:180upx;
-		margin-bottom: 20upx;
-		height: 40upx;
-		line-height: 40upx;
-		display: block;
-	} 
-	picker{
-		font-size: 30upx;
-	}
-	view.txt{
-		font-size: 30upx;
-	}
-	.weeklist label{
-		margin-right: 10upx;
-		width:120upx;
-		margin-bottom: 20upx;
-		height: 40upx;
-		line-height: 40upx;
-		font-size: 30upx;
-	} 	
-	.checkboxlist .checkbox{
-		height: 40upx;
-		line-height: 40upx;
-	}
-	.weeklist{
-		height: 110upx;
-	}
-	
-	.content{
-		width:96%;
-		margin: 0 auto;
-	}
-	
-	.clear{
-		clear: both;
-	}
-	
-	.btn-row{
-		margin-top: 40upx;	
-		padding: 0upx;
-	}
-	
-	uni-button{
-		border-radius: 25upx;		
-	}
-	uni-button:after{
-		border: 0px;		
-	}
-	.remeber{
-		font-size: 28upx;
-		margin-top: 10upx;		
-	}
-	.remeber checkbox{
-		
-	}
-	.content{
-		background-color: #fff;		
-		padding-top: 10upx;
-	}
-	.register_account_input{
-		padding-top: 20upx;
-		padding-bottom: 10px;
-		border-bottom: 1px solid #eeeeee;
-		line-height: 60upx;		
-	}
-	.register_account{
-		font-size: 42upx;
-		font-family: '黑体';
-		margin-top: 30upx;
-		margin-bottom: 20upx;
-	}
-	.m-input{
-		border: 0upx;
-		font-size: 28upx;
-	}
-	.register-input{		
-		width:90%;
-		line-height: 60upx;
-		height: 110upx;
-		padding-left: 90upx;
-	}
-	.register-input-username{
-		background:url(../../../static/img/user.png) no-repeat;
-		-webkit-background-size:30upx 42upx ;
-		background-size:30upx 42upx ;
-	}
-	.register-input-mobile{
-		background:url(../../../static/img/mobile.png) no-repeat;
-	}
-	.register-input-mail{
-		background:url(../../../static/img/mail.png) no-repeat;	
-		width:53%;
-		float: left;
-		/* border:1px solid #ff0000; */
-	}
-	.btn1{
-		border:0upx;
-		background-color: #ccc;
-		
-	}
-	.btn{
-		float: right;
-		background-color: #eee;
-		color:#225181;
-		font-size: 24upx;
-		align:center;
-		width: 29%;
-		height: 76upx;
-		line-height: 76upx;
-		border-radius: 45upx;
-		top:10upx;
-		
-		
-	}
-	.register-input-password{
-		background:url(../../../static/img/password.png) no-repeat;		
-	}
-	.login_content{
-	        width: 100%;
-	    }
-	.title{
-		background:url('../../../static/img/login_title.png') #ffffff center 0 no-repeat;
-	    background-size:100% 100%;
-	    padding-bottom:20%
-	}
-	.login_center{
-		width:85%;			
-		margin: 0 auto;
-		padding-bottom: 60upx;
-	}
-	.login_title_txt{
-	    color:#fff;
-	    font-family:'微软雅黑';
-	    font-size:60upx;
-	    padding-top:150upx;
-	}
-	.login_title_txt span{
-	    font-size: 48upx;
-	}
-	
-	
-</style>
