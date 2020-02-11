@@ -340,10 +340,10 @@
 			}
 			if(_self.uid == 0){
 				_self.btntxt = '添加'
-				_self.headermsg = "添加新计划,grade Add";
+				_self.headermsg = "添加新计划,Plan Add";
 			}else{
 				_self.btntxt="修改";
-				_self.headermsg = "计划编辑,grade Edit";
+				_self.headermsg = "计划编辑,Plan Edit";
 			}
 		},
 		onReady(){
@@ -389,23 +389,7 @@
 				week_dataList:[],
 				week_dataIDList:[],
 				
-				utime1:'15:00',
-				uaddress1:'',
-				givetime1:'',
-				giveaddress1:'',
-				backtime1:'',
 				
-				utime2:'14:00',
-				uaddress2:'',
-				givetime2:'',
-				giveaddress2:'',
-				backtime2:'',
-				
-				utime3:'13:00',
-				uaddress3:'',
-				givetime3:'',
-				giveaddress3:'',
-				backtime4:'',
 				
 				ptime:"15:00",
 				
@@ -416,7 +400,7 @@
 		methods:{
 			bindmodify(){			
 				//debugger;
-				/* if(parseInt(_self.com_id) == 0){
+				if(parseInt(_self.com_id) == 0){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请选择机构'
@@ -437,12 +421,108 @@
 					    title: '请选择学生'
 					});
 					return;
-				} */
-				
-				
-				
-				
-				
+				}				
+					    
+				var arr0 = _self.studentsweek_list.split(",");
+				var arr1 = _self.studentsutime_list.split(",");
+				if(arr0.length != arr1.length){
+					uni.showToast({
+					    icon: 'none',
+					    title: '请选择上课时间'
+					});
+					return;
+				}
+				//提交数据
+				let ret = _self.getUserInfo();				
+				_self.sendRequest({
+				    url : _self.UpdateCompanyplanInfoUrl,
+				    method : _self.Method,
+				    data : {
+						"token":ret.token,
+						"guid":ret.guid,
+						"com_id":_self.com_id,
+						"cat_id":_self.category_id,
+						"studentsidlist":_self.studentsid_list,
+						"studentsweeklist":_self.studentsweek_list,
+						"studentsutimelist":_self.studentsutime_list,
+						"studentsuaddresslist":_self.studentsuaddress_list,
+						"studentsgivetimelist":_self.studentsgivetime_list,
+						"studentsgiveaddresslist":_self.studentsgiveaddress_list,
+						"studentsbacktimelist":_self.studentsbacktime_list,
+					},
+				    hideLoading : true,
+				    success:function (res) {
+						//debugger;
+						if(res){
+							let status = res.status;
+							let str = '';
+							switch(status){
+								case 0:{
+									str = '数据填写错误';
+									break;
+								}
+								case 1:{
+									str = '请选择学生';
+									break;
+								}
+								case 2:{
+									str = '上课天数和上课次数不一致';
+									break;
+								}
+								case 3:{
+									_self.dataList = [];
+												
+									_self.com_id = 0;
+									_self.cindex = 0;
+									_self.cList = [];
+									_self.cIDList =  [];
+									_self.cStatuslist = [];
+									
+									//临时保存的信息
+									_self.studentsid_list = ''; //所有学生id
+									_self.studentsweek_list = '1';//所选周几
+									_self.studentsutime_list = '15:00';//所选周几的接孩子时间
+									_self.studentsuaddress_list = '';//所选周几的接孩子地点
+									_self.studentsgivetime_list = '';//所选周几的送孩子时间
+									_self.studentsgiveaddress_list = '';//所选周几的送孩子地点
+									_self.studentsbacktime_list = '';//所选周几的送孩子时间
+									
+									_self.category_id = 0;
+									_self.category_index = 0;
+									_self.category_dataList = [];
+									_self.category_dataIDList = [];
+									
+									//学生列表
+									_self.uid = 0;
+									_self.students_dataList = [];
+													
+									
+									_self.week_id = 0;
+									_self.week_index = 0;				
+									_self.week_dataList = [];
+									_self.week_dataIDList = [];									
+									
+									str = '添加成功';
+									break;
+								}							
+							}
+							
+							uni.showModal({
+								title: str,
+								content: '请选择返回的页面',
+								cancelText:'留在本页',
+								confirmText:'返回前页',
+								success: function (res) {
+									if (res.confirm) {
+										_self.navigateTo('companyplanedit');
+									} else if (res.cancel) {
+										_self.navigateTo('companyplanedit');
+									}
+								}
+							});
+						}
+				    }
+				},"1","");
 			},
 			bindbackTimeChange: function(e,num) {
 				num = parseInt(num);
