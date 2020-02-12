@@ -63,6 +63,27 @@
 								</picker>	
 							</view>
 						<view class="clear"></view>
+						
+					</view>
+				</view>
+				<view class="week-list-time address">
+					<view class="left_txt">上课教室：</view>
+					<view class="cell-right">
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsclassroom_list" placeholder="上课教室"></input> -->
+						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
+							<view :class="{
+								'texts':true,
+								'hidden':!item2.shower
+								}">周{{item2.weektext}}
+								</view>
+								<picker @change="bindClassRoomChange($event,item2.weekid)" :value="item2.classroom_index" :range="classroom_dataList"  :class="{
+									'awidth':true,
+										'hidden':!item2.shower
+									}">
+									<view class="uni-input">{{classroom_dataList[item2.classroom_index]}}</view>
+								</picker>
+							</view>
+						<view class="clear"></view>
 					</view>
 				</view>
 				<view class="week-list-time address">
@@ -140,6 +161,35 @@
 						<view class="clear"></view>	
 					</view>					
 				</view>
+				<view class="week-list-time address">
+					<view class="left_txt">是否吃饭：</view>
+					<view class="cell-right">
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsfanstatus_list" placeholder="吃饭状态"></input> -->
+						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
+							<view :class="{
+								'texts':true,
+								'hidden':!item2.shower
+							}">周{{item2.weektext}}</view>
+							<view :class="{
+								'awidth':true,
+								'hidden':!item2.shower
+							}">
+							<radio-group @change="radiofanChange($event,item2.weekid)">
+								<label class="uni-list-cell uni-list-cell-pd" v-for="(fan_item, fan_index) in fan_items" :key="fan_item.value">
+								<view>
+									<radio class="radios" :value="fan_item.value" :checked="parseInt(fan_item.value) === item2.fan_status" />
+								</view>
+								<view class="radio_text">{{fan_item.name}}</view>
+								</label>
+							</radio-group>	
+							
+							
+							</view>	
+						</view>
+						<view class="clear"></view>
+					</view>	
+					<view class="clear"></view>
+				</view>
 				<view class="clear"></view>
 			</view>	
 			<view class="clear"></view>
@@ -164,7 +214,7 @@
 		margin-right: 15upx;
 		margin-bottom:10upx;
 		font-size: 30upx;
-		width: 110upx;
+		width: 120upx;
 		display: block;
 		float: left;
 	}
@@ -356,6 +406,12 @@
 				grade_order:'',
 				grade_address:'',
 				
+				//教室相关
+				classroom_id:0,
+				classroomindex:0,
+				classroom_dataList:[],
+				classroom_dataIDList:[],
+				
 				
 				dataList:[],	
 							
@@ -373,6 +429,7 @@
 				studentsgivetime_list:'',//所选周几的送孩子时间
 				studentsgiveaddress_list:'',//所选周几的送孩子地点
 				studentsbacktime_list:'',//所选周几的送孩子时间
+				studentsfanstatus_list:'0',//是否吃饭
 				
 				category_id:0,
 				category_index:0,
@@ -388,6 +445,17 @@
 				week_index:0,				
 				week_dataList:[],
 				week_dataIDList:[],
+				
+				fan_items: [
+					{
+						value: '1',
+						name: '吃'
+					},
+					{
+						value: '0',
+						name: '不吃'
+					}
+				],
 				
 				
 				
@@ -449,6 +517,8 @@
 						"studentsgivetimelist":_self.studentsgivetime_list,
 						"studentsgiveaddresslist":_self.studentsgiveaddress_list,
 						"studentsbacktimelist":_self.studentsbacktime_list,
+						"studentsclassroomlist":_self.studentsclassroom_list,
+						"studentsfanstatuslist":_self.studentsfanstatus_list,
 					},
 				    hideLoading : true,
 				    success:function (res) {
@@ -486,6 +556,8 @@
 									_self.studentsgivetime_list = '';//所选周几的送孩子时间
 									_self.studentsgiveaddress_list = '';//所选周几的送孩子地点
 									_self.studentsbacktime_list = '';//所选周几的送孩子时间
+									_self.studentsclassroom_list = '';//所选教室
+									
 									
 									_self.category_id = 0;
 									_self.category_index = 0;
@@ -523,6 +595,20 @@
 						}
 				    }
 				},"1","");
+			},
+			radiofanChange:function(e,num){
+				debugger;
+				num = parseInt(num);
+				if(num == 0) num = 7;
+				_self.week_dataList[num-1].fan_status = e.target.value;
+				_self.getWeekList();
+			},
+			bindClassRoomChange:function(e,num){
+				//debugger;
+				num = parseInt(num);
+				if(num == 0) num = 7;
+				_self.week_dataList[num-1].classroom_index = e.target.value;
+				_self.getWeekList();
 			},
 			bindbackTimeChange: function(e,num) {
 				num = parseInt(num);
@@ -573,7 +659,8 @@
 				let list_givetime = [];
 				let list_giveaddress = [];
 				let list_backtime = [];
-				let list_fan = [];
+				let list_classroom = [];
+				let list_fan_status = [];
 				for (var i = 0; i <  items.length; i++) {
 				    let item = items[i];
 					if(item.shower){
@@ -583,15 +670,19 @@
 						list_givetime.push(item.givetime);
 						list_giveaddress.push(item.giveaddress);
 						list_backtime.push(item.backtime);
+						list_classroom.push(_self.classroom_dataIDList[item.classroom_index]);
+						list_fan_status.push(item.fan_status);
 				    }
 				}
-				//debugger;
 				_self.studentsweek_list = list.toString();
 				_self.studentsutime_list = list_utime.toString();
 				_self.studentsuaddress_list = list_uaddress.toString();
 				_self.studentsgivetime_list = list_givetime.toString();
 				_self.studentsgiveaddress_list = list_giveaddress.toString();
 				_self.studentsbacktime_list = list_backtime.toString();
+				_self.studentsclassroom_list = list_classroom.toString();
+				_self.studentsfanstatus_list = list_fan_status.toString();
+				
 			},
 			weekcheckboxChange:function(e){
 				var items = _self.week_dataList;
@@ -670,6 +761,19 @@
 								}
 								_self.students_dataList = list;
 								
+								//所有教室
+								data = res.classroomlist;
+								list = [];
+								list.push("=请选择教室==");
+								idlist = [];
+								idlist.push(0);
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.classroom_name);
+									idlist.push(item.classroom_id);
+								}
+								_self.classroom_dataList = list;
+								_self.classroom_dataIDList = idlist;
 							}							
 						}
 					}
@@ -690,13 +794,13 @@
 						
 				if(_self.uid == 0){
 					_self.week_dataList = [					
-						{"weektext":'一',"weekid":'1',"shower":true,"utime":_self.ptime,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00'},
-						{"weektext":'二',"weekid":'2',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:02','giveaddress':'','backtime':'19:00'},
-						{"weektext":'三',"weekid":'3',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:03','giveaddress':'','backtime':'19:00'},
-						{"weektext":'四',"weekid":'4',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:04','giveaddress':'','backtime':'19:00'},
-						{"weektext":'五',"weekid":'5',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:05','giveaddress':'','backtime':'19:00'},
-						{"weektext":'六',"weekid":'6',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:06','giveaddress':'','backtime':'19:00'},
-						{"weektext":'日',"weekid":'0',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:07','giveaddress':'','backtime':'19:00'},
+						{"weektext":'一',"weekid":'1',"shower":true,"utime":_self.ptime,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'二',"weekid":'2',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:02','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'三',"weekid":'3',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:03','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'四',"weekid":'4',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:04','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'五',"weekid":'5',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:05','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'六',"weekid":'6',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:06','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'日',"weekid":'0',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:07','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
 					];
 				}
 				else{
