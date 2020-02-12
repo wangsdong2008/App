@@ -393,6 +393,7 @@
 				_self.headermsg = "添加新计划,Plan Add";
 			}else{
 				_self.btntxt="修改";
+				_self.cat_id = options['cat_id'];
 				_self.headermsg = "计划编辑,Plan Edit";
 			}
 		},
@@ -401,6 +402,7 @@
 		},
 		data(){
 			return{
+				cat_id:0,
 				grade_id:0,
 				grade_name:'',
 				grade_order:'',
@@ -789,7 +791,8 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:_self.grade_id
+					id:_self.uid,
+					cat_id:_self.cat_id
 				};		
 						
 				if(_self.uid == 0){
@@ -805,11 +808,8 @@
 				}
 				else{
 					_self.week_dataList = ['周一','周二','周三','周四','周五','周六','周日'];
-					_self.week_dataIDList = ['1','2','3','4','5','6','0'];
-					
-				} 
-				
-				
+					_self.week_dataIDList = ['1','2','3','4','5','6','0'];					
+				}
 				_self.getData(data);
 			},
 			getData(data){			
@@ -820,6 +820,7 @@
 						"guid": data.guid,
 						"token":data.token,
 						"id":data.id,
+						"cat_id":data.cat_id,
 						"t":Math.random()
 					},
 				    hideLoading : true,
@@ -841,48 +842,42 @@
 							_self.cList = list;
 							_self.cIDList = idlist;
 							_self.cStatuslist = statuslist;
-							if(_self.uid == 0) _self.cindex = 0;	
+							if(_self.uid == 0) _self.cindex = 0; 
 							
-							
-							list = [];
-							idlist = [];
-							list.push("==请选择课程==");
-							idlist.push(0);
-							_self.category_dataList = list;
-							_self.category_dataIDList = idlist;
-							if(_self.uid == 0)	_self.category_index = 0; 
-						
-				    	    if(res){
-								
-								
-								/* var categorylist = res.categorylist;
+							if(_self.uid == 0){
 								list = [];
 								idlist = [];
-								list.push("==请选择分类==");
+								list.push("==请选择课程==");
 								idlist.push(0);
-								for (var i = 0; i < categorylist.length; i++) {
-									var item = categorylist[i];
-									list.push(item.category_name);
-									idlist.push(item.category_id);
-								}								
 								_self.category_dataList = list;
 								_self.category_dataIDList = idlist;
-								if(_self.uid == 0)	_self.category_index = 0; */
-								
-								//debugger;
-								
-								var data = res.gradelist; 
+								if(_self.uid == 0)	_self.category_index = 0; 
+							}
+						
+				    	    if(res){
+								var data = res.companyplaninfo; 
 				    			if(parseInt(res.status) == 3){
-				    				/* _self.grade_name = data.grade_name;
-				    				_self.grade_order = data.grade_order.toString();	 							
 									
-									_self.com_id = data.com_id;
+									_self.com_id = data.planinfo[0].com_id;
 									let j = _self.cIDList.findIndex(i => i == _self.com_id);
-									_self.cindex = j;									
+									_self.cindex = j;
 									
-									_self.category_id = data.category_id;
-									j = _self.category_dataIDList.findIndex(i => i == _self.category_id);
-									_self.category_index = j;*/	
+									var categorylist = data.categorylist;
+									list = [];
+									idlist = [];
+									list.push("==请选择分类==");
+									idlist.push(0);
+									for (var i = 0; i < categorylist.length; i++) {
+										var item = categorylist[i];
+										list.push(item.cat_name);
+										idlist.push(item.cat_id);
+									}								
+									_self.category_dataList = list;
+									_self.category_dataIDList = idlist;									
+									_self.cat_id = data.planinfo[0].cat_id;
+									j = _self.cIDList.findIndex(i => i == _self.cat_id);
+									_self.category_index = j;
+									
 									
 									
 									

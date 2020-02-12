@@ -203,6 +203,11 @@
 			"style": {
 				"navigationBarTitleText": "上课安排编辑"
 			}
+		},{
+			"path": "pages/company/site/companyplanadd",
+			"style": {
+				"navigationBarTitleText": "上课安排添加"
+			}
 		},
 			
 		

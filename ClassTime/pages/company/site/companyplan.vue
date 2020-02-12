@@ -56,7 +56,7 @@
 		},
 		methods:{
 			companyplanadd(){
-				_self.navigateTo('companyplanedit');
+				_self.navigateTo('companyplanadd');
 			},
 			companyplanedit(id,cat_id){				
 				_self.navigateTo('companyplanedit?id='+id+"&cat_id="+cat_id);
