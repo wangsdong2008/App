@@ -152,6 +152,7 @@
 								});		
 							}else{
 								if(data.length > 0){
+									
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];

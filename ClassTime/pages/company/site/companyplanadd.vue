@@ -15,10 +15,16 @@
 			</view>
 			
 			<view :class="{
-				'register_account_input':true
+				'register_account_input':true,
+				 'checkboxlist':(_self.com_id > 0)
 				}">
-				<view class="unamecss">
-					<m-input class="m-input" type="text" clearable focus v-model="uname" placeholder="学生姓名"></m-input>
+				<view class="studentslist" v-if="_self.com_id == 0">==请选择学生==</view>
+				<view v-if="_self.com_id > 0">
+					<checkbox-group @change="checkboxChange">
+						<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in students_dataList" :index="index" :key="item.uid.toString()">
+							<checkbox class="checkbox" :value="item.uid.toString()" /><text>{{item.uname}}</text>
+						</label>
+					</checkbox-group>					
 				</view>
 			</view>
 			
@@ -42,7 +48,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">上课时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsutime_list" placeholder="所选接时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsutime_list" placeholder="所选接时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -63,7 +69,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">上课教室：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsclassroom_list" placeholder="上课教室"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsclassroom_list" placeholder="上课教室"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -83,7 +89,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">接的地址：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsuaddress_list" placeholder="接的地址"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsuaddress_list" placeholder="接的地址"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -104,7 +110,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">送的时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsgivetime_list" placeholder="送的时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsgivetime_list" placeholder="送的时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -121,7 +127,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">送的地址：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsgiveaddress_list" placeholder="送的地址"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsgiveaddress_list" placeholder="送的地址"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -141,7 +147,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">接回时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsbacktime_list" placeholder="接回的时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsbacktime_list" placeholder="接回的时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -158,7 +164,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">是否吃饭：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsfanstatus_list" placeholder="吃饭状态"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsfanstatus_list" placeholder="吃饭状态"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -228,7 +234,7 @@
 		border-radius: 25upx;		
 		margin-top: 20upx;
 	}		
-	picker,.studentslist,.unamecss{
+	picker,.studentslist{
 		font-size: 30upx;
 	}
 	.awidth{
@@ -387,7 +393,6 @@
 				_self.headermsg = "添加新计划,Plan Add";
 			}else{
 				_self.btntxt="修改";
-				_self.cat_id = options['cat_id'];
 				_self.headermsg = "计划编辑,Plan Edit";
 			}
 		},
@@ -396,7 +401,6 @@
 		},
 		data(){
 			return{
-				cat_id:0,
 				grade_id:0,
 				grade_name:'',
 				grade_order:'',
@@ -434,7 +438,6 @@
 				
 				//学生列表
 				uid:0,
-				uname:'',
 				students_dataList:[],
 								
 				
@@ -463,7 +466,8 @@
 			}
 		},
 		methods:{
-			bindmodify(){
+			bindmodify(){			
+				//debugger;
 				if(parseInt(_self.com_id) == 0){
 					uni.showToast({
 					    icon: 'none',
@@ -478,11 +482,11 @@
 					});
 					return;
 				}
-				if(_self.uname == '')
+				if(!service.checkNull(_self.studentsid_list+""))
 				{
 					uni.showToast({
 					    icon: 'none',
-					    title: '请填写学生姓名'
+					    title: '请选择学生'
 					});
 					return;
 				}				
@@ -499,14 +503,12 @@
 				//提交数据
 				let ret = _self.getUserInfo();				
 				_self.sendRequest({
-				    url : _self.UpdateCompanyplanInfoUrl,
+				    url : _self.AddCompanyplanInfoUrl,
 				    method : _self.Method,
 				    data : {
 						"token":ret.token,
 						"guid":ret.guid,
 						"com_id":_self.com_id,
-						"uid":_self.uid,
-						"uname":_self.uname,
 						"cat_id":_self.category_id,
 						"studentsidlist":_self.studentsid_list,
 						"studentsweeklist":_self.studentsweek_list,
@@ -538,45 +540,41 @@
 									break;
 								}
 								case 3:{
-									if(_self.uid == 0){
-										_self.dataList = [];
-										_self.com_id = 0;
-										_self.cindex = 0;
-										_self.cList = [];
-										_self.cIDList =  [];
-										_self.cStatuslist = [];
-										
-										//临时保存的信息
-										_self.studentsid_list = ''; //所有学生id
-										_self.studentsweek_list = '1';//所选周几
-										_self.studentsutime_list = '15:00';//所选周几的接孩子时间
-										_self.studentsuaddress_list = '';//所选周几的接孩子地点
-										_self.studentsgivetime_list = '';//所选周几的送孩子时间
-										_self.studentsgiveaddress_list = '';//所选周几的送孩子地点
-										_self.studentsbacktime_list = '';//所选周几的送孩子时间
-										_self.studentsclassroom_list = '';//所选教室
-										
-										
-										_self.category_id = 0;
-										_self.category_index = 0;
-										_self.category_dataList = [];
-										_self.category_dataIDList = [];
-										
-										//学生列表
-										_self.uid = 0;
-										_self.students_dataList = [];
-														
-										
-										_self.week_id = 0;
-										_self.week_index = 0;				
-										_self.week_dataList = [];
-										_self.week_dataIDList = [];									
-										
-										str = '添加成功';
-									}else{
-										str = '修改成功';
-									}
+									_self.dataList = [];
+												
+									_self.com_id = 0;
+									_self.cindex = 0;
+									_self.cList = [];
+									_self.cIDList =  [];
+									_self.cStatuslist = [];
 									
+									//临时保存的信息
+									_self.studentsid_list = ''; //所有学生id
+									_self.studentsweek_list = '1';//所选周几
+									_self.studentsutime_list = '15:00';//所选周几的接孩子时间
+									_self.studentsuaddress_list = '';//所选周几的接孩子地点
+									_self.studentsgivetime_list = '';//所选周几的送孩子时间
+									_self.studentsgiveaddress_list = '';//所选周几的送孩子地点
+									_self.studentsbacktime_list = '';//所选周几的送孩子时间
+									_self.studentsclassroom_list = '';//所选教室
+									
+									
+									_self.category_id = 0;
+									_self.category_index = 0;
+									_self.category_dataList = [];
+									_self.category_dataIDList = [];
+									
+									//学生列表
+									_self.uid = 0;
+									_self.students_dataList = [];
+													
+									
+									_self.week_id = 0;
+									_self.week_index = 0;				
+									_self.week_dataList = [];
+									_self.week_dataIDList = [];									
+									
+									str = '添加成功';
 									break;
 								}							
 							}
@@ -588,9 +586,9 @@
 								confirmText:'返回前页',
 								success: function (res) {
 									if (res.confirm) {
-										_self.navigateTo('companyplan');
+										_self.navigateTo('companyplanedit');
 									} else if (res.cancel) {
-										_self.navigateTo('companyplanedit?id='+_self.uid+"&cat_id="+_self.cat_id);
+										_self.navigateTo('companyplanedit');
 									}
 								}
 							});
@@ -599,6 +597,7 @@
 				},"1","");
 			},
 			radiofanChange:function(e,num){
+				debugger;
 				num = parseInt(num);
 				if(num == 0) num = 7;
 				_self.week_dataList[num-1].fan_status = e.target.value;
@@ -753,14 +752,14 @@
 								_self.category_dataIDList = idlist;
 								_self.category_index = 0;
 								
-								/* //所有学生
+								//所有学生
 								data = res.studentslist;
 								list = [];
 								for (var i = 0; i < data.length; i++) {
 									var item = data[i];									
 									list.push(item);
 								}
-								_self.students_dataList = list; */
+								_self.students_dataList = list;
 								
 								//所有教室
 								data = res.classroomlist;
@@ -790,22 +789,10 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:_self.uid,
-					cat_id:_self.cat_id
+					id:_self.grade_id
 				};		
-				
-				
-				_self.week_dataList = [
-					{"weektext":'一',"weekid":'1',"shower":true,"utime":_self.ptime,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'二',"weekid":'2',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:02','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'三',"weekid":'3',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:03','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'四',"weekid":'4',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:04','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'五',"weekid":'5',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:05','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'六',"weekid":'6',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:06','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-					{"weektext":'日',"weekid":'0',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:07','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-				];
-				
-				/* if(_self.uid == 0){
+						
+				if(_self.uid == 0){
 					_self.week_dataList = [					
 						{"weektext":'一',"weekid":'1',"shower":true,"utime":_self.ptime,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
 						{"weektext":'二',"weekid":'2',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:02','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
@@ -817,8 +804,12 @@
 					];
 				}
 				else{
-									
-				} */
+					_self.week_dataList = ['周一','周二','周三','周四','周五','周六','周日'];
+					_self.week_dataIDList = ['1','2','3','4','5','6','0'];
+					
+				} 
+				
+				
 				_self.getData(data);
 			},
 			getData(data){			
@@ -829,7 +820,6 @@
 						"guid": data.guid,
 						"token":data.token,
 						"id":data.id,
-						"cat_id":data.cat_id,
 						"t":Math.random()
 					},
 				    hideLoading : true,
@@ -851,87 +841,48 @@
 							_self.cList = list;
 							_self.cIDList = idlist;
 							_self.cStatuslist = statuslist;
-							if(_self.uid == 0) _self.cindex = 0; 
+							if(_self.uid == 0) _self.cindex = 0;	
 							
-							if(_self.uid == 0){
+							
+							list = [];
+							idlist = [];
+							list.push("==请选择课程==");
+							idlist.push(0);
+							_self.category_dataList = list;
+							_self.category_dataIDList = idlist;
+							if(_self.uid == 0)	_self.category_index = 0; 
+						
+				    	    if(res){
+								
+								
+								/* var categorylist = res.categorylist;
 								list = [];
 								idlist = [];
-								list.push("==请选择课程==");
+								list.push("==请选择分类==");
 								idlist.push(0);
+								for (var i = 0; i < categorylist.length; i++) {
+									var item = categorylist[i];
+									list.push(item.category_name);
+									idlist.push(item.category_id);
+								}								
 								_self.category_dataList = list;
 								_self.category_dataIDList = idlist;
-								if(_self.uid == 0)	_self.category_index = 0; 
-							}
-							
-				    	    if(res){
-								var data = res.companyplaninfo; 
+								if(_self.uid == 0)	_self.category_index = 0; */
+								
+								//debugger;
+								
+								var data = res.gradelist; 
 				    			if(parseInt(res.status) == 3){
+				    				/* _self.grade_name = data.grade_name;
+				    				_self.grade_order = data.grade_order.toString();	 							
 									
-									_self.uname = data.planinfo[0].uname;
-									_self.com_id = data.planinfo[0].com_id;
+									_self.com_id = data.com_id;
 									let j = _self.cIDList.findIndex(i => i == _self.com_id);
-									_self.cindex = j;
+									_self.cindex = j;									
 									
-									//所有教室
-									let classroom_data = res.classroomlist;
-									list = [];
-									list.push("=请选择教室==");
-									idlist = [];
-									idlist.push(0);
-									for (var i = 0; i < classroom_data.length; i++) {
-										var item = classroom_data[i];									
-										list.push(item.classroom_name);
-										idlist.push(item.classroom_id);
-									}
-									_self.classroom_dataList = list;
-									_self.classroom_dataIDList = idlist;
-									
-									//所有课程
-									var categorylist = res.categorylist;
-									list = [];
-									idlist = [];
-									list.push("==请选择课程==");
-									idlist.push(0);
-									for (var i = 0; i < categorylist.length; i++) {
-										var item = categorylist[i];
-										list.push(item.cat_name);
-										idlist.push(item.cat_id);
-									}								
-									_self.category_dataList = list;
-									_self.category_dataIDList = idlist;	
-									if(_self.uid == 0)	_self.category_index = 0; 
-									_self.category_id = data.planinfo[0].cat_id;
-									j = _self.category_dataIDList.findIndex(i => i == _self.cat_id);
-									_self.category_index = j;
-									
-									
-									//一周安排
-									//debugger;
-									var weeklist = data.list;
-									for(var i = 0; i< weeklist.length; i++){
-										let week_id = parseInt(weeklist[i].week_id) - 1;
-										if(week_id == -1) week_id = 6;
-										_self.week_dataList[week_id].utime = weeklist[i].utime;
-										_self.week_dataList[week_id].uaddress = weeklist[i].uaddress;
-										_self.week_dataList[week_id].givetime = weeklist[i].givetime;
-										_self.week_dataList[week_id].giveaddress = weeklist[i].giveaddress;
-										_self.week_dataList[week_id].backtime = weeklist[i].backtime;
-										_self.week_dataList[week_id].fan_status = weeklist[i].fan_status;
-										_self.week_dataList[week_id].shower = true;
-										
-										//debugger;
-										_self.classroom_id = weeklist[i].classroom_id;
-										j = _self.classroom_dataIDList.findIndex(i => i == _self.classroom_id);
-										_self.classroom_index = j;
-										_self.week_dataList[week_id].classroom_index = j;
-										
-										
-										_self.getWeekList();
-										
-									}
-									
-									//{"weektext":'日',"weekid":'0',"shower":false,"utime":_self.ptime,"uaddress":'','givetime':'18:07','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
-									
+									_self.category_id = data.category_id;
+									j = _self.category_dataIDList.findIndex(i => i == _self.category_id);
+									_self.category_index = j;*/	
 									
 									
 									

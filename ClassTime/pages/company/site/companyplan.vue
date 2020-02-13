@@ -21,7 +21,8 @@
 				</uni-collapse>
 			</view>
 			<view class="button-sp-area">
-				<button type="primary" plain="true" @tap="companyplanadd">添加安排</button>
+				<button type="primary" plain="true" @tap="companyplanaddone">单人添加</button>
+				<button type="primary" plain="true" @tap="companyplanadd">批量添加</button>
 			</view>
 		</view>
 	</view>
@@ -55,6 +56,9 @@
 			}
 		},
 		methods:{
+			companyplanaddone(){
+				_self.navigateTo('companyplanedit');
+			},
 			companyplanadd(){
 				_self.navigateTo('companyplanadd');
 			},
@@ -153,6 +157,9 @@
 <style>
 	.button-sp-area{
 		margin: 40upx 0upx;
+	}
+	.button-sp-area button{
+		margin-bottom: 20upx;
 	}
 	.content{
 		width:96%;

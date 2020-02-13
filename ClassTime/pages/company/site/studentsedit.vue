@@ -461,33 +461,41 @@
 								_self.school_dataIDList = idlist;
 								if(_self.uid == 0)	_self.school_index = 0;
 								
-								var gradelist = res.gradelist;
+								
+								//填入空的年级下拉框
 								list = [];
 								idlist = [];
 								list.push("==请选择年级==");
 								idlist.push(0);
-								for (var i = 0; i < gradelist.length; i++) {
-									var item = gradelist[i];
-									list.push(item.grade_name);
-									idlist.push(item.grade_id);
-								}								
+								if(res.gradelist != null){
+									var gradelist = res.gradelist;
+									for (var i = 0; i < gradelist.length; i++) {
+										var item = gradelist[i];
+										list.push(item.grade_name);
+										idlist.push(item.grade_id);
+									}
+								}
 								_self.grade_dataList = list;
 								_self.grade_dataIDList = idlist;
 								if(_self.uid == 0)	_self.grade_index = 0;
 								
-								var classlist = res.classlist;
+								//填入空的班级下拉框
 								list = [];
 								idlist = [];
 								list.push("==请选择班级==");
 								idlist.push(0);
-								for (var i = 0; i < classlist.length; i++) {
-									var item = classlist[i];
-									list.push(item.class_name);
-									idlist.push(item.class_id);
-								}								
+								if(res.classlist != null){
+									var classlist = res.classlist;
+									for (var i = 0; i < classlist.length; i++) {
+										var item = classlist[i];
+										list.push(item.class_name);
+										idlist.push(item.class_id);
+									}
+								}
 								_self.class_dataList = list;
 								_self.class_dataIDList = idlist;
 								if(_self.uid == 0)	_self.class_index = 0;
+								
 								
 				    			if(parseInt(res.status) == 3){
 				    				_self.uname = data.uname;
