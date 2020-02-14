@@ -287,7 +287,7 @@
 									list.push(item.school_name);
 									idlist.push(item.school_id);
 									if(i == 0){
-										_self.school_id = item.com_id;
+										_self.school_id = item.school_id;
 									}
 								}
 								_self.school_dataList = list;
@@ -446,7 +446,6 @@
 								_self.cIDList = idlist;
 								if(_self.uid == 0) _self.cindex = 0;
 								
-				    	    	var data = res.studentslist; 
 								var schoollist = res.schoollist;
 								list = [];
 								idlist = [];
@@ -496,7 +495,7 @@
 								_self.class_dataIDList = idlist;
 								if(_self.uid == 0)	_self.class_index = 0;
 								
-								
+								var data = res.studentslist;
 				    			if(parseInt(res.status) == 3){
 				    				_self.uname = data.uname;
 									_self.sex = data.sex;
@@ -512,8 +511,8 @@
 									
 									_self.mparent = data.mparent;
 									_self.mtel = data.mtel;
-									_self.memo = data.memo;
-									_self.fan_jkou = data.fan_jkou;
+									_self.memo = data.memo==null?'':data.memo;
+									_self.fan_jkou = data.fan_jkou==null?'':data.fan_jkou;
 									
 									
 									_self.school_id = data.school_id;

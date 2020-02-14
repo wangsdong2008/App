@@ -3,6 +3,26 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="register_account">计划信息</view>
+			<view :class="{
+				'register_account_input':true
+				}">
+				<view class="unamecss">
+					<m-input class="m-input" type="text" clearable focus v-model="uname" placeholder="学生姓名"></m-input>
+				</view>
+			</view>
+			<view class="clear"></view>
+			<view class="register_account_input form">
+				<radio-group @change="sexChange">
+					<label class="uni-list-cell uni-list-cell-pd" v-for="(item, index) in sex_items" :index="index" :key="item.value">
+					<view>
+						<radio class="radios" :value="item.value" :checked="parseInt(item.value) == sex" />
+					</view>
+					<view class="radio_text">{{item.name}}</view>
+					</label>
+					<view class="clear"></view>
+				</radio-group>
+			</view>
+			<view class="clear"></view>
 			<view class="register_account_input">
 				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
 					<view class="uni-input">{{cList[cindex]}}</view>
@@ -12,22 +32,27 @@
 				<picker @change="categoryPickerChange($event)" :value="category_index" :range="category_dataList">
 					<view class="uni-input">{{category_dataList[category_index]}}</view>
 				</picker>
+			</view>			
+			<view class="register_account_input">
+				<picker @change="SchoolPickerChange($event)" :value="school_index" :range="school_dataList">
+					<view class="uni-input">{{school_dataList[school_index]}}</view>
+				</picker>
+			</view>	
+			<view class="register_account_input">
+				<picker @change="GradePickerChange($event)" :value="grade_index" :range="grade_dataList">
+					<view class="uni-input">{{grade_dataList[grade_index]}}</view>
+				</picker>
+			</view>	
+			<view class="register_account_input">
+				<picker @change="ClassPickerChange($event)" :value="class_index" :range="class_dataList">
+					<view class="uni-input">{{class_dataList[class_index]}}</view>
+				</picker>
 			</view>
-			
-			<view :class="{
-				'register_account_input':true
-				}">
-				<view class="unamecss">
-					<m-input class="m-input" type="text" clearable focus v-model="uname" placeholder="学生姓名"></m-input>
-				</view>
-			</view>
-			
 			<view class="register_account_input">
 				<view class="uni-list-cell-left">
 				    上课时间
 				</view>		
-			</view>
-			
+			</view>			
 			<view  class="register_account_input week-list">				
 				<view class="week-list-time">
 					<view class="left_txt">星期：</view>
@@ -42,7 +67,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">上课时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsutime_list" placeholder="所选接时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsutime_list" placeholder="所选接时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -63,7 +88,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">上课教室：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsclassroom_list" placeholder="上课教室"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsclassroom_list" placeholder="上课教室"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -83,7 +108,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">接的地址：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsuaddress_list" placeholder="接的地址"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsuaddress_list" placeholder="接的地址"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -104,7 +129,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">送的时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsgivetime_list" placeholder="送的时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsgivetime_list" placeholder="送的时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -121,7 +146,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">送的地址：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsgiveaddress_list" placeholder="送的地址"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsgiveaddress_list" placeholder="送的地址"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -141,7 +166,7 @@
 				<view class="week-list-time">
 					<view class="left_txt">接回时间:</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsbacktime_list" placeholder="接回的时间"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsbacktime_list" placeholder="接回的时间"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -158,7 +183,7 @@
 				<view class="week-list-time address">
 					<view class="left_txt">是否吃饭：</view>
 					<view class="cell-right">
-						<input class="m-input t2" type="text" :value="_self.studentsfanstatus_list" placeholder="吃饭状态"></input>
+						<!-- <input class="m-input t2" type="text" :value="_self.studentsfanstatus_list" placeholder="吃饭状态"></input> -->
 						<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
 							<view :class="{
 								'texts':true,
@@ -196,6 +221,24 @@
 	</view>
 </template>
 <style>	
+	..register_account_input.form{
+		/* height: 60upx;
+		line-height: 60upx; */
+	}
+	.form image{
+		width:80upx;
+		height: 80upx;
+	}	
+	.form label view{
+		float: left;
+		margin-bottom: 10upx;	
+		font-size: 30upx;
+		height: 60upx;
+		line-height: 60upx;
+	}	
+	.radio_text{
+		margin-right: 40upx;
+	}
 	.texts{
 		font-size: 25upx;
 		margin-right: 10upx;
@@ -397,10 +440,33 @@
 		data(){
 			return{
 				cat_id:0,
+				sex:1,
+				sex_items:[
+					{
+						value: '1',
+						name: '男'
+					},
+					{
+						value: '0',
+						name: '女'
+					}
+				],
+				
+				school_id:0,
+				school_index:0,
+				school_dataList:[],
+				school_dataIDList:[],
+				
 				grade_id:0,
-				grade_name:'',
-				grade_order:'',
-				grade_address:'',
+				grade_index:0,
+				grade_dataList:[],
+				grade_dataIDList:[],
+				
+				class_id:0,
+				class_index:0,
+				class_dataList:[],
+				class_dataIDList:[],
+				
 				
 				//教室相关
 				classroom_id:0,
@@ -436,7 +502,6 @@
 				uid:0,
 				uname:'',
 				students_dataList:[],
-								
 				
 				week_id:0,
 				week_index:0,				
@@ -454,15 +519,17 @@
 					}
 				],
 				
-				
-				
 				ptime:"15:00",
-				
 				headermsg:'',
 				btntxt:''
 			}
 		},
 		methods:{
+			sexChange: function(evt) {
+				debugger;
+				var current = evt.detail.value;
+				_self.sex = current;	
+			},
 			bindmodify(){
 				if(parseInt(_self.com_id) == 0){
 					uni.showToast({
@@ -508,6 +575,10 @@
 						"uid":_self.uid,
 						"uname":_self.uname,
 						"cat_id":_self.category_id,
+						"school_id":_self.school_id,
+						"grade_id":_self.grade_id,
+						"class_id":_self.class_id,
+						"sex":_self.sex,
 						"studentsidlist":_self.studentsid_list,
 						"studentsweeklist":_self.studentsweek_list,
 						"studentsutimelist":_self.studentsutime_list,
@@ -556,7 +627,6 @@
 										_self.studentsbacktime_list = '';//所选周几的送孩子时间
 										_self.studentsclassroom_list = '';//所选教室
 										
-										
 										_self.category_id = 0;
 										_self.category_index = 0;
 										_self.category_dataList = [];
@@ -565,7 +635,6 @@
 										//学生列表
 										_self.uid = 0;
 										_self.students_dataList = [];
-														
 										
 										_self.week_id = 0;
 										_self.week_index = 0;				
@@ -597,6 +666,69 @@
 						}
 				    }
 				},"1","");
+			},
+			ClassPickerChange:function(e){
+				console.log('班级picker发送选择改变，携带值为', e.target.value+"===="+_self.class_dataList[e.target.value] + _self.class_dataIDList[e.target.value]);
+				_self.class_id = _self.class_dataIDList[e.target.value];
+				_self.class_index = e.target.value;
+			},
+			GradePickerChange:function(e){
+				console.log('年级picker发送选择改变，携带值为', e.target.value+"===="+_self.grade_dataList[e.target.value] + _self.grade_dataIDList[e.target.value]);
+				let grade_id = _self.grade_dataIDList[e.target.value];
+				_self.grade_id = grade_id;
+				_self.grade_index = e.target.value;
+			},
+			SchoolPickerChange:function(e){
+				console.log('学校picker发送选择改变，携带值为', e.target.value+"===="+_self.school_dataList[e.target.value] + _self.school_dataIDList[e.target.value]);
+				var school_id = _self.school_dataIDList[e.target.value];
+				_self.school_id = school_id;
+				_self.school_index = e.target.value;
+				
+				let ret = _self.getUserInfo();
+				this.sendRequest({
+				    url : this.GetAllGradeUrl,
+				    method : _self.Method,
+				    data : {
+						"guid": ret.guid,
+						"token":ret.token,
+						"id":_self.school_id,
+						"t":Math.random()
+					},
+				    hideLoading : true,
+				    success: (res) => {	
+				    	if(res){
+							var gradelist = res.gradelist;
+							let list = [];
+							let idlist = [];
+							list.push("==请选择年级==");
+							idlist.push(0);
+							for (var i = 0; i < gradelist.length; i++) {
+								var item = gradelist[i];
+								list.push(item.grade_name);
+								idlist.push(item.grade_id);
+							}								
+							_self.grade_dataList = list;
+							_self.grade_dataIDList = idlist;
+							_self.grade_index = 0;
+							
+							//重新选择学校后，清空班级
+							list = [];
+							idlist = [];
+							list.push("==请选择班级==");
+							idlist.push(0);
+							var classlist = res.classlist;
+							for (var i = 0; i < classlist.length; i++) {
+								var item = classlist[i];
+								list.push(item.class_name);
+								idlist.push(item.class_id);
+							}								
+							_self.class_dataList = list;
+							_self.class_dataIDList = idlist;
+							_self.class_index = 0;
+							
+						}
+					},
+				});
 			},
 			radiofanChange:function(e,num){
 				num = parseInt(num);
@@ -762,6 +894,24 @@
 								}
 								_self.students_dataList = list; */
 								
+								data = res.schoollist;
+								//所有学校
+								list = [];
+								idlist = [];
+								list.push("==请选择学校==");
+								idlist.push(0);
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.school_name);
+									idlist.push(item.school_id);
+									if(i == 0){
+										_self.school_id = item.school_id;
+									}
+								}
+								_self.school_dataList = list;
+								_self.school_dataIDList = idlist;
+								_self.school_index = 0;	
+								
 								//所有教室
 								data = res.classroomlist;
 								list = [];
@@ -863,14 +1013,84 @@
 								if(_self.uid == 0)	_self.category_index = 0; 
 							}
 							
+							list = [];
+							idlist = [];
+							list.push("==请选择学校==");
+							idlist.push(0);
+							if(_self.uid > 0){
+								var data = res.schoollist;
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];									
+									list.push(item.school_name);
+									idlist.push(item.school_id);
+								}
+							}							
+							_self.school_dataList = list;
+							_self.school_dataIDList = idlist;
+							_self.school_index = 0;	
+							
+							//填入空的年级下拉框
+							list = [];
+							idlist = [];
+							list.push("==请选择年级==");
+							idlist.push(0);
+							if(_self.uid > 0){
+								if(res.gradelist != null){
+									var gradelist = res.gradelist;
+									for (var i = 0; i < gradelist.length; i++) {
+										var item = gradelist[i];
+										list.push(item.grade_name);
+										idlist.push(item.grade_id);
+									}
+								}
+							}							
+							_self.grade_dataList = list;
+							_self.grade_dataIDList = idlist;
+							if(_self.uid == 0)	_self.grade_index = 0;
+							
+							//填入空的班级下拉框
+							list = [];
+							idlist = [];
+							list.push("==请选择班级==");
+							idlist.push(0);
+							if(_self.uid > 0){
+								if(res.classlist != null){
+									var classlist = res.classlist;
+									for (var i = 0; i < classlist.length; i++) {
+										var item = classlist[i];
+										list.push(item.class_name);
+										idlist.push(item.class_id);
+									}
+								}
+							}							
+							_self.class_dataList = list;
+							_self.class_dataIDList = idlist;
+							if(_self.uid == 0)	_self.class_index = 0;
+							
 				    	    if(res){
 								var data = res.companyplaninfo; 
 				    			if(parseInt(res.status) == 3){
 									
+									_self.sex = data.planinfo[0].sex;
 									_self.uname = data.planinfo[0].uname;
 									_self.com_id = data.planinfo[0].com_id;
 									let j = _self.cIDList.findIndex(i => i == _self.com_id);
 									_self.cindex = j;
+									
+									//所在学校
+									_self.school_id = data.planinfo[0].school_id;
+									j = _self.school_dataIDList.findIndex(i => i == _self.school_id);
+									_self.school_index = j;
+									
+									//所在年级
+									_self.grade_id = data.planinfo[0].grade_id;
+									j = _self.grade_dataIDList.findIndex(i => i == _self.grade_id);
+									_self.grade_index = j;
+									
+									//所在班级
+									_self.class_id = data.planinfo[0].class_id;
+									j = _self.class_dataIDList.findIndex(i => i == _self.class_id);
+									_self.class_index = j;
 									
 									//所有教室
 									let classroom_data = res.classroomlist;
