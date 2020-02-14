@@ -351,7 +351,6 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 	    guid: ret.guid,
 	    token: ret.token
 	};
-		
 	uni.request({
 		url: that.SetsignUrl,
 		header: {
@@ -429,7 +428,7 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 									that.navigateTo('/pages/company/company/index');
 									
 						        } else if (res.cancel) {
-						            //this.navigateTo('planshow?id='+_self.plan_id);
+									that.navigateTo('/pages/company/company/'+url);
 						        }
 						    }
 						});

@@ -2,8 +2,8 @@
 	<view class="main_content">
 		<view class="content">
 			<view class="center title">
-				<view>榴石</view>
-				<view class="pinyin">liushi</view>
+				<view>学时</view>
+				<view class="pinyin">xueshi</view>
 			</view>
 			<view class="center mainpic">
 				<image src="../../../static/img/indeximg.png" mode=""></image>

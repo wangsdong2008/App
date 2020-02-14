@@ -92,6 +92,7 @@
 				    data : {
 						"guid": data.guid,
 						"token":data.token,
+						"catid":2,
 						"t":Math.random()
 					},
 				    hideLoading : true,
@@ -207,7 +208,7 @@
 					return false;
 				}
 				//调用签到函数
-				_self.setSign(2,sid,_self.selectid.toString(),'sksign');
+				_self.setSign(2,sid,_self.selectid.toString(),'cfsign');
 			}
 		}
 	}
