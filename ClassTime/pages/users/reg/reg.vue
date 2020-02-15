@@ -154,11 +154,15 @@
     import service from '../../../service.js';
     import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue";
+	var _self;
 	
 	export default {
         components: {
             mInput,headerNav
         },
+		onLoad(){
+			_self = this;
+		},
         data() {
             return {
 				headermsg:'注册,Register',
@@ -170,9 +174,8 @@
             }
         },
         methods: {
-			send_sms(){
-				let that = this;				
-				if(!service.checkMobile(this.mobile)){
+			send_sms(){		
+				if(!service.checkMobile(_self.mobile)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '手机号码不合法'
@@ -180,7 +183,7 @@
 					return;
 				}
 				
-				if(this.temp_status == 1){ //测试
+				if(_self.temp_status == 1){ //测试
 					try {
 						uni.clearStorageSync();  
 					} catch (e) {  
@@ -189,22 +192,22 @@
 					debugger;
 				}
 									
-				var ret = uni.getStorageSync(that.Temp_KEY);
+				var ret = uni.getStorageSync(_self.Temp_KEY);
 				if(ret == undefined || ret == ""){//如果不能获取的话，获取新的sessionid，防止软件直接注册
 					return false;
 				}else{
 					//正常的页面，通过登录页面过来的
 					const data = {
 					    "token": ret.token,
-					    "mobile": that.mobile,
+					    "mobile": _self.mobile,
 						"smsid":ret.smsid,
 						"status":1
 					};
-					that.sendsms(data);
+					_self.sendsms2(data);
 				}
 			},
             register() {                
-				if(!service.checkMobile(this.mobile)){
+				if(!service.checkMobile(_self.mobile)){
 				    uni.showToast({
 				        icon: 'none',
 				        title: '手机号码不合法'
@@ -212,7 +215,7 @@
 				    return;
 				}
 				
-				if(!service.checkNull(this.code)){
+				if(!service.checkNull(_self.code)){
 				    uni.showToast({
 				        icon: 'none',
 				        title: '验证码不能为空'
@@ -220,21 +223,21 @@
 				    return;
 				}
 				
-                if (this.password.length < 6) {
+                if (_self.password.length < 6) {
                     uni.showToast({
                         icon: 'none',
                         title: '密码最短为 6 个字符'
                     });
                     return;
                 }
-				if (this.againpassword.length < 6) {
+				if (_self.againpassword.length < 6) {
 				    uni.showToast({
 				        icon: 'none',
 				        title: '密码最短为 6 个字符'
 				    });
 				    return;
 				}
-				if(this.againpassword != this.password){
+				if(_self.againpassword != _self.password){
 					uni.showToast({
 					    icon: 'none',
 					    title: '两次密码不一致，请重新填写！'
@@ -243,12 +246,12 @@
 				}
 				
                 const data = {
-                    password: this.password,
-					againpassword: this.againpassword,
-                    mobile: this.mobile,
-					code:this.code
+                    password: _self.password,
+					againpassword: _self.againpassword,
+                    mobile: _self.mobile,
+					code:_self.code
                 }
-                this.addUsers(data);
+                _self.addUsers(data);
                 /* uni.showToast({
                     title: '注册成功'
                 });

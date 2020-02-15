@@ -477,7 +477,7 @@ Vue.prototype.getsessionsi = function(){
 	});	
 }
 
-//发送短信1
+//用于取回密码
 Vue.prototype.sendsms = function (userInfo) {	
 	uni.request({
 		url:this.SendSmsUrl,
@@ -485,6 +485,7 @@ Vue.prototype.sendsms = function (userInfo) {
 	             "Content-Type": "application/x-www-form-urlencoded"							 
 	    },
 	    data: {
+			"token":userInfo.token,
 	        "mobile": userInfo.mobile,
 			"t":Math.random()
 	    },
@@ -550,7 +551,7 @@ Vue.prototype.sendsms = function (userInfo) {
 Vue.prototype.sendsms2 = function(datainfo){
 	this.sendRequest({
 	       url : this.SendSmsUrl,
-	       method : _self.Method,
+	       method : this.Method,
 	       data : {
 			"token":datainfo.token,
 			"mobile":datainfo.mobile,
@@ -568,7 +569,6 @@ Vue.prototype.sendsms2 = function(datainfo){
 						mask: true,
 						duration: 1500
 					});
-					break;
 					break;
 				}
 				case 2:{
@@ -599,20 +599,6 @@ Vue.prototype.sendsms2 = function(datainfo){
 			}
 	       }
 	   },"1","");
-	   
-	uni.request({
-		url:this.SendSmsUrl,
-		header: {
-	             "Content-Type": "application/x-www-form-urlencoded"							 
-	    },
-	    data: {
-			
-	    },
-	    method: "get",
-		success: (res) => {
-			
-		}
-	});	
 }
 
 Vue.prototype.navTo = function (item,index) {
