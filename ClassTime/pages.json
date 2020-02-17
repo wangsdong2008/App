@@ -22,6 +22,11 @@
 		    "style": {
 		        "navigationBarTitleText": "注册新用户"
 		    }
+		},{
+		    "path": "pages/users/pwd/pwd",
+		    "style": {
+		        "navigationBarTitleText": "取回密码"
+		    }
 		},
 		{
 			"path": "pages/parents/parents/index",
@@ -62,6 +67,11 @@
 			"path": "pages/parents/site/planshow",
 			"style": {
 				"navigationBarTitleText": "上课设置"
+			}
+		},{
+			"path": "pages/parents/site/help",
+			"style": {
+				"navigationBarTitleText": "帮助文档"
 			}
 		},{
 			"path": "pages/company/site/index",

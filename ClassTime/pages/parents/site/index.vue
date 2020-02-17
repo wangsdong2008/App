@@ -9,6 +9,9 @@
 				<uni-list-item title="上课计划" thumb="../../../static/img/plan.png" @tap="bindPlan" />
 				<uni-list-item title="查找机构" thumb="../../../static/img/company.png" @tap="bindcompany" />
 			</uni-list>
+			<uni-list>
+				<uni-list-item title="帮助文档"   thumb="../../../static/img/help.png" @tap="bindhelp" />
+			</uni-list>
 		</view>
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
@@ -53,6 +56,9 @@
 			},
 			bindcompany:function(){
 				this.navigateTo('/pages/index/index/search');
+			},
+			bindhelp:function(){
+				this.navigateTo('help');
 			}
 		}
 	}

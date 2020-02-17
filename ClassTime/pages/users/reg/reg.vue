@@ -96,7 +96,7 @@
 	}
 	.register-input-mail{
 		background:url(../../../static/img/mail.png) no-repeat;	
-		width:53%;
+		width:48%;
 		float: left;
 		/* border:1px solid #ff0000; */
 	}
@@ -109,9 +109,9 @@
 		float: right;
 		background-color: #eee;
 		color:#225181;
-		font-size: 24upx;
+		font-size: 32upx;
 		align:center;
-		width: 29%;
+		width: 35%;
 		height: 76upx;
 		line-height: 76upx;
 		border-radius: 45upx;

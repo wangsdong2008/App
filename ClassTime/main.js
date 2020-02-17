@@ -31,6 +31,7 @@ Vue.prototype.getUsersInfoUrl = Vue.prototype.GeneralUrl + "getuserinfo" //个�
 Vue.prototype.LoginUrl = Vue.prototype.GeneralUrl + "dl" //登录地址
 Vue.prototype.CheckTokenUrl = Vue.prototype.GeneralUrl + "checktoken" //检测是否登录，每天第一次打开进行检测
 Vue.prototype.RegisterUrl = Vue.prototype.GeneralUrl + "register" //注册新用户
+Vue.prototype.ResetPasswordrUrl = Vue.prototype.GeneralUrl + "resetpassword" //重置密码
 Vue.prototype.getSessionUrl = Vue.prototype.GeneralUrl + "getsessionid" //生成session
 Vue.prototype.SendSmsUrl = Vue.prototype.GeneralUrl + "sendsms" //发短信
 Vue.prototype.SearchCourseUrl = Vue.prototype.GeneralUrl + "search" //查找机构
@@ -260,6 +261,85 @@ Vue.prototype.checkLogin = function(){
 	
 	}	
 }
+
+//重置密码
+Vue.prototype.ResetPassword = function(userInfo){
+	let _self = this;	
+	_self.sendRequest({
+			url : this.ResetPasswordrUrl,
+		    method : _self.Method,
+		    data : {
+				"mobile": userInfo.mobile,
+				"password":userInfo.password,
+				"againpassword":userInfo.againpassword,
+				"code":userInfo.code,
+				"t":Math.random()
+			},
+		    hideLoading : true,
+		    success:function (res) {
+				debugger;
+				var data = res;
+				switch(parseInt(data.status)){
+					case 0:{
+						uni.showToast({
+							title: '两次密码不一致，请更换',
+							mask: true,
+							duration: 1500
+						});
+						break;
+						}
+					case 1:{
+						uni.showToast({
+							title: '手机号码不存在',
+							mask: true,
+							duration: 1500
+						});
+						break;
+					}
+					case 2:{
+						uni.showToast({
+							title: '手机号码已被使用，请更换',
+							mask: true,
+							duration: 1500
+						});
+						break;
+					}
+					case 3:{
+						uni.showToast({
+							title: '重置密码成功，请登录!',
+							mask: true,
+							duration: 1500,
+							success: function(){
+								setTimeout(function() {
+								    uni.reLaunch({  
+										url: '../login/login'  
+									});
+								}, 2000);
+							}  
+						});
+						break;
+					}				
+					case 4:{
+						uni.showToast({
+							title: '验证码不正确',
+							mask: true,
+							duration: 1500
+						});
+						break;
+					}
+					default:{
+						uni.showToast({
+						    title: '重置密码失败，请检查'
+						});
+						break;
+					}
+				}
+				
+				
+		    }
+		},"1","");
+}
+
 Vue.prototype.addUsers = function(userInfo){
 	//debugger;
 	//if(userinfo == undefined) return;
@@ -545,7 +625,7 @@ Vue.prototype.sendsms = function (userInfo) {
 }
 
 /*
- status:1发送验证码短信，2取回密码短信，3生日祝福短信
+ datainfo.status=1发送验证码短信，2取回密码短信，3生日祝福短信
 */
 //发送短信
 Vue.prototype.sendsms2 = function(datainfo){
@@ -564,11 +644,23 @@ Vue.prototype.sendsms2 = function(datainfo){
 			var data = res;
 			switch(parseInt(data.status)){
 				case 1:{
+					let str = '';
+					switch(parseInt(datainfo.status)){
+						case 1:{
+							str = '此号码已经存在，不需要重新注册';
+							break;
+						}
+						case 2:{
+							str = '此号码不存在，无法取回密码';
+							break;
+						}
+					}					
 					uni.showToast({
-						title: '此号码已经存在，不需要重新注册',
+						title: str,
 						mask: true,
 						duration: 1500
 					});
+					
 					break;
 				}
 				case 2:{
