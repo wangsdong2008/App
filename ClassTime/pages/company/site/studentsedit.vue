@@ -6,8 +6,11 @@
 			<view class="register_account_input">				
 				<m-input class="m-input" type="text" clearable focus v-model="uname" placeholder="填写学生姓名"></m-input>
 			</view>	
-			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="birthday" placeholder="生日"></m-input>
+			<view class="register_account_input">				
+				<picker mode="date" fields='day' :value="_self.birthday" @change="getdate($event)">  
+				    <view class="uni-input txt_s">{{value_startTime}}</view>  
+				</picker>  
+				
 			</view>	
 			<view class="register_account_input form">
 				<radio-group @change="sexChange">
@@ -78,17 +81,18 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
-	import uniCalendar from '@/components/uni-calendar/uni-calendar.vue'
 	var _self;
 	export default {
 	    components: {
 			service,
 			headerNav,
-			mInput,
-			uniCalendar 
+			mInput
 		},
 		data(){
 			return{
+				value_startTime: '学生生日',   
+				birthday:'',
+						
 				uid:0,
 				uname:'',
 				dataList:[],				
@@ -128,7 +132,6 @@
 					}
 				],
 				teacher:'',
-				birthday:'',
 				is_show:1,
 				items: [
 					{
@@ -154,6 +157,9 @@
 				_self.uid = 0;
 			}
 			if(_self.uid == 0){
+				var d = new Date();				
+				_self.birthday = (parseInt(d.getFullYear())-6).toString()+"-01-01";
+				
 				_self.headermsg = "添加新学生,Student Add";
 				_self.btntxt = "添加";
 			}else{
@@ -166,8 +172,11 @@
 		},
 		
 		methods:{
+			getdate(e) {
+				_self.birthday = e.detail.value;
+				_self.value_startTime = e.detail.value;				
+			},
 			bindmodify(){
-				//debugger;
 				if(!service.checkNull(_self.uname)){
 					uni.showToast({
 					    icon: 'none',
@@ -246,7 +255,7 @@
 				       			if (res.confirm) {
 				       				_self.navigateTo('students');
 				       			} else if (res.cancel) {
-				       				_self.navigateTo('studentsedit?id='+_self.id);
+				       				_self.navigateTo('studentsedit?id='+_self.uid);
 				       			}
 				       		}
 				       	});
@@ -374,39 +383,7 @@
 				console.log('年级picker发送选择改变，携带值为', e.target.value+"===="+_self.grade_dataList[e.target.value] + _self.grade_dataIDList[e.target.value]);
 				let grade_id = _self.grade_dataIDList[e.target.value];
 				_self.grade_id = grade_id;
-				_self.grade_index = e.target.value;
-				
-				/* let ret = _self.getUserInfo();
-					this.sendRequest({
-					    url : this.GetAllClassUrl,
-					    method : _self.Method,
-					    data : {
-							"guid": ret.guid,
-							"token":ret.token,
-							"id":_self.school_id,
-							"gradeid":grade_id,
-							"t":Math.random()
-						},
-					    hideLoading : true,
-					    success: (res) => {	
-					    	if(res){
-								var classlist = res.classlist;
-								let list = [];
-								let idlist = [];
-								list.push("==请选择年级==");
-								idlist.push(0);
-								for (var i = 0; i < classlist.length; i++) {
-									var item = classlist[i];
-									list.push(item.class_name);
-									idlist.push(item.class_id);
-								}								
-								_self.class_dataList = list;
-								_self.class_dataIDList = idlist;
-							}
-						},
-					}); */
-				
-				
+				_self.grade_index = e.target.value;		
 				
 			},
 			ClassPickerChange:function(e){
@@ -504,7 +481,10 @@
 									
 									var birthday1 = data.birthday;
 									if(birthday1 == '1970-01-01'){
-										birthday1 = '';
+										var d = new Date();
+										birthday1 = (parseInt(d.getFullYear())-6).toString()+"-01-01";
+									}else{
+										_self.value_startTime = birthday1;
 									}
 									
 									_self.birthday = birthday1;
