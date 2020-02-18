@@ -104,12 +104,34 @@
 					}
 				}
 				//_self.navigateTo(url);
-				debugger;
 				let ret = this.getUserInfo();
 				if(!ret){
 					return;
 				}
+				
 				//待完成支付功能
+			/* 	let orderInfo = 'app_id=2016091654625569&biz_content=shike&charset=utf-8&method=alipay.trade.app.pay&notify_url=http%3A%2F%2F112.74.68.252%3A9200%2Fcssd%2Fapi%2Falipay_notify&out_trade_no=2019052456194799&product_code=QUICK_MSECURITY_PAY&sign_type=RSA2&subject=LV%E5%8C%85%E5%A5%B3%E6%80%A7%E5%A5%A2%E4%BE%88%E5%8C%85&timestamp=2019-05-24+16%3A32%3A27&total_amount=1770.0&version=1.0&sign=R5dwr0XAX42jocM86fIZFTIX5HzzE4U2xBvhU5qWo8hjAO%2F%2FNH4u3XF%2FeCjxtXOVPRTUgPGMbkPBj1pDA2QMmdZk55nBhjb%2FJ0H9kmBFPBek7AwuANZNbU3Lc0keMGxlxJDAadzgaMckiuNXLSkHDAPeI7glR7Yx86FVyqM88V9bEHjIY7e5kfS7f2phU8VmJrAdda32aW49ETgmBMtxPzo1DmzP8r7ovqFu9IAl7MDXYlsUUR4z9%2B9puEtZUe81QI895HD%2FnKN5JiwKhTAcsOXar752NI1j7rJlp%2BVrqejjuXXfvxFmMkWNUXjXWKPGgbQf7uiRJhgfuJp5mJzsEA%3D%3D'
+				uni.requestPayment({
+					provider: 'alipay',
+					orderInfo: orderInfo, 
+					success: function (res) {
+						
+						console.log('success:' + JSON.stringify(res));
+					},
+					fail: function (err) {
+						console.log('fail:' + JSON.stringify(err));
+					}
+				})
+				 */
+				//let service="mobile.securitypay.pay"&partner="2088801273866834"&_input_charset="UTF-8"&out_trade_no="20200217152818"&subject="DCloud项目捐赠"&payment_type="1"&seller_id="payservice@dcloud.io"&total_fee="1"&body="DCloud致力于打造HTML5最好的移动开发工具，包括终端的Runtime、云端的服务和IDE，同时提供各项配套的开发者服务。"&it_b_pay="1d"&notify_url="http%3A%2F%2Fdemo.dcloud.net.cn%2Fpayment%2Falipay%2Fnotify.php"&show_url="http%3A%2F%2Fwww.dcloud.io%2Fhelloh5%2F"&sign="dLGdcWUE6Dn8NmvJUiMxqCSjmoEFNEdZQB%2B0bkGIAWII6ijAmoZWXRtTgcEkCw4e6NtRzuc%2BJxdOwKDmvYh8uC%2FaMN5qhIMRVoLl719tUIV8nDsuuCNYqFmlN8xvDku0BknI7UeR9mO%2BjZe4N1IrCEZGTC1ARYf%2FZ37GHa%2B4Sn0%3D"&sign_type="RSA";
+				
+			// AlipayClient alipayClient = new DefaultAlipayClient(URL, APP_ID, APP_PRIVATE_KEY, FORMAT, CHARSET, ALIPAY_PUBLIC_KEY, SIGN_TYPE);
+
+				
+				
+				
+				
+				
 			},
 			even(e){
 				let num = e.detail.index;

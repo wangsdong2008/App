@@ -38,7 +38,10 @@ Vue.prototype.SearchCourseUrl = Vue.prototype.GeneralUrl + "search" //查找机�
 Vue.prototype.UpgradeUrl = Vue.prototype.GeneralUrl + "upgrade" //升级申请
 Vue.prototype.ModifyUserInfoUrl = Vue.prototype.GeneralUrl + "modifyuserinfo" //修改个人信息
 Vue.prototype.ModifyParentfaceUrl = Vue.prototype.GeneralUrl + "modifyparentface" //修改家长头像
-Vue.prototype.AlipayUrl = Vue.prototype.GeneralUrl + "alipay" //查找机构
+Vue.prototype.MessagelistUrl = Vue.prototype.GeneralUrl + "getmessagelist" //某人短信列表
+Vue.prototype.MessageshowUrl = Vue.prototype.GeneralUrl + "messageshow" //某人短信详情
+Vue.prototype.AlipayUrl = Vue.prototype.GeneralUrl + "alipay" //支付,待完成
+
 
 
 //家长相关

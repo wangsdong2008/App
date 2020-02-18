@@ -1,43 +1,21 @@
 <template>
 	<view class="main_content">
 		<view class="h500 content">
-			<view class="main-body header">
-				<ul>
-					<li class="imgs">						
-						<image class="headimgsize" :src="childface" mode="" @click="upload"></image>
-					</li>
-					<li class="header_title">
-						<ul class="header_txt">
-							<li>{{userinfo.nick_name}}</li>
-							<li><image src="../../../static/img/mobile2.png" mode=""></image>{{userinfo.mobile}}</li>
-						</ul>
-					</li>
-				</ul>
-				<view class="clear"></view>
-			</view>		
 		</view>
-		<view class="center-body write main-body">					
-			<uni-grid :column="3" :show-border="false" @change="navToDetailPage">
-			    <uni-grid-item v-for="(item, i) in data_ctgy" :index="i" :key="i">
-			       <view class="grid-item-box" >
-						<image :src="item.image" class="identify-head" mode="aspectFill" ></image>
-			            <text class="gemmologist-name">{{item.text}}</text>
-			        </view>
-			    </uni-grid-item>
-			</uni-grid>
-		</view>
-		<view class="main-body write lists">
-			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,1)"></uni-list-item>
-			</uni-list>
+		<view class="center-body write main-body">
+			我的消息
 		</view>
 		
 		<view class="main-body write lists">
 			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList2" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,2)"></uni-list-item>
-				<uni-list-item title="退出" thumb="/static/img/quit.png" @tap="bindquit"></uni-list-item>
+				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.message_title" @tap="bindclick(item.message_id)" :show-arrow="false" :show-badge="item.isread==0?true:false" badge-text="new"></uni-list-item>
+			</uni-list>
+			<uni-list>
+				<uni-list-item :show-arrow="false" :showIcon="false"><uni-pagination @change="handlePage" :show-icon="true" :total="total" :current="page" :pageSize="pagesize" /></uni-list-item>
 			</uni-list>
 		</view>
+		
+		
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
 		</view>
@@ -49,12 +27,14 @@
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import uniList from '@/components/uni-list/uni-list.vue'
-	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'	
+	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
+	
 	var _self;
 	
 	export default {
 	    components: {			
-			footerNav,uniGrid,uniGridItem,uniList,uniListItem
+			footerNav,uniGrid,uniGridItem,uniList,uniListItem,uniPagination
 		},
 		onLoad(){
 			_self = this;
@@ -65,24 +45,14 @@
 		},
 		data(){
 			return{
-				childface:'',
-				userinfo:[],
-				dataList:[
-					{"text":"修改昵称","url":"account","image":"power.png"},
-					{"text":"修改密码","url":"modifypassword","image":"password.png"},
-					{"text":"更换手机","url":"modifymobile","image":"mobile5.png"},
-					{"text":"升级账号","url":"upgrade","image":"upgrade.png"},
-					{"text":"会员续费","url":"pay","image":"xf.png"}, 	
+				page:1,
+				current: 1,
+				total: 0,
+				pagesize: 6,
+				dataList:[					
 				],
 				dataList2:[
 					
-				],
-				footer: 'mine',
-				data_ctgy:[  
-				    {image:'../../../static/img/message.png',text:'我的消息(0)',url:"messagelist"},  
-				    {image:'../../../static/img/favorites.png',text:'收藏夹',url:"favorites"},  
-				   
-					{image:'../../../static/img/orders.png',text:'报名课程',url:"enlist"}        
 				]
 			}
 		},
@@ -95,13 +65,8 @@
 			bindquit:function(){
 				_self.quit();
 			},
-			bindclick:function(num,n){
-				if(n == 1){
-					_self.navigateTo(this.dataList[num].url);
-				}
-				else{
-					_self.navigateTo(this.dataList2[num].url);
-				}
+			bindclick:function(message_id){
+				_self.navigateTo('messageshow?id='+message_id+"&page="+_self.page);
 				
 			},
 			show(){
@@ -112,19 +77,30 @@
 				};
 				this.getData(data);
 			},
+			handlePage(params){
+				//debugger;
+				_self.page = params.current;
+				_self.show();
+			},
 			getData(data){
 				this.sendRequest({
-				    url : _self.getUsersInfoUrl,
+				    url : _self.MessagelistUrl,
 				    method : _self.Method,
-				    data : {"token":data.token,"guid":data.guid,"t":Math.random()},
+				    data : {"token":data.token,"guid":data.guid,"page":_self.page,"pagesize":_self.pagesize,"t":Math.random()},
 				    hideLoading : true,
 				    success:function (res) {
 						if(res){
-							let data = res;
-							if(data.status == 3){
-								_self.userinfo = data.userinfo;
-								_self.childface = _self.PicUrl + 'users' + data.userinfo.face;
-								_self.data_ctgy[0].text = "我的消息("+data.messagenum+")";
+						//	debugger;
+							let data = res.messagelist;
+							if(res.status == 3){
+								let data1 = data.list;
+								let list = [];
+								for (var i = 0; i < data1.length; i++) {
+									var item = data1[i];
+									list.push(item);
+								}								
+								_self.dataList = list;
+								_self.total =  data.count;
 							}
 						}
 				    }
@@ -176,6 +152,19 @@
 </script>
 
 <style>	
+	.uni-pagination{
+		width: 100%;
+		margin: 0 auto;
+	}
+	.example-body {
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+		padding: 0;
+		font-size: 14rpx;
+		background-color: #ffffff;
+		margin-bottom: 120upx;
+	}	
 	.lists{
 		/* height: 350upx; */
 		padding: 20upx 0upx;
@@ -247,20 +236,32 @@
 		height: 280upx;
 		background-color: #0a8aff;
 		padding-top: 120upx;
-	}		
+	}
+			
 	.main-body{
 		width: 95%;
 		margin: 0 auto;
+		overflow: hidden;
 	}
 	.write{
 		background-color: #fff;
 		border-radius: 25upx;
-		margin-bottom: 30upx;
+		margin-bottom: 20upx;
 	}
 	.center-body{
-		height: 180upx;	
-		margin-top: -90upx;
+		height:120upx;	
+		line-height: 120upx;
+		margin-top: 20upx;
+		font-size: 35upx;		
+		padding-left: 80upx;
+		overflow: hidden;
+		background:url(../../../static/img/message.png) 30upx 40upx no-repeat;
+		background-size: 42upx 42upx;
+		border-radius: 0upx;
+		background-color: #fff;
 	}
+	
+	
 	.header{}
 	.header ul{ margin: 0upx; padding:0upx; list-style-type: none; }
 	.header ul li{

@@ -243,6 +243,16 @@
 				"navigationBarTitleText": "会员中心"
 			}
 		},{
+			"path": "pages/users/main/messagelist",
+			"style": {				
+				"navigationBarTitleText": "我的消息"
+			}
+		},{
+			"path": "pages/users/main/messageshow",
+			"style": {				
+				"navigationBarTitleText": "消息详情"
+			}
+		},{
 			"path": "pages/users/main/main2",
 			"style": {				
 				"navigationBarTitleText": "会员中心"
