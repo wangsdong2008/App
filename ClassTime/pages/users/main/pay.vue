@@ -48,12 +48,40 @@
 		</view>
 		
 		<view class="main-body write lists2">
+			<radio-group @change="payChange">	
 			<ul>
 				<li>支付方式</li>
-				<li class="li40 wx" @tap="bindpay(1)">微信</li>		
-				<li class="li40 alipay" @tap="bindpay(2)">支付宝</li>				
+				<li class="li40">
+					<label class="uni-list-cell uni-list-cell-pd" >
+					<view>						
+						<radio class="radios" value="1" checked />
+					</view>
+					<view class="radio_text"><image src="../../../static/img/weixin.png" mode=""></image>微信</view>
+					</label>
+					<view class="clear"></view>
+				</li>
+				<li class="li40">
+					<label class="uni-list-cell uni-list-cell-pd" >
+					<view>						
+						<radio class="radios" value="2" />
+					</view>
+					<view class="radio_text"><image src="../../../static/img/alipay.png" mode=""></image>支付宝</view>
+					</label>
+					<view class="clear"></view>
+				</li>
+				
+				<!-- <li class="li40 wx" @tap="bindpay(1)">微信</li>
+				<li class="li40 alipay" @tap="bindpay(2)">支付宝</li>	 -->
 			</ul>
-		</view>		
+			</radio-group>	
+		</view>
+		
+		<view class="main-body write lists2">
+			<view class="btn-row">
+			    <button type="primary" class="primary" @tap="bindpay">去支付</button>
+			</view>	
+		</view>
+		
 	</view>
 </template>
 
@@ -85,53 +113,118 @@
 				endtime:'',
 				childface:'',
 				user_identity:0,
-				num:0
+				num:0,
+				payitems: [
+					{
+						imgurl:'../../../static/img/weixin.png',
+						value: '1',
+						name: '微信'
+					},
+					{
+						imgurl:'../../../static/img/alipay.png',
+						value: '2',
+						name: '支付宝'
+					}
+				],
+				payid:1
 			}
 		},
 		methods:{
-			bindpay(id){
-				let payid = id;
-				let nums = _self.num;
-				var url = '';
-				switch(payid){
-					case 1:{
-						url = '../pay/wxpay';
-						break;
-					}
-					case 2:{
-						url = '../pay/alipay';
-						break;
-					}
-				}
-				//_self.navigateTo(url);
-				let ret = this.getUserInfo();
+			payChange: function(evt) {
+				_self.payid = evt.detail.value;
+			},
+			bindpay(){
+				let payid = parseInt(_self.payid);
+				let nums = parseInt(_self.num);
+				
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return;
 				}
 				
-				//待完成支付功能
-			/* 	let orderInfo = 'app_id=2016091654625569&biz_content=shike&charset=utf-8&method=alipay.trade.app.pay&notify_url=http%3A%2F%2F112.74.68.252%3A9200%2Fcssd%2Fapi%2Falipay_notify&out_trade_no=2019052456194799&product_code=QUICK_MSECURITY_PAY&sign_type=RSA2&subject=LV%E5%8C%85%E5%A5%B3%E6%80%A7%E5%A5%A2%E4%BE%88%E5%8C%85&timestamp=2019-05-24+16%3A32%3A27&total_amount=1770.0&version=1.0&sign=R5dwr0XAX42jocM86fIZFTIX5HzzE4U2xBvhU5qWo8hjAO%2F%2FNH4u3XF%2FeCjxtXOVPRTUgPGMbkPBj1pDA2QMmdZk55nBhjb%2FJ0H9kmBFPBek7AwuANZNbU3Lc0keMGxlxJDAadzgaMckiuNXLSkHDAPeI7glR7Yx86FVyqM88V9bEHjIY7e5kfS7f2phU8VmJrAdda32aW49ETgmBMtxPzo1DmzP8r7ovqFu9IAl7MDXYlsUUR4z9%2B9puEtZUe81QI895HD%2FnKN5JiwKhTAcsOXar752NI1j7rJlp%2BVrqejjuXXfvxFmMkWNUXjXWKPGgbQf7uiRJhgfuJp5mJzsEA%3D%3D'
-				uni.requestPayment({
-					provider: 'alipay',
-					orderInfo: orderInfo, 
-					success: function (res) {
+				uni.req	
+				var url = '';
+				switch(payid){
+					case 1:{ //微信支付
+						//url = '../pay/wxpay';
 						
-						console.log('success:' + JSON.stringify(res));
-					},
-					fail: function (err) {
-						console.log('fail:' + JSON.stringify(err));
+					/* appid: 应用ID,
+							noncestr: 随机字符串,
+							package: 'Sign=WXPay', // 固定值，以微信支付文档为主
+							partnerid: 商户号,
+							prepayid: 预支付交易会话ID,
+							timestamp: 时间戳,
+							sign: 签名 ,// 根据签名算法生成签名 */
+						//
+						let obj = {							
+							appid: 'wx0411fa6a39d61297',
+							noncestr: '5JigiIJicbq8hQI2',
+							package: 'Sign=WXPay',
+							partnerid: '1230636401',
+							prepayid: 'wx21204902147233e222e12d451613768000',
+							timestamp: 1582257316,
+							sign: '0E5C9B9B1C8D7497A234CCC3C721AB1F'
+						};
+						// 第一种写法，传对象
+						//let orderInfo = obj;
+						// 第二种写法，传对象字符串
+						let orderInfo = JSON.stringify(obj);
+						
+						uni.requestPayment({
+							provider: 'wxpay',
+							orderInfo: orderInfo, // 订单数据							
+							success: function (res) {
+								// 支付成功的回调中 创建绘本馆成功
+								uni.showToast({
+									title: '微信支付成功',
+									icon: 'success',
+									duration: 1500
+								});
+							},
+							fail: function (err) {
+								// 支付失败的回调中 用户未付款
+								uni.showToast({
+									title: '支付取消',
+									duration: 1500,
+									image: '/static/png/error_icon.png'
+								});
+							}
+						});
+						// 
+						break;
 					}
-				})
-				 */
-				//let service="mobile.securitypay.pay"&partner="2088801273866834"&_input_charset="UTF-8"&out_trade_no="20200217152818"&subject="DCloud项目捐赠"&payment_type="1"&seller_id="payservice@dcloud.io"&total_fee="1"&body="DCloud致力于打造HTML5最好的移动开发工具，包括终端的Runtime、云端的服务和IDE，同时提供各项配套的开发者服务。"&it_b_pay="1d"&notify_url="http%3A%2F%2Fdemo.dcloud.net.cn%2Fpayment%2Falipay%2Fnotify.php"&show_url="http%3A%2F%2Fwww.dcloud.io%2Fhelloh5%2F"&sign="dLGdcWUE6Dn8NmvJUiMxqCSjmoEFNEdZQB%2B0bkGIAWII6ijAmoZWXRtTgcEkCw4e6NtRzuc%2BJxdOwKDmvYh8uC%2FaMN5qhIMRVoLl719tUIV8nDsuuCNYqFmlN8xvDku0BknI7UeR9mO%2BjZe4N1IrCEZGTC1ARYf%2FZ37GHa%2B4Sn0%3D"&sign_type="RSA";
-				
-			// AlipayClient alipayClient = new DefaultAlipayClient(URL, APP_ID, APP_PRIVATE_KEY, FORMAT, CHARSET, ALIPAY_PUBLIC_KEY, SIGN_TYPE);
-
-				
-				
-				
-				
-				
+					case 2:{//支付宝支付						
+						let orderInfo = 'app_id=2016101800715949&biz_content=shike&charset=utf-8&method=alipay.trade.app.pay&notify_url=http://www.a.com/index/notify/notifyy&out_trade_no=202002201028596283874524&product_code=QUICK_MSECURITY_PAY&sign_type=RSA2&subject=mysql&timestamp=2020-02-20+10:28:59&total_amount=123.0&version=1.0&sign=';
+						uni.requestPayment({
+							provider: 'alipay',
+							orderInfo: orderInfo, // 订单数据
+							success: function (res) {
+								if (res.resultCode == 6001) {
+									uni.showToast({
+										title: '支付取消',
+										icon: 'none',
+										duration: 1500
+									});
+								} else {
+									uni.showToast({
+										title: '支付宝支付成功',
+										icon: 'success',
+										duration: 1500
+									});
+								}
+							},
+							fail: function (err) {
+								// 支付失败的回调中 用户未付款
+								uni.showToast({
+									title: '支付取消',
+									duration: 1500,
+									icon: 'none'
+								});
+							}
+						});	
+						break;
+					}
+				}				
 			},
 			even(e){
 				let num = e.detail.index;
@@ -221,6 +314,24 @@
 </script>
 
 <style>		
+	.radio_text{
+		margin-left: 30upx;
+		margin-right: 40upx;
+	}
+	.uni-list-cell-pd view{
+		width: auto;
+		float: left;
+		font-size: 35upx;
+	}
+	.uni-list-cell-pd view image{
+		width: 80upx;
+		height: 80upx;
+		vertical-align: middle;
+		margin-right: 30upx;
+	}
+	.uni-list-cell-pd view radio{
+		margin-top: 15upx;
+	}
 	.lists2 ul li.grids{
 		clear: both;
 		padding: 0upx;
@@ -292,10 +403,10 @@
 		clear: both;
 	}
 	.lists{
-		margin-bottom:120upx;
+		margin-bottom:60upx;
 	}
 	.lists2{
-		margin-bottom:30upx;
+		margin-bottom:40upx;
 	}
 	.lists ul li,.lists2 ul li{
 		padding: 25upx 20upx;
@@ -355,9 +466,12 @@
 		line-height: 45upx;
 		padding:0upx;
 		
+		border:1upx solid #66ccff;
+		border-top: 0upx;
+		
 	}
 	.lists2 ul li.li40{
-		padding-left: 80upx;
+		padding-left: 40upx;
 	}
 	.wx{
 		background:url(../../../static/img/weixinpay.png) 10upx 20upx no-repeat;
