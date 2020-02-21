@@ -1,110 +1,83 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-			<view class="main-body header">
-				<ul>
-					<li class="imgs">重置密码</li>
-					<li class="header_title">
-						此操作将会重置您的登录密码，请牢记新密码
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/power.png" mode=""></image>修改密码
+			</view>	
+			<view class="main-body write lists">
+				<ul>				
+					<li class="li30">					
+						<m-input class="m-input" type="password" clearable focus v-model="old_password" placeholder="请输入旧密码"></m-input>					
+					</li>
+					<li class="li30">					
+						<m-input class="m-input" type="password" v-model="new_password" placeholder="请输入新密码"></m-input>					
+					</li>
+					<li class="li30">					
+						<m-input class="m-input" type="password" v-model="again_password" placeholder="请输入确认密码"></m-input>					
 					</li>
 				</ul>
-			</view>			
-		</view>
-		<view class="main-body write lists">
-			<ul>				
-				<li class="li30">					
-					<m-input class="m-input" type="password" clearable focus v-model="old_password" placeholder="请输入旧密码"></m-input>					
-				</li>
-				<li class="li30">					
-					<m-input class="m-input" type="password" clearable v-model="new_password" placeholder="请输入新密码"></m-input>					
-				</li>
-				<li class="li30">					
-					<m-input class="m-input" type="password" clearable v-model="again_password" placeholder="请输入确认密码"></m-input>					
-				</li>
-			</ul>
-			<button type="primary" class="btn" @tap="bindsaveuserinfo">修改</button>
+				<button type="primary" class="btn" @tap="bindsaveuserinfo">修改</button>
+			</view>
 		</view>
 	</view>
 </template>
 <style>
-	.header{}
-	.header ul,.main-body ul{ margin: 0upx; padding:0upx; list-style-type: none; }
-	.header ul li{padding:20upx;}
-	.imgs {	
-		height: 40upx;
-		text-align: left;
-		font-weight: bold;
-	}	
-	.main-body{
-		width: 95%;
-		margin: 0 auto;
-		margin-bottom: 20upx;
+	ul{
+		margin: 0;
+		padding: 0;
 	}
-	.header_title{
-		 font-size: 30upx;
-	}
-	.write{
-		background-color: #fff;
-		margin-bottom: 30upx;
-	}
-	.header_txt li{
-		clear: both;
-	}	
 	
-	.header_txt li{			
-		height: 50upx;
-		line-height: 50upx;
-		font-size: 30upx;
+	.main_content{	}	
+
+	
+	.content{
+		width:96%;
+		margin: 0 auto;
 	}
-	.gemmologist-name{
-		display: block;
+	.content .title{
+		border-bottom: 1px solid #66ccff;
 		height: 45upx;
 		line-height: 45upx;
-		font-size: 25upx;
-		
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
 	}
-	.grid-item-box{
-		text-align: center;		
-		margin-top: 25upx;
-		height: 45upx;
-	}
-	image.identify-head{
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-	}
-	.main_content{	}	
-	.h500{
-		padding-top: 120upx;
-	}
-	.btn{
-		margin-top: 80upx;
-		clear: both;
-	}
-	.lists ul li{
-		padding: 25upx 20upx;	
-		
-	}
-	.lists ul li.li30{
-		margin-bottom: 30upx;
-		background:url(../../../static/img/password1.png) 20upx 25upx no-repeat;
-		/* border:1px solid #f00; */
-		padding-left: 70upx;
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
 	}
 	
-	.lists ul li>view{
+	.lists{
+		/* border:1px solid #f00; */
+		width:96%;
+		margin: 0 auto;
+		margin-top: 40upx;
+		padding-top: 40upx;
+	}
+	
+	.lists ul{
+		list-style-type: none;
+	}
+	
+	.li30{		
+		padding: 20upx 20upx;
+ 		margin-bottom: 30upx;
+		padding-left: 70upx;
+		background:url(../../../static/img/password1.png) 20upx 25upx no-repeat;
+		-webkit-background-size: 40upx 40upx;
+		background-size: 40upx 40upx;
+		border: 1upx solid #EEEEEE;
+		line-height:60upx;
+		height: 60upx;
 		
 	}
-	.uni-list-cell-left{
-		margin-right: 40upx;
-		width:25%;
-	}
-	.cell-right{
-		float: left;
-		border: 1px solid #66ccff;
-		width:65%;
-		text-align: center;		
-	}
+	
+	.btn{
+		margin-top: 60upx;
+		clear: both;
+	}	
+	
 	.m-input{
 		height: 55upx;
 		line-height: 55upx;
@@ -114,12 +87,16 @@
 <script>
 	import service from '../../../service.js'
 	import mInput from '../../../components/m-input.vue'
+	import headerNav from "@/components/header/users_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
+	
+	var _self;
 	export default {
 	    components: {			
-			service,mInput,footerNav
+			service,mInput,headerNav,footerNav
 		},
 		onLoad(){
+			_self = this;
 			this.checkLogin();
 		},
 		onReady() {
@@ -129,41 +106,42 @@
 			return{
 				old_password:'',
 				new_password:'',
-				again_password:''
+				again_password:'',
+				headermsg:'会员中心,Member Center',
+				footer:''
 			}
 		},
 		methods:{
 			bindsaveuserinfo(){
-				let that = this;
-				if(!service.checkNull(that.old_password)){
+				if(!service.checkNull(_self.old_password)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请填写旧密码'
 					});
 					return;
 				}
-				if(!service.checkNull(that.new_password)){
+				if(!service.checkNull(_self.new_password)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请填写新密码'
 					});
 					return;
 				}
-				if(!service.checkNull(that.again_password)){
+				if(!service.checkNull(_self.again_password)){
 					uni.showToast({
 					    icon: 'none',
 					    title: '请填写确认密码'
 					});
 					return;
 				}
-				if(that.new_password != that.again_password){
+				if(_self.new_password != _self.again_password){
 					uni.showToast({
 					    icon: 'none',
 					    title: '两次密码不一致，请重新输入'
 					});
 					return;
 				}
-				let ret = that.getUserInfo();
+				let ret = _self.getUserInfo();
 				
 				this.sendRequest({
 				    url : this.ModifyUserInfoUrl,
@@ -171,9 +149,9 @@
 				    data : {
 						"guid": ret.guid,
 						"token": ret.token,	
-						"old_password":that.old_password,
-						"new_password":that.new_password,
-						"again_password":that.again_password,						
+						"old_password":_self.old_password,
+						"new_password":_self.new_password,
+						"again_password":_self.again_password,						
 						"status":1,
 						"t":Math.random()
 					},

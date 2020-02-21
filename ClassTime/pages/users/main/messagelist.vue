@@ -1,21 +1,20 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-		</view>
-		<view class="center-body write main-body">
-			我的消息
-		</view>
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/message.png" mode=""></image>我的消息
+			</view>	
+			<view class="main-body write lists">
+				<uni-list>
+					<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.message_title" @tap="bindclick(item.message_id)" :show-arrow="false" :show-badge="item.isread==0?true:false" badge-text="new"></uni-list-item>
+				</uni-list>
+			</view>
+			<view>
+				<uni-pagination @change="handlePage" :show-icon="true" :total="total" :current="page" :pageSize="pagesize" />
+			</view>
 		
-		<view class="main-body write lists">
-			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.message_title" @tap="bindclick(item.message_id)" :show-arrow="false" :show-badge="item.isread==0?true:false" badge-text="new"></uni-list-item>
-			</uni-list>
-			<uni-list>
-				<uni-list-item :show-arrow="false" :showIcon="false"><uni-pagination @change="handlePage" :show-icon="true" :total="total" :current="page" :pageSize="pagesize" /></uni-list-item>
-			</uni-list>
-		</view>
-		
-		
+		</view> 
 		<view class="footer">
 			<footerNav :msg="footer"></footerNav>
 		</view>
@@ -23,6 +22,7 @@
 </template>
 
 <script>
+	import headerNav from "@/components/header/users_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
@@ -34,7 +34,7 @@
 	
 	export default {
 	    components: {			
-			footerNav,uniGrid,uniGridItem,uniList,uniListItem,uniPagination
+			headerNav,footerNav,uniGrid,uniGridItem,uniList,uniListItem,uniPagination
 		},
 		onLoad(){
 			_self = this;
@@ -49,6 +49,8 @@
 				current: 1,
 				total: 0,
 				pagesize: 6,
+				headermsg:'会员中心,Member Center',
+				footer:'',
 				dataList:[					
 				],
 				dataList2:[
@@ -153,119 +155,44 @@
 
 <style>	
 	.uni-pagination{
-		width: 100%;
+		width: 80%;
 		margin: 0 auto;
-	}
-	.example-body {
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: center;
-		padding: 0;
-		font-size: 14rpx;
-		background-color: #ffffff;
-		margin-bottom: 120upx;
-	}	
+		margin-top: 40upx;
+	}		
 	.lists{
-		/* height: 350upx; */
-		padding: 20upx 0upx;
-	}
-	.gemmologist-name{
-		display: block;
-		/* border:1px solid #FF0; */
-		height: 45upx;
-		line-height: 45upx;
-		font-size: 25upx;
-		
-	}
-	.grid-item-box{
-		/* border: 1px solid #f00; */
-		text-align: center;
-		height: 165upx;
-		margin-top: 25upx;
-	}
-	.grid-item-box text{
-		height: 45upx;
-	}
-	image.identify-head{
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-		/* border:1px solid #f00; */
-	}
-	.main_content{
-		background-color: #eaeaea;
-	}
-	.header_title{
-		/* border:#f00 solid 1upx; */
-	}
-	.header_txt li{
-		clear: both;
-		color:#fff;		
-	}
-	.header_txt li image{
-		width: 42upx;
-		height: 42upx;
-		margin-right: 5upx;
-	}
-	.header_txt li:first-child{		
-		vertical-align: top;
-		height: 78upx;
-		line-height: 78upx;
-		font-size: 45upx;
-	}
-	.header_txt li:last-child{
-		height: 42upx;
-		line-height: 42upx;
-		font-size: 30upx;
-	}
-	.imgs {
-		height:120upx;
-		margin-right: 20upx;
-		background-color: #fff;
-		border-radius: 80upx;
-		width: 130upx;
-		height: 130upx;
-		text-align: center;
-		overflow: hidden;
-	}
-	.imgs image{
-		height: 120upx;
-		width: 120upx;
-	}
-	.h500{
-		height: 280upx;
-		background-color: #0a8aff;
-		padding-top: 120upx;
-	}
-			
-	.main-body{
-		width: 95%;
+		border:1px solid #eaeaea;
+		width:96%;
 		margin: 0 auto;
-		overflow: hidden;
+		margin-top: 40upx;
+		padding-top: 10upx;
+		border-radius: 15upx;
+	}	
+	
+	.lists ul{
+		list-style-type: none;
 	}
+	.lists ul li{
+		padding: 20upx 20upx;
+	}
+	
 	.write{
 		background-color: #fff;
-		border-radius: 25upx;
-		margin-bottom: 20upx;
+	}	
+	.content{
+		width:100%;
+		margin: 0 auto;
 	}
-	.center-body{
-		height:120upx;	
-		line-height: 120upx;
-		margin-top: 20upx;
-		font-size: 35upx;		
-		padding-left: 80upx;
-		overflow: hidden;
-		background:url(../../../static/img/message.png) 30upx 40upx no-repeat;
-		background-size: 42upx 42upx;
-		border-radius: 0upx;
-		background-color: #fff;
+	.content .title{
+		border-bottom: 1px solid #66ccff;
+		height: 45upx;
+		line-height: 45upx;
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
 	}
-	
-	
-	.header{}
-	.header ul{ margin: 0upx; padding:0upx; list-style-type: none; }
-	.header ul li{
-		float: left;
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
 	}
 	
 </style>

@@ -1,167 +1,111 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-			<view class="main-body header">
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/power.png" mode=""></image>更换手机
+			</view>	
+			<view class="main-body write lists">
 				<ul>
-					<li class="imgs">更换手机</li>
-					<li class="header_title">
-						此操作将会更换您的手机，更换后请使用新手号码登录
+					<li class="li30">
+						<m-input class="m-input" type="text" clearable focus v-model="old_mobile" placeholder="请输入旧手机"></m-input>
+					</li>
+					<li class="li30">
+						<m-input class="m-input" type="text" clearable v-model="new_mobile" placeholder="请输入新手机"></m-input>
+					</li>
+					<li class="li30">
+						<m-input class="m-input inputs" type="text" clearable v-model="code" placeholder="请输入验证码"></m-input>
+						<button type="default" class="btns" size="mini" @tap="bindcode">获取验证码</button>
 					</li>
 				</ul>
+				<button type="primary" class="btn" @tap="bindsavemobile">修改</button>
 			</view>
-		</view>
-		<view class="main-body write lists">
-			<ul>
-				<li class="li31">
-					<m-input class="m-input" type="text" clearable focus v-model="old_mobile" placeholder="请输入旧手机"></m-input>
-				</li>
-				<li class="li31">
-					<m-input class="m-input" type="text" clearable v-model="new_mobile" placeholder="请输入新手机"></m-input>
-				</li>
-				<li class="li30">
-					<m-input class="m-input inputs" type="text" clearable v-model="code" placeholder="请输入验证码"></m-input>
-					<button type="default" class="btns" size="mini" @tap="bindcode">获取验证码</button>
-				</li>
-			</ul>
-			<button type="primary" class="btn" @tap="bindsavemobile">修改</button>
 		</view>
 	</view>
 </template>
 <style>
-	.header {}
-
-	.header ul,
-	.main-body ul {
-		margin: 0upx;
-		padding: 0upx;
-		list-style-type: none;
+	ul{
+		margin: 0;
+		padding: 0;
 	}
-
-	.header ul li {
-		padding: 20upx;
-	}
-
-	.imgs {
-		height: 40upx;
-		text-align: left;
-		font-weight: bold;
-	}
-
-	.main-body {
-		width: 95%;
-		margin: 0 auto;
-		margin-bottom: 20upx;
-	}
-
-	.header_title {
-		font-size: 30upx;
-	}
-
-	.write {
-		background-color: #fff;
-		margin-bottom: 30upx;
-	}
-
-	.header_txt li {
-		clear: both;
-	}
-
-	.header_txt li {
-		height: 50upx;
-		line-height: 50upx;
-		font-size: 30upx;
-	}
-
-	.gemmologist-name {
-		display: block;
-		height: 45upx;
-		line-height: 45upx;
-		font-size: 25upx;
-
-	}
-
-	.grid-item-box {
-		text-align: center;
-		margin-top: 25upx;
-		height: 45upx;
-	}
-
-	image.identify-head {
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-	}
-
-	.main_content {}
-
-	.h500 {
-		padding-top: 120upx;
-	}
-
-	.btn {
+	
+	.main_content{	}	
+	
+	.btn{
 		margin-top: 80upx;
 		clear: both;
 	}
-
-	.lists ul li {
-		padding: 25upx 20upx;
-
+	
+	.lists{
+		/* border:1px solid #f00; */
+		width:96%;
+		margin: 0 auto;
+		margin-top: 40upx;
+		padding-top: 40upx;
+	}	
+	
+	.lists ul{
+		list-style-type: none;
 	}
-
-	.lists ul li.li30 {
-		margin-bottom: 30upx;
-		background: url(../../../static/img/password1.png) 20upx 25upx no-repeat;
-		padding-left: 70upx;
+	.lists ul li{
+		padding: 20upx 20upx;
 	}
-
 	.inputs {
-		border: 1px solid #f00;
+		/* border: 1px solid #f00; */
 		float: left;
 		width: 60%;
 		margin-right: 20upx;
 		height: 35upx;
+		line-height: 35upx;
 	}
-
-	.btn2 {
-		float: left;
-		border: 1px solid #f00;
-	}
-
-	.lists ul li.li31 {
+	.li30{
+		padding: 20upx 10upx;
 		margin-bottom: 30upx;
-		background: url(../../../static/img/mobile1.png) 20upx 25upx no-repeat;
 		padding-left: 70upx;
+		background:url(../../../static/img/mobile5.png) 20upx 25upx no-repeat;
+		-webkit-background-size: 40upx 40upx;
+		background-size: 40upx 40upx;
+		border: 1upx solid #EEEEEE;
+		line-height:60upx;
+		height: 60upx;
+		
 	}
-
-	.lists ul li>view {}
-
-	.uni-list-cell-left {
-		margin-right: 40upx;
-		width: 25%;
-	}
-
-	.cell-right {
-		float: left;
-		border: 1px solid #66ccff;
-		width: 65%;
-		text-align: center;
-	}
-
-	.m-input {
+	
+	
+	.m-input{
 		height: 55upx;
 		line-height: 55upx;
+	}
+	
+	.content{
+		width:96%;
+		margin: 0 auto;
+	}
+	.content .title{
+		border-bottom: 1px solid #66ccff;
+		height: 45upx;
+		line-height: 45upx;
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
+	}
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
 	}
 </style>
 
 <script>
 	import service from '../../../service.js'
-	import mInput from '../../../components/m-input.vue'
+	import mInput from '../../../components/m-input.vue'	
+	import headerNav from "@/components/header/users_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
 	var _self;
 	export default {
 		components: {
 			service,
 			mInput,
+			headerNav,
 			footerNav
 		},
 		onLoad() {
@@ -176,7 +120,9 @@
 			return {
 				old_mobile: '',
 				new_mobile: '',
-				code: ''
+				code: '',
+				headermsg:'会员中心,Member Center',
+				footer:''
 			}
 		},
 		methods: {

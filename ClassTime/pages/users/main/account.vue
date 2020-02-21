@@ -1,38 +1,100 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-			<view class="main-body header">
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/power.png" mode=""></image>修改昵称
+			</view>		
+			<view class="main-body write lists">
 				<ul>
-					<li class="imgs"><image src="../../../static/img/qq.png"></image></li>
-					<li class="header_title">
-						<ul class="header_txt">
-							<li>{{userinfo.nick_name}}</li>
-							<li>{{userinfo.user_identity == 2?'机构':'家长'}}</li>
-						</ul>
-					</li>
+					<li>
+						<view class="uni-list-cell-left">
+						    昵称
+						</view>
+						<view class="cell-right">
+							<m-input class="m-input" type="text" clearable focus v-model="nick_name" placeholder="请输入昵称"></m-input>
+						</view>
+					</li><view class="clear"></view>				
 				</ul>
-				<view class="clear"></view>
-			</view>			
+				<view>
+					<button type="primary" class="btn" @tap="bindsaveuserinfo">保存</button>
+				</view>
+			</view>	
+			
 		</view>
-		<view class="main-body write lists">
-			<ul>
-				<li>个人信息</li>
-				<li class="li30">
-					<view class="uni-list-cell-left">
-					    昵称
-					</view>
-					<view class="cell-right">
-						<m-input class="m-input" type="text" clearable focus v-model="nick_name" placeholder="请输入昵称"></m-input>
-					</view>
-				</li>				
-			</ul>
-			<button type="primary" class="btn" @tap="bindsaveuserinfo">保存</button>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
 		</view>
+		
+		
+		
 	</view>
 </template>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	.main_content{		
+	}	
+
+	.btn{
+		margin-top: 40upx;
+		clear: both;
+	}
+	.lists{		
+		/* border:1px solid #f00; */
+		width:96%;
+		margin: 0 auto;
+		margin-top: 40upx;
+		padding-top: 40upx;
+	}
+	.lists ul{
+		list-style-type: none;		
+	}
+	.lists ul li{
+		padding: 25upx 20upx;
+		height: 60upx;
+		line-height: 60upx;
+	}	
+	
+	.uni-list-cell-left{
+		margin-right: 40upx;
+		width:20%;
+		float: left;
+	}
+	.cell-right{
+		float: left;
+		border: 1px solid #66ccff;
+		width:70%;
+		text-align: center;		
+	}
+	.m-input{
+		height: 55upx;
+		line-height: 55upx;
+	}
+	
+	.content{
+		width:96%;
+		margin: 0 auto;
+	}
+	.content .title{
+		border-bottom: 1px solid #66ccff;
+		height: 45upx;
+		line-height: 45upx;
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
+	}
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
+	}
+</style>
 
 <script>
 	import mInput from '../../../components/m-input.vue'
+	import headerNav from "@/components/header/users_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
@@ -42,7 +104,7 @@
 	
 	export default {
 	    components: {			
-			mInput,footerNav,uniList,uniListItem,uniSection
+			mInput,headerNav,footerNav,uniList,uniListItem,uniSection
 		},
 		onLoad(){
 			_self = this;
@@ -56,7 +118,9 @@
 				userinfo:[],
 				dataList:[],
 				nick_name:'',
-				user_identity:0
+				user_identity:0,
+				headermsg:'会员中心,Member Center',
+				footer:''
 			}
 		},
 		methods:{
@@ -83,11 +147,14 @@
 				        success:function (res) {
 							let data = res;
 							if(parseInt(data.status) == 3){
+								
 								_self.userinfo = data.userinfo;
-								uni.showToast({
+								/* uni.showToast({
 								    icon: 'none',
-								    title: '修改成功'
-								});
+								    title: '修改成功',
+									duration:2000
+								}); */
+								_self.navigateTo('main');
 							}
 				        }
 				    },"1");
@@ -124,98 +191,3 @@
 		
 </script>
 
-<style>
-	.header{}
-	.header ul,.main-body ul{ margin: 0upx; padding:0upx; list-style-type: none; }
-	.header ul li{
-		float: left;
-	}
-	.imgs {
-		margin-right: 20upx;
-		background-color: #eaeaea;
-		width: 130upx;
-		height: 130upx;
-		text-align: center;
-		border-radius: 80upx;
-	}
-	.imgs image{
-		height: 100upx;
-		width: 100upx;
-		margin-top: 15upx;
-	}
-	.main-body{
-		width: 95%;
-		margin: 0 auto;
-		margin-bottom: 20upx;
-	}
-	.write{
-		background-color: #fff;
-		margin-bottom: 30upx;
-	}
-	.header_txt li{
-		clear: both;
-	}
-	
-	.header_txt li:first-child{			
-		height: 80upx;
-		line-height: 80upx;
-		font-size: 45upx;
-	}
-	.header_txt li:last-child{			
-		height: 50upx;
-		line-height: 50upx;
-		font-size: 30upx;
-	}
-	.gemmologist-name{
-		display: block;
-		height: 45upx;
-		line-height: 45upx;
-		font-size: 25upx;
-		
-	}
-	.grid-item-box{
-		text-align: center;		
-		margin-top: 25upx;
-		height: 45upx;
-	}
-	image.identify-head{
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-	}
-	.main_content{	}	
-	.h500{
-		padding-top: 120upx;
-	}
-	.btn{
-		margin-top: 80upx;
-		clear: both;
-	}
-	.lists ul li{
-		padding: 25upx 20upx;	
-		
-	}
-	.lists ul li.li30{
-		margin-bottom: 30upx;
-	}
-	.lists ul li:first-child{		
-		border-bottom: 1upx solid #eeeeee;
-	}
-	.lists ul li>view{
-		float: left;
-	}
-	.uni-list-cell-left{
-		margin-right: 40upx;
-		width:25%;
-	}
-	.cell-right{
-		float: left;
-		border: 1px solid #66ccff;
-		width:65%;
-		text-align: center;		
-	}
-	.m-input{
-		height: 55upx;
-		line-height: 55upx;
-	}
-</style>

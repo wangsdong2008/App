@@ -1,92 +1,72 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-			<view class="main-body header">
-				<ul>
-					<li class="imgs">						
-						<image class="headimgsize" :src="childface" mode="" @click="upload"></image>
-					</li>
-					<li class="header_title">
-						<ul class="header_txt">
-							<li>{{userinfo.nick_name}}</li>
-							<li><image src="../../../static/img/mobile2.png" mode=""></image>{{userinfo.mobile}}</li>
-						</ul>
-					</li>
-				</ul>
-				<view class="clear"></view>
+		<view class="header-title">
+		    <view class="login_center login_title_txt">
+				<view class="header-img"><image :src="childface" mode=""  @click="upload"></image></view>
+				<view class="titles"> <span>{{userinfo.nick_name}}</span></view>	
+			</view>
+		</view>	
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/userHL.png" mode=""></image>会员中心
 			</view>		
+			<view class="main-body write lists">
+				<uni-list>
+					<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index)"></uni-list-item>
+					<uni-list-item title="退出" thumb="/static/img/quit.png" @tap="bindquit"></uni-list-item>
+				</uni-list>	
+			</view>	
+			<!-- <view> <button type="primary" class="primary" @tap="bindface">更换头像</button></view> -->
+			
 		</view>
-		<view class="center-body write main-body">					
-			<uni-grid :column="3" :show-border="false" @change="navToDetailPage">
-			    <uni-grid-item v-for="(item, i) in data_ctgy" :index="i" :key="i">
-			       <view class="grid-item-box" >
-						<image :src="item.image" class="identify-head" mode="aspectFill" ></image>
-			            <text class="gemmologist-name">{{item.text}}</text>
-			        </view>
-			    </uni-grid-item>
-			</uni-grid>
-		</view>
-		<view class="main-body write lists">
-			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,1)"></uni-list-item>
-			</uni-list>
-		</view>
-		
-		<view class="main-body write lists">
-			<uni-list>
-				<uni-list-item v-for="(item,index) in dataList2" :key="index" :title="item.text" :thumb="'../../../static/img/'+item.image" @tap="bindclick(index,2)"></uni-list-item>
-				<uni-list-item title="退出" thumb="/static/img/quit.png" @tap="bindquit"></uni-list-item>
-			</uni-list>
-		</view>
-		<view class="footer">
-			<footerNav :msg="footer"></footerNav>
-		</view>
+	    <view class="footer">
+	    	<footerNav :msg="footer"></footerNav>
+	    </view>
 	</view>
 </template>
 
-<script>
+<script>	
 	import footerNav from "@/components/footer/footer_nav.vue"
-	import uniGrid from "@/components/uni-grid/uni-grid.vue"
-	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
+	
+	
 	var _self;
 	
 	export default {
 	    components: {			
-			footerNav,uniGrid,uniGridItem,uniList,uniListItem
+			footerNav,uniList,uniListItem
 		},
 		onLoad(){
 			_self = this;
 			this.checkLogin();
 		},
+		
 		onReady() {
 			this.show();
 		},
 		data(){
 			return{
+				name:'',
+				en_name:'',				
 				childface:'',
 				userinfo:[],
-				dataList:[
-					{"text":"修改昵称","url":"account","image":"power.png"},
-					{"text":"修改密码","url":"modifypassword","image":"password.png"},
-					{"text":"更换手机","url":"modifymobile","image":"mobile5.png"},
+				dataList:[					
+					{"image":"power.png","url":"account","text":"修改昵称"},
+					{"image":"password.png","text":"修改密码","url":"modifypassword"},
+					{"image":"mobile5.png","text":"更换手机","url":"modifymobile"},					
+					{image:'message.png',text:'我的消息(0)',url:"messagelist"},
 					{"text":"升级账号","url":"upgrade","image":"upgrade.png"},
-					{"text":"会员续费","url":"pay","image":"xf.png"}, 	
+					{"text":"会员续费","url":"pay","image":"xf.png"}, 
 				],
-				dataList2:[
-					
-				],
-				footer: 'mine',
-				data_ctgy:[  
-				    {image:'../../../static/img/message.png',text:'我的消息(0)',url:"messagelist"},  
-				    {image:'../../../static/img/favorites.png',text:'收藏夹',url:"favorites"},  
-				   
-					{image:'../../../static/img/orders.png',text:'报名课程',url:"enlist"}        
-				]
+				headermsg:'',
+				footer: 'mine'
 			}
 		},
 		methods:{
+			bindface:function(){
+				//_self.childface = "http://192.168.1.103/uploadfile/users/20200220/f2ebe7a571357bd83c6708cdf702d44b.jpg";
+			},
 			navToDetailPage:function(e){
 				let index = e.detail.index;
 				let url = _self.data_ctgy[index].url;
@@ -95,25 +75,20 @@
 			bindquit:function(){
 				_self.quit();
 			},
-			bindclick:function(num,n){
-				if(n == 1){
-					_self.navigateTo(this.dataList[num].url);
-				}
-				else{
-					_self.navigateTo(this.dataList2[num].url);
-				}
-				
+			bindclick:function(num){
+				_self.navigateTo(_self.dataList[num].url);				
 			},
 			show(){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
-				};
-				this.getData(data);
+				};				
+				
+				_self.getData(data);
 			},
 			getData(data){
-				this.sendRequest({
+				_self.sendRequest({
 				    url : _self.getUsersInfoUrl,
 				    method : _self.Method,
 				    data : {"token":data.token,"guid":data.guid,"t":Math.random()},
@@ -124,21 +99,20 @@
 							if(data.status == 3){
 								_self.userinfo = data.userinfo;
 								_self.childface = _self.PicUrl + 'users' + data.userinfo.face;
-								_self.data_ctgy[0].text = "我的消息("+data.messagenum+")";
+								_self.dataList[3].text = "我的消息("+data.messagenum+")";
 							}
 						}
 				    }
 				},"1","");
 			},
+			
 			upload(){
-				var _self = this;
 				uni.chooseImage({
 				 count: 1,
 				 sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				 sourceType: ['album'], //从相册选择
 				 success: function (res) {					
 					let ret = _self.getUserInfo();
-					//debugger;
 					var url = _self.ModifyParentfaceUrl;
 					const tempFilePaths = res.tempFilePaths;
 					const uploadTask = uni.uploadFile({
@@ -151,11 +125,12 @@
 						t:Math.random()
 					},
 					success: function (uploadFileRes) {
-						_self.childface = uploadFileRes.data;
+						let imgpath = uploadFileRes.data;
+						_self.childface = imgpath;
 						uni.showToast({
 							title: '上传成功',
-							icon: 'none',
-						});
+							icon: 'none'
+						});						
 					}
 				});							 
 				uploadTask.onProgressUpdate(function (res) {
@@ -168,103 +143,66 @@
 					 error : function(e){
 					  console.log(e);
 					}
-				});			   
-			}			
+				});	
+			}
 		}
 	}
-		
 </script>
 
-<style>	
-	.lists{
-		/* height: 350upx; */
-		padding: 20upx 0upx;
-	}
-	.gemmologist-name{
-		display: block;
-		/* border:1px solid #FF0; */
-		height: 45upx;
-		line-height: 45upx;
-		font-size: 25upx;
+<style>
+	.titles{
+		line-height: 40upx;
+		margin-top: 20upx;
+		text-align: center;
 		
 	}
-	.grid-item-box{
-		/* border: 1px solid #f00; */
-		text-align: center;
-		height: 165upx;
-		margin-top: 25upx;
+	.header-title{
+		background:url(../../../static/img/login_title.png) #ffffff center 0 no-repeat;
+	    background-size:100% 100%;
+	    padding-bottom:20%
 	}
-	.grid-item-box text{
-		height: 45upx;
-	}
-	image.identify-head{
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-		/* border:1px solid #f00; */
-	}
-	.main_content{
-		background-color: #eaeaea;
-	}
-	.header_title{
-		/* border:#f00 solid 1upx; */
-	}
-	.header_txt li{
-		clear: both;
-		color:#fff;		
-	}
-	.header_txt li image{
-		width: 42upx;
-		height: 42upx;
-		margin-right: 5upx;
-	}
-	.header_txt li:first-child{		
-		vertical-align: top;
-		height: 78upx;
-		line-height: 78upx;
-		font-size: 45upx;
-	}
-	.header_txt li:last-child{
-		height: 42upx;
-		line-height: 42upx;
-		font-size: 30upx;
-	}
-	.imgs {
-		height:120upx;
-		margin-right: 20upx;
-		background-color: #fff;
-		border-radius: 80upx;
-		width: 130upx;
-		height: 130upx;
-		text-align: center;
+	.header-img{
+		width:150upx;
+		height: 150upx;
+		margin: 0 auto;
 		overflow: hidden;
+		border-radius: 90upx;	
+		border:1px solid #fff;
+		background-color: #fff;
 	}
-	.imgs image{
-		height: 120upx;
-		width: 120upx;
-	}
-	.h500{
-		height: 280upx;
-		background-color: #0a8aff;
-		padding-top: 120upx;
-	}		
-	.main-body{
-		width: 95%;
+	.login_center{
+		width:85%;			
 		margin: 0 auto;
 	}
-	.write{
-		background-color: #fff;
-		border-radius: 25upx;
-		margin-bottom: 30upx;
+	.login_center image{
+		width:150upx;
+		height: 150upx;
+		margin: 0 auto;
 	}
-	.center-body{
-		height: 180upx;	
-		margin-top: -90upx;
+	.login_title_txt{
+	    color:#fff;	   
+	    padding-top:90upx;
 	}
-	.header{}
-	.header ul{ margin: 0upx; padding:0upx; list-style-type: none; }
-	.header ul li{
-		float: left;
+	.login_title_txt span{
+		font-family:'微软雅黑';
+	    font-size: 35upx;
 	}
 	
+	
+	.content{
+		width:96%;
+		margin: 0 auto;
+	}
+	.content .title{
+		border-bottom: 1px solid #66ccff;
+		height: 45upx;
+		line-height: 45upx;
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
+	}
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
+	}
 </style>
