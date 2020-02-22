@@ -3,7 +3,7 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="title">
-				<image src="../../../static/img/help.png" mode=""></image>帮助文档
+				<image src="../../../static/img/help.png" mode=""></image>帮助
 			</view>
 			<uni-collapse accordion="true">
 			    <uni-collapse-item v-for="(item,index) in dataList" :title="item.article_title" :open="item.open" :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'" class="colbg">
@@ -42,7 +42,7 @@
 		},
 		onLoad:function() {
 			_self = this;
-			_self.checkLogin(1);
+			_self.checkLogin(2);
 		},
 		onReady:function(){
 			_self.show();

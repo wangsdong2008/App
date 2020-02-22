@@ -51,7 +51,7 @@
 		},
 		onLoad:function() {
 			_self = this;
-			_self.checkLogin();			
+			_self.checkLogin(2);			
 		},
 		onReady:function(){
 			_self.show();

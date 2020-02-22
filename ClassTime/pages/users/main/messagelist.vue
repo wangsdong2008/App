@@ -38,7 +38,7 @@
 		},
 		onLoad(){
 			_self = this;
-			this.checkLogin();
+			this.checkLogin(0);
 		},
 		onReady() {
 			this.show();

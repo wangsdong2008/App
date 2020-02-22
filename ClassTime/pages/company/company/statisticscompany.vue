@@ -64,7 +64,7 @@
 		},
 		onLoad(options){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(2);
 			var pid = options['id'];
 			 if(pid == '') pid = 1;
 			_self.id =  pid;

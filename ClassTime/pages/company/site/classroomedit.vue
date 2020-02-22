@@ -38,7 +38,7 @@
 		},
 		onLoad(options){	
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(2);
 			_self.classroom_id = options['id'];
 			if(_self.classroom_id == undefined){
 				_self.classroom_id = 0;

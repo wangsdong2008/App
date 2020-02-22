@@ -107,7 +107,7 @@
 		},
 		onLoad:function(options){
 			_self = this;
-			_self.checkLogin();	
+			_self.checkLogin(2);	
 			var sid = options['id'];
 			if(sid == undefined) sid = 0;
 			_self.id = sid;

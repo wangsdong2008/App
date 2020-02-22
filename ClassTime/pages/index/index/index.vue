@@ -19,9 +19,14 @@
 </template>
 
 <script>
+	var _self;
 	export default {
 	    components: {			
 			
+		},
+		onLoad(){
+			_self = this;
+			_self.checkLogin(0);
 		},
 		data(){
 			return{

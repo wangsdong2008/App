@@ -62,7 +62,7 @@
 			}
 		},
 		onLoad(){
-			this.checkLogin();
+			this.checkLogin(1);
 		},
 		onReady() {
 			var date = new Date();

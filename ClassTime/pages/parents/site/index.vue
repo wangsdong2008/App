@@ -50,7 +50,7 @@
 		},
 		onLoad:function() {
 			_self = this;
-			this.checkLogin();
+			this.checkLogin(1);
 		},
 		methods:{
 			onNavigationBarButtonTap(e) {

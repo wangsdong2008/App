@@ -37,7 +37,7 @@
 		},		
 		onLoad(options){
 			_self = this;
-			this.checkLogin();
+			this.checkLogin(0);
 			_self.message_id = options['id'];
 		},
 		onReady() {

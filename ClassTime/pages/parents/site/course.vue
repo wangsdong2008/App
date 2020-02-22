@@ -50,7 +50,7 @@
 		},
 		onLoad(){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(1);
 		},
 		onReady(){
 			_self.show();

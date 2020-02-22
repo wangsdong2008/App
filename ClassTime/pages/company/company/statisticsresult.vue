@@ -41,7 +41,7 @@
 		},
 		onLoad(options){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(2);
 			if(options == undefined) return false;
 			_self.id = options['id']; //id=1为上课统计
 			_self.cid = options['cid'];  //课程id

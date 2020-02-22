@@ -25,7 +25,7 @@
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
-	
+	var _self;
 	export default {
 	    components: {
 			headerNav,
@@ -33,6 +33,10 @@
 			uniListItem,
 			uniSection,
 			mInput
+		},
+		onLoad(){
+			_self = this;
+			_self.checkLogin(0);
 		},
 		data(){
 			return{

@@ -36,6 +36,7 @@
 		},
 		onLoad(options) {
 			_self = this;
+			_self.checkLogin(0);
 			_self.course_name = options['keyword'];
 			_self.longitude = options['longitude'];
 			_self.latitude = options['latitude'];			

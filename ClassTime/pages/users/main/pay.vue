@@ -80,7 +80,7 @@
 		},
 		onLoad(){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(0);
 		},
 		onReady() {
 			_self.show();

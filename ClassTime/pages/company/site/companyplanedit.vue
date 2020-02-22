@@ -420,7 +420,7 @@
 		},
 		onLoad(options){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(2);
 			_self.uid = options['id'];
 			if(_self.uid == undefined){
 				_self.uid = 0;

@@ -45,7 +45,7 @@
 		},
 		onLoad(options){
 			_self = this;
-			_self.checkLogin();
+			_self.checkLogin(2);
 			_self.grade_id = options['id'];
 			if(_self.grade_id == undefined){
 				_self.grade_id = 0;

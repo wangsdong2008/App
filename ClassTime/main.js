@@ -202,7 +202,7 @@ Vue.prototype.quit = function(){
 }
 
 //检查用户登录状态
-Vue.prototype.checkLogin = function(){	
+Vue.prototype.checkLogin = function(identity){
 	let that = this;
 	let ret = that.getUserInfo();
 	if(ret == undefined || ret == "" || ret.identity == undefined || ret.identity == ""){
@@ -210,59 +210,78 @@ Vue.prototype.checkLogin = function(){
 		    url: '/pages/users/login/login',
 		});
 	}
-	var now = new Date();
-	var year = now.getFullYear(); //得到年份
-	var month = now.getMonth();//得到月份
-	var date = now.getDate();//得到日期
-	month = month + 1;
-	if (month < 10) month = "0" + month;
-	if (date < 10) date = "0" + date;
-	var time = "";
-	time = year + "-" + month + "-" + date;
+	let status = 1;
+	if(parseInt(identity) > 0){
+		if(parseInt(identity) == parseInt(ret.identity)) {
+			status = 1;
+		}else{
+			status = 0;
+		}
+	}
 	
-	var ret_time = ret.time
-	if(ret_time != time){ //去服务器上验证一次
-		that.sendRequest({
-				        url : that.CheckTokenUrl,
-				        method :that.Method,
-				        data : {
-							"token": ret.token,
-							"guid": ret.guid,
-							"username":ret.username,
-							"t":Math.random()
-						},
-				        hideLoading : true,
-				        success: (res) => {
-				        		var data = res;
-				        		if(data.status == 1){
-				        			try {
-				        				uni.removeStorageSync(that.USERS_KEY);
-				        			} catch (e) {
-				        				
-				        			}           
-				        			uni.setStorage({
-				        				key:that.USERS_KEY,
-				        				data:{
-				        					id:ret.id,
-				        					mobile:ret.mobile,
-				        					username:ret.username,
-				        					guid:ret.guid,
-				        					token:ret.token,
-				        					time:time,
-				        					identity:ret.user_identity,
-				        					is_brithday:data.is_brithday
-				        				}
-				        			});					
-				        		}else{
-				        			uni.reLaunch({
-				        			    url: '/pages/users/login/login',
-				        			});
-				        		}				
-				        	}
-				        
-				    },"1","");
-	
-	}	
+	if(status == 1){
+		var now = new Date();
+		var year = now.getFullYear(); //得到年份
+		var month = now.getMonth();//得到月份
+		var date = now.getDate();//得到日期
+		month = month + 1;
+		if (month < 10) month = "0" + month;
+		if (date < 10) date = "0" + date;
+		var time = "";
+		time = year + "-" + month + "-" + date;
+		
+		var ret_time = ret.time
+		if(ret_time != time){ //去服务器上验证一次
+			that.sendRequest({
+			url : that.CheckTokenUrl,
+				method :that.Method,
+				data : {
+					"token": ret.token,
+					"guid": ret.guid,
+					"username":ret.username,
+					"t":Math.random()
+				},
+				hideLoading : true,
+				success: (res) => {
+						var data = res;
+						if(data.status == 1){
+							try {
+								uni.removeStorageSync(that.USERS_KEY);
+							} catch (e) {
+								
+							}           
+							uni.setStorage({
+								key:that.USERS_KEY,
+								data:{
+									id:ret.id,
+									mobile:ret.mobile,
+									username:ret.username,
+									guid:ret.guid,
+									token:ret.token,
+									time:time,
+									identity:ret.user_identity,
+									is_brithday:data.is_brithday
+								}
+							});					
+						}else{
+							uni.reLaunch({
+								url: '/pages/users/login/login',
+							});
+						}				
+					}
+				
+			},"1","");
+		}
+	}else{
+		try {
+			uni.removeStorageSync(that.USERS_KEY);
+		} catch (e) {
+			
+		} 
+		uni.reLaunch({
+			url: '/pages/users/login/login',
+		});
+	}
 }
 
 //重置密码
@@ -280,7 +299,6 @@ Vue.prototype.ResetPassword = function(userInfo){
 			},
 		    hideLoading : true,
 		    success:function (res) {
-				debugger;
 				var data = res;
 				switch(parseInt(data.status)){
 					case 0:{
@@ -344,7 +362,6 @@ Vue.prototype.ResetPassword = function(userInfo){
 }
 
 Vue.prototype.addUsers = function(userInfo){
-	//debugger;
 	//if(userinfo == undefined) return;
 	uni.request({
 		url:this.RegisterUrl,
@@ -360,7 +377,6 @@ Vue.prototype.addUsers = function(userInfo){
 	    },
 	    method: "get",
 		success: (res) => {
-			debugger;
 			var data = res.data;
 			switch(parseInt(data.status)){
 				case 0:{
@@ -465,11 +481,9 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 						});
 					}
 					case 3:{
-						//debugger;
 						var items = that.ulist;
 						var v1,v2,com_id,category_id,uid;
 						var num;
-						//debugger;
 						for(var i = 0;i < items.length;i++){
 							v1 = items[i];
 							for(var j = 0;j<that.dataList.length;j++){
@@ -491,7 +505,6 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 								}
 							}
 						}
-						//debugger;
 						if(num == that.dataList_num && that.dataList_num > 0){
 							that.isCheckedAll = true;
 						}else{

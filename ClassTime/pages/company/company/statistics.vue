@@ -53,7 +53,7 @@
 			headerNav,uniList,uniListItem,uniSection,uniCollapse,uniCollapseItem
 		},
 		onLoad:function() {
-			this.checkLogin();			
+			this.checkLogin(2);			
 		},
 		data(){
 			return{

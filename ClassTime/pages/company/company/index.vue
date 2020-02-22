@@ -95,7 +95,7 @@
 		},
 		onLoad:function() {	
 			_self = this;
-			this.checkLogin();
+			this.checkLogin(2);
 		},
 		onReady(){
 			this.show();

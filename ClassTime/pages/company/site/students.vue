@@ -71,7 +71,7 @@
 			if(_self.page == undefined){
 				_self.page = 1;
 			}
-			_self.checkLogin();
+			_self.checkLogin(2);
 		},
 		onReady(){
 			_self.show();
