@@ -40,8 +40,8 @@ Vue.prototype.ModifyUserInfoUrl = Vue.prototype.GeneralUrl + "modifyuserinfo" //
 Vue.prototype.ModifyParentfaceUrl = Vue.prototype.GeneralUrl + "modifyparentface" //修改家长头像
 Vue.prototype.MessagelistUrl = Vue.prototype.GeneralUrl + "getmessagelist" //某人短信列表
 Vue.prototype.MessageshowUrl = Vue.prototype.GeneralUrl + "messageshow" //某人短信详情
-Vue.prototype.AlipayUrl = Vue.prototype.GeneralUrl + "alipay" //支付,待完成
-
+//Vue.prototype.AlipayUrl = Vue.prototype.GeneralUrl + "alipay" //支付,待完成
+Vue.prototype.ArticleListUrl = Vue.prototype.GeneralUrl + "getarticlelist" //获取文章信息
 
 
 //家长相关

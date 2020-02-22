@@ -16,6 +16,7 @@
 			<uni-list>
 				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				 
 				<uni-list-item title="权限管理" thumb="../../../static/img/power.png" />
+				<uni-list-item title="帮助文档" thumb="../../../static/img/help.png" @tap="bindhelp" />
 			</uni-list>
 		</view>
 		<view class="footer">
@@ -30,6 +31,8 @@
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
+	
+	var _self;
 	
 	export default {
 	    components: {
@@ -47,33 +50,37 @@
 			}
 		},
 		onLoad:function() {
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
 		},
 		methods:{
+			bindhelp:function(){
+				_self.navigateTo('help');
+			},
 			bindCompany:function(){ //子公司管理
-				this.navigateTo('company');
+				_self.navigateTo('company');
 			},
 			bindCategory:function(){ //分类管理
-				this.navigateTo('category');
+				_self.navigateTo('category');
 			},
 			bindClassRoom:function(){ //教室管理
-				this.navigateTo('classroom');
+				_self.navigateTo('classroom');
 			},
 			bindShcool:function(){ //学校管理
-				this.navigateTo('school');
+				_self.navigateTo('school');
 			},
 			
 			bindgrade:function(){ //年级管理
-				this.navigateTo('grade');
+				_self.navigateTo('grade');
 			},
 			bindclass:function(){ //班级管理
-				this.navigateTo('classs');
+				_self.navigateTo('classs');
 			},
 			bindstudent:function(){ //学生管理
-				this.navigateTo('students');
+				_self.navigateTo('students');
 			},
 			bindcompanyplan:function(){
-				this.navigateTo('companyplan');
+				_self.navigateTo('companyplan');
 			}
 			
 		}

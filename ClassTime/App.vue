@@ -1,40 +1,7 @@
 <script>
 	export default {
 		onLaunch: function() {
-			console.log('App Launch');
-			
-			//以下是自动升级代码
-			// #ifdef APP-PLUS  
-			plus.runtime.getProperty(plus.runtime.appid, function(widgetInfo) {  
-			   uni.request({  
-			       url: 'http://www.example.com/static/UNI3FB3BF0.wgt',  
-			       data: {  
-			           version: widgetInfo.version,
-			           name: widgetInfo.name  
-			       },  
-			       success: (result) => {  
-			           var data = result.data;  
-			           if (data.update && data.wgtUrl) {  
-			               uni.downloadFile({  
-			                   url: data.wgtUrl,  
-			                   success: (downloadResult) => {  
-			                       if (downloadResult.statusCode === 200) {  
-			                           plus.runtime.install(downloadResult.tempFilePath, {  
-			                               force: false  
-			                           }, function() {  
-			                               console.log('install success...');  
-			                               plus.runtime.restart();  
-			                           }, function(e) {  
-			                               console.error('install fail...');  
-			                           });  
-			                       }  
-			                   }  
-			               });  
-			           }  
-			       }  
-			   });  
-			});  
-			// #endif  
+			console.log('App Launch');	
 			
 		},
 		onShow: function() {
@@ -43,6 +10,7 @@
 		onHide: function() {
 			console.log('App Hide')
 		}
+		
 	}
 </script>
 

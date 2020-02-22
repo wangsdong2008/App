@@ -56,7 +56,6 @@
 					{"image":"password.png","text":"修改密码","url":"modifypassword"},
 					{"image":"mobile5.png","text":"更换手机","url":"modifymobile"},					
 					{image:'message.png',text:'我的消息(0)',url:"messagelist"},
-					{"text":"升级账号","url":"upgrade","image":"upgrade.png"},
 					{"text":"会员续费","url":"pay","image":"xf.png"}, 
 				],
 				headermsg:'',

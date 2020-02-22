@@ -31,12 +31,34 @@
 		{
 			"path": "pages/parents/parents/index",
 			"style": {
-				"navigationBarTitleText": "家长页面"
+				"navigationBarTitleText": "家长页面" 
 			}
 		},{
 			"path": "pages/parents/site/index",
 			"style": {
-				"navigationBarTitleText": "设置"
+				"navigationBarTitleText": "设置",
+				"navigationBarBackgroundColor": "#66ccff",
+				"app-plus": {
+				    "titleNView": {
+						"autoBackButton":"false",
+				        "buttons": [ 							
+				            {
+				                "text": "搜索", 
+				                "fontSize":"16",
+				                "float": "right",
+				                "color":"#fff",
+								"right":"50upx",
+								"width":"80upx"
+				            }
+				        ],
+				        "searchInput":{
+				            "align": "left",
+				            "placeholder": "请输入课程名",
+				            "borderRadius":"50upx",
+				            "backgroundColor": "#fff"
+				        }
+				    }					
+				} 
 			}
 		},{
 			"path": "pages/parents/site/course",
@@ -70,6 +92,11 @@
 			}
 		},{
 			"path": "pages/parents/site/help",
+			"style": {
+				"navigationBarTitleText": "帮助文档"
+			}
+		},{
+			"path": "pages/company/site/help",
 			"style": {
 				"navigationBarTitleText": "帮助文档"
 			}
@@ -240,7 +267,7 @@
 		},{
 			"path": "pages/users/main/main",
 			"style": {				
-				"navigationBarTitleText": "会员中心"
+				"navigationBarTitleText": "会员中心"			             
 			}
 		},{
 			"path": "pages/users/main/messagelist",
@@ -288,14 +315,30 @@
 				"navigationBarTitleText": "会员续费"
 			}
 		},{
-			"path": "pages/users/pay/alipay",
-			"style": {				
-				"navigationBarTitleText": "会员续费"
-			}
-		},{
-			"path": "pages/users/pay/wxpay",
-			"style": {				
-				"navigationBarTitleText": "会员续费"
+			"path": "pages/users/main/test",
+			"style": {
+			    "navigationBarBackgroundColor": "#66ccff",
+			    "app-plus": {
+			        "titleNView": {
+						"autoBackButton":"false",
+			            "buttons": [ 							
+			                {
+			                    "text": "搜索", 
+			                    "fontSize":"16",
+			                    "float": "right",
+			                    "color":"#fff",
+								"right":"50upx",
+								"width":"80upx"
+			                }
+			            ],
+			            "searchInput":{
+			                "align": "left",
+			                "placeholder": "请输入课程名",
+			                "borderRadius":"50upx",
+			                "backgroundColor": "#fff"
+			            }
+			        }					
+			    }            
 			}
 		}
 		

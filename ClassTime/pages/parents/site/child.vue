@@ -139,10 +139,10 @@
 						if(res){
 							var data = res.list; 
 							if(parseInt(res.status)==0){
-								uni.showToast({
+								/* uni.showToast({
 									title: '无数据',
 									icon: 'none',
-								});		
+								});		 */
 							}else{	
 								let list = [];
 								for (var i = 0; i < data.length; i++) {

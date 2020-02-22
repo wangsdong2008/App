@@ -6,9 +6,8 @@
 				<image src="../../../static/img/help.png" mode=""></image>帮助
 			</view>
 			<uni-collapse accordion="true">
-			    <uni-collapse-item v-for="(item,index) in dataList" :title="item.help_name" :open="item.open" :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'" class="colbg">
-					<view class="newcontent">描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息描述信息</view>
-					
+			    <uni-collapse-item v-for="(item,index) in dataList" :title="item.article_title" :open="item.open" :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'" class="colbg">
+					<view class="newcontent">{{item.article_content}}</view>					
 			    </uni-collapse-item>
 			</uni-collapse>
 			
@@ -24,6 +23,7 @@
 	import footerNav from "@/components/footer/footer_nav.vue"
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
+	var _self;
 	export default {
 		components: {
 			uniCollapse,
@@ -34,24 +34,64 @@
 		data(){
 			return{
 				dataList:[
-					{"help_id":1, "help_name":"第一步", "open":true},
-					{"help_id":2, "help_name":"第二步", "open":false},
+					
 				],
 				headermsg:'帮助,Help',
 				footer: 'help'
 			}
 		},
 		onLoad:function() {
-			this.checkLogin();
+			_self = this;
+			_self.checkLogin();
+		},
+		onReady:function(){
+			_self.show();
 		},
 		methods:{
+			show:function(){
+				let ret = _self.getUserInfo();
+				if(!ret){
+					return;
+				}
+				const data = {
+				    guid: ret.guid,
+				    token: ret.token
+				};
+				_self.getData(data);
+			},
+			getData(data){
+				this.sendRequest({
+				       url : this.ArticleListUrl,
+				       method : _self.Method,
+				       data : {
+							"guid": data.guid,
+							"token":data.token,
+							"cat_id":1,
+							"t":Math.random()
+					   },
+				       hideLoading : true,
+				       success:function (res) {
+						if(res){
+							var data = res.articlelist; 
+							if(parseInt(res.status)==3){
+								let list = [];
+								for (var i = 0; i < data.length; i++) {
+									var item = data[i];
+									list.push(item);
+								}								
+								_self.dataList = list;
+							}					    	
+						}
+				       }
+				   },"1","");
+			}
 		},
 	}
 </script>
 
 <style>
 	.newcontent{
-		width: auto;	
+		width: 92%;	
 		margin: 20upx auto;
 		font-size: 30upx;
 		background-color: #fff;
@@ -60,7 +100,7 @@
 	}
 	
 	.content{
-		width:96%;
+		width:100%;
 		margin: 0 auto;
 	}
 	.content .title{
