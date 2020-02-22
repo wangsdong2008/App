@@ -36,7 +36,7 @@
 		margin: 0 auto;
 	}
 	.content .title{
-		border-bottom: 1px solid #66ccff;
+		border-bottom: 1upx solid #66ccff;
 		height: 45upx;
 		line-height: 45upx;
 		margin: 30upx 0upx;
@@ -49,7 +49,6 @@
 	}
 	
 	.lists{
-		/* border:1px solid #f00; */
 		width:96%;
 		margin: 0 auto;
 		margin-top: 40upx;

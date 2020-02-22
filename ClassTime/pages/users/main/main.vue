@@ -167,7 +167,7 @@
 		margin: 0 auto;
 		overflow: hidden;
 		border-radius: 90upx;	
-		border:1px solid #fff;
+		border:1upx solid #fff;
 		background-color: #fff;
 	}
 	.login_center{
@@ -194,7 +194,7 @@
 		margin: 0 auto;
 	}
 	.content .title{
-		border-bottom: 1px solid #66ccff;
+		border-bottom: 1upx solid #66ccff;
 		height: 45upx;
 		line-height: 45upx;
 		margin: 30upx 0upx;

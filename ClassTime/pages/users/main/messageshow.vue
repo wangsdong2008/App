@@ -107,7 +107,7 @@
 		font-size: 35upx;
 	}
 	.lists{
-		border:1px solid #eaeaea;
+		border:1upx solid #eaeaea;
 		width:96%;
 		margin: 0 auto;
 		margin-top: 40upx;

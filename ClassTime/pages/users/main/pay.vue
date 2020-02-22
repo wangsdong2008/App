@@ -1,92 +1,73 @@
 <template>
 	<view class="main_content">
-		<view class="h500 content">
-			<view class="main-body header">
+		<headerNav :msg="headermsg"></headerNav>
+		<view class="center100 content">
+			<view class="title">
+				<image src="../../../static/img/xf.png" mode=""></image>会员续费
+			</view>	
+			<view class="main-body write lists">
 				<ul>
-					<li class="imgs"><image class="headimgsize" :src="childface" mode=""></image></li>
-					<li class="header_title">
-						<ul class="header_txt">
-							<li>{{userinfo.nick_name}}</li>
-							<li>{{userinfo.user_identity == 2?'机构':'家长'}}</li>
+					<li>有效期至：{{userinfo.endtime}}</li>
+				</ul>
+			</view>
+			
+			<view class="main-body write lists">
+				<ul>
+					<li class="utitle">续费</li>
+					<li class="li30 grids">
+						<ul>
+							<li :class="{
+									'grid-item-box':true,
+									'active':item.activer
+								}" v-for="(item, index) in dataList" :index="index" :key="index" @click="even(index)">￥{{item.c_price}}/{{item.c_month}}月</li>
 						</ul>
-					</li>
+						<view class="clear"></view>
+					</li>				
 				</ul>
 				<view class="clear"></view>
 			</view>			
-		</view>
-		<view class="main-body write lists">
-			<ul>
-				<li>个人信息</li>
-				<li class="li30">
-					<view class="uni-list-cell-left">
-					    有效期
-					</view>
-					<view class="cell-right">
-						{{userinfo.endtime}}
-					</view>
-				</li>				
-			</ul>
-		</view>
-		
-		<view class="main-body write lists2">
-			<ul>
-				<li>续费</li>
-				<li class="li30 grids">
-					<uni-grid :column="4" :show-border="true" @change="even">
-					    <uni-grid-item v-for="(item, index) in dataList" :index="index" :key="index">
-							<view :class="{
-								'grid-item-box':true,
-								'active':item.activer
-							}">
-								<text class="gemmologist-title">{{item.c_month}}个月</text>
-								<text class="gemmologist-name">￥{{item.c_price}}</text>
+			
+			<view class="main-body write lists">
+				<radio-group @change="payChange">
+					<ul>
+						<li class="utitle">支付方式</li>
+						<li class="li40">
+							<label class="uni-list-cell uni-list-cell-pd" >
+							<view>						
+								<radio class="radios" value="1" checked />
 							</view>
-					    </uni-grid-item>
-					</uni-grid>
-				</li>				
-			</ul>
-		</view>
-		
-		<view class="main-body write lists2">
-			<radio-group @change="payChange">	
-			<ul>
-				<li>支付方式</li>
-				<li class="li40">
-					<label class="uni-list-cell uni-list-cell-pd" >
-					<view>						
-						<radio class="radios" value="1" checked />
-					</view>
-					<view class="radio_text"><image src="../../../static/img/weixin.png" mode=""></image>微信</view>
-					</label>
-					<view class="clear"></view>
-				</li>
-				<li class="li40">
-					<label class="uni-list-cell uni-list-cell-pd" >
-					<view>						
-						<radio class="radios" value="2" />
-					</view>
-					<view class="radio_text"><image src="../../../static/img/alipay.png" mode=""></image>支付宝</view>
-					</label>
-					<view class="clear"></view>
-				</li>
-				
-				<!-- <li class="li40 wx" @tap="bindpay(1)">微信</li>
-				<li class="li40 alipay" @tap="bindpay(2)">支付宝</li>	 -->
-			</ul>
-			</radio-group>	
-		</view>
-		
-		<view class="main-body write lists2">
-			<view class="btn-row">
-			    <button type="primary" class="primary" @tap="bindpay">去支付</button>
+							<view class="radio_text"><image src="../../../static/img/weixin.png" mode=""></image>微信</view>
+							</label>
+							<view class="clear"></view>
+						</li>
+						<li class="li40">
+							<label class="uni-list-cell uni-list-cell-pd" >
+							<view>						
+								<radio class="radios" value="2" />
+							</view>
+							<view class="radio_text"><image src="../../../static/img/alipay.png" mode=""></image>支付宝</view>
+							</label>
+							<view class="clear"></view>
+						</li>
+					</ul>
+				</radio-group>	
+				<view class="clear"></view>
 			</view>	
+						
+			<view class="main-body write lists">
+				<ul>
+					<li class="btn"><button type="primary" class="primary" @tap="bindpay">去支付</button></li>
+				</ul>
+			</view>			
+			
+			
 		</view>
-		
 	</view>
 </template>
 
 <script>
 	import mInput from '../../../components/m-input.vue'
+	import headerNav from "@/components/header/users_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
 	import uniGrid from "@/components/uni-grid/uni-grid.vue"
 	import uniGridItem from "@/components/uni-grid-item/uni-grid-item.vue"
@@ -95,7 +76,7 @@
 	
 	export default {
 	    components: {			
-			mInput,footerNav,uniGrid,uniGridItem
+			mInput,headerNav,footerNav,uniGrid,uniGridItem
 		},
 		onLoad(){
 			_self = this;
@@ -126,7 +107,9 @@
 						name: '支付宝'
 					}
 				],
-				payid:1
+				payid:1,
+				headermsg:'会员中心,Member Center',
+				footer:'',
 			}
 		},
 		methods:{
@@ -226,14 +209,13 @@
 					}
 				}				
 			},
-			even(e){
-				let num = e.detail.index;
-				_self.num = num;
+			even(index){
+				_self.num = index;
 				let list = _self.dataList;
 				for(let i = 0;i<list.length; i++){
 					list[i].activer = false;
 				}
-				list[num].activer = true;
+				list[index].activer = true;
 				_self.dataList = list;				
 			},
 			bindsaveuserinfo(){				
@@ -314,8 +296,71 @@
 </script>
 
 <style>		
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	.lists > ul > li.btn{
+		padding-bottom: 80upx;
+	}
+	.lists > ul > li > .primary{
+		border-radius: 50upx;
+	}
+	.main_content{}
+	.lists{
+		/* border:1upx solid #eaeaea; */
+		width:100%;
+		margin: 0 auto;
+		margin-top: 20upx;
+	}
+	.lists > ul,.lists > radio-group> ul{ list-style-type: none; width: 92%; margin: 0 auto; margin-top: 40upx;}
+	.lists > ul > li,.lists > radio-group > ul > li{ font-size: 30upx; line-height: 45upx; height: 45upx; padding: 10upx 0upx; color:#333;}
+	
+	.lists > ul > li.utitle,.lists > radio-group> ul > li.utitle{
+		font-size: 35upx;
+		color: green;
+		border-bottom: 1upx solid #eee;
+		margin-bottom: 20upx;
+		overflow: hidden;
+		
+	}
+	.lists > ul > li > ul{
+		list-style-type: none;
+	} 
+	.lists > ul > li > ul > li.active{
+		background-color:#007AFF;
+		color:#fff;
+		border: 0upx;
+	}
+	.lists > ul > li > ul > li{
+		width: 22%;
+		border: 1upx solid #eee;
+		float: left;
+		margin-right: 12upx;
+		padding: 5upx 2upx;
+		text-align: center;
+		font-size: 25upx;
+		height: 60upx;
+		line-height: 60upx;
+		color:#666;
+	}
+	
+	.lists > ul > li.grids{	
+		padding-bottom: 30upx;
+	}	
+	
+	.lists > uni-radio-group > ul > li.li40{
+		height: 55upx;
+		line-height: 55upx;	
+		border:1upx solid #eee;		
+		padding: 20upx;
+		border-radius: 50upx;
+		margin-bottom: 30upx;
+		
+	}
+	
 	.radio_text{
-		margin-left: 30upx;
+		margin-left: 10upx;
 		margin-right: 40upx;
 	}
 	.uni-list-cell-pd view{
@@ -324,163 +369,30 @@
 		font-size: 35upx;
 	}
 	.uni-list-cell-pd view image{
-		width: 80upx;
-		height: 80upx;
+		width: 60upx;
+		height: 60upx;
 		vertical-align: middle;
 		margin-right: 30upx;
 	}
 	.uni-list-cell-pd view radio{
-		margin-top: 15upx;
-	}
-	.lists2 ul li.grids{
-		clear: both;
-		padding: 0upx;
-		/* border: 1px solid #f00; */
-	}
-	.lists ul li.grids>view{
-		float:none;
+		margin-top: 0upx;
+		margin-left: 20upx;
 	}
 	
-	.header{}
-	.header ul,.main-body ul{ margin: 0upx; padding:0upx; list-style-type: none; }
-	.header ul li{
-		float: left;
-	}
-	.imgs {
-		margin-right: 20upx;
-		background-color: #eaeaea;
-		width: 130upx;
-		height: 130upx;
-		text-align: center;
-		border-radius: 80upx;
-		overflow: hidden;
-	}
-	.imgs image{
-		height: 100upx;
-		width: 100upx;
-		margin-top: 15upx;
-	}
-	.main-body{
-		width: 95%;
+	.content{
+		width:98%;
 		margin: 0 auto;
-		margin-bottom: 20upx;
 	}
-	.write{
-		background-color: #fff;
-		margin-bottom: 30upx;
-	}
-	.header_txt li{
-		clear: both;
-	}
-	
-	.header_txt li:first-child{			
-		height: 80upx;
-		line-height: 80upx;
-		font-size: 45upx;
-	}
-	.header_txt li:last-child{			
-		height: 50upx;
-		line-height: 50upx;
-		font-size: 30upx;
-	}
-	.gemmologist-name{
-		display: block;
+	.content .title{
+		border-bottom: 1px solid #66ccff;
 		height: 45upx;
 		line-height: 45upx;
-		font-size: 25upx;		
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
 	}
-	
-	image.identify-head{
-		width: 80upx;
-		height: 80upx;
-		clear: both;
-	}
-	.main_content{	}	
-	.h500{
-		padding-top: 120upx;
-	}
-	.btn{
-		clear: both;
-	}
-	.lists{
-		margin-bottom:60upx;
-	}
-	.lists2{
-		margin-bottom:40upx;
-	}
-	.lists ul li,.lists2 ul li{
-		padding: 25upx 20upx;
-	}	
-	.lists ul li:first-child,.lists2 ul li:first-child{
-		background-color: #66ccff;
-		border-top-left-radius:25upx ;
-		border-top-right-radius:25upx ;
-		color:#fff;
-	}
-	.lists ul li.li30{
-		margin-bottom: 30upx;
-	}
-	.lists ul li:first-child{		
-		border-bottom: 1upx solid #eeeeee;
-	}
-	.lists ul li>view{
-		float: left;
-	}
-	.uni-list-cell-left{
-		margin-right: 40upx;
-		width:20%;
-	}
-	.cell-right{
-		float: left;
-		width:70%;
-		text-align: center;	
-	}
-	.m-input{
-		height: 55upx;
-		line-height: 55upx;
-	}
-	.grid-item-box{
-		text-align: center;	
-		padding-top: 25upx;
-		height: 180upx;
-	}
-	.active{
-		border:1px solid #007AFF;
-	}
-	
-	.grid-item-box text{
-		line-height: 60upx;
-		
-	}
-	.gemmologist-title{
-		border-bottom: 1px solid #66ccff;
-		width: 100%;
-		font-size: 35upx;
-		
-	}
-	.gemmologist-name{
-		font-weight: bold;
-		font-size: 54upx;
-	}
-	.li40{
-		line-height: 45upx;
-		padding:0upx;
-		
-		border:1upx solid #66ccff;
-		border-top: 0upx;
-		
-	}
-	.lists2 ul li.li40{
-		padding-left: 40upx;
-	}
-	.wx{
-		background:url(../../../static/img/weixinpay.png) 10upx 20upx no-repeat;
-		-webkit-background-size: 60upx 60upx;
-		background-size: 60upx 60upx;
-	}
-	.alipay{
-		background:url(../../../static/img/alipay.png) 10upx 20upx no-repeat;
-		-webkit-background-size: 60upx 60upx;
-		background-size: 60upx 60upx;
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
 	}
 </style>
