@@ -20,11 +20,14 @@
 </template>
 
 <script>
+	import service from '@/service.js';
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
+	
+	var _self;
 	
 	export default {
 	    components: {
@@ -32,19 +35,58 @@
 			uniList,
 			uniListItem,
 			headerNav,
-			footerNav
+			footerNav,
+			service			
 		},
 		data(){
 			return{
 				dataList:[],				
 				headermsg:'系统设置,System Siteup',
-				footer: 'familysite'
+				footer: 'familysite',
+				course_name:'',
+				longitude:0,
+				latitude:0,
 			}
 		},
 		onLoad:function() {
+			_self = this;
 			this.checkLogin();
 		},
 		methods:{
+			onNavigationBarButtonTap(e) {
+				_self.bindsearch();
+			},		
+			onNavigationBarSearchInputChanged (e) {
+			    //console.log("你在搜索框中输入了信息"+e.text);
+				_self.course_name = e.text;
+			},
+			bindsearch(){
+				if(_self.longitude == 0){  //没有经纬度的时候，获取经纬度
+					//获取经纬度
+					uni.getLocation({
+					  // 默认为 wgs84 返回 gps 坐标，
+					  // gcj02 返回国测局坐标，可用于 uni.openLocation 的坐标
+					  type: 'wgs84',
+					  geocode: true,
+					  success: (data) => {
+						this.longitude = data.longitude;
+						this.latitude = data.latitude;
+					  },
+					  fail: (err) => {
+						console.log(err)
+						// this.$api.msg('获取定位失败');
+					  }
+					});
+				}
+				if(!service.checkNull(this.course_name)){
+					uni.showToast({
+					    icon: 'none',
+					    title: '课程不能为空'
+					});
+					return;
+				}
+				this.navigateTo('/pages/index/index/searchresult?keyword='+this.course_name+"&longitude="+this.longitude+"&latitude="+this.latitude);
+			},
 			bindCourse:function(){
 				this.navigateTo('course');
 			},
