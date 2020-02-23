@@ -125,13 +125,14 @@ Vue.prototype.AddCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "addcompanyplan
 Vue.prototype.UpdateCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyplaninfo" //修改安排信息
 
 //员工
-Vue.prototype.GetAllMemberUrl = Vue.prototype.CompanyUrl + "getmemberlist" //获取员工
+Vue.prototype.GetAllMemberUrl = Vue.prototype.CompanyUrl + "getmemberlist" //获取未签到员工
 Vue.prototype.DelMemberinfoUrl = Vue.prototype.CompanyUrl + "delmemberinfo" //删除员工
 Vue.prototype.GetMemberInfoUrl = Vue.prototype.CompanyUrl + "getmemberinfo" //获取员工信息
 Vue.prototype.AddMemberInfoUrl = Vue.prototype.CompanyUrl + "addmemberinfo" //添加员工信息
 Vue.prototype.UpdateMemberInfoUrl = Vue.prototype.CompanyUrl + "updatememberinfo" //修改员工信息
 Vue.prototype.GetCurrentMemberlistUrl = Vue.prototype.CompanyUrl + "getcurrentmemberlist" //获取今天上班的员工
-
+Vue.prototype.GetAllMemberlistUrl = Vue.prototype.CompanyUrl + "getallmemberlist" //获取所有员工
+Vue.prototype.GetAllSubCompanyMemberlistUrl = Vue.prototype.CompanyUrl + "getsubcompanymemberlist" //根据comid来获取子公司所有员工
 
 Vue.prototype.GetAllSubCompanyCategoryByComidUrl = Vue.prototype.CompanyUrl + "getsubcompanycategory"  //通过com_id获取子公司所有分类
 //常用函数

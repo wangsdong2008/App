@@ -25,9 +25,17 @@
 			    </uni-collapse-item>
 			</uni-collapse>
 			
-			<uni-list>				
-				<uni-list-item title="员工统计" thumb="../../../static/img/etj.png" :show-arrow="true" /></uli-list-item>
-			</uni-list>
+			<uni-collapse>
+			    <uni-collapse-item title="吃饭统计" thumb="../../../static/img/etj.png">
+			        <view style="padding: 30rpx;">
+			           <uni-list>
+						   <uni-list-item title="单人查询"  @tap="bindtj(3)" :show-arrow="true" /></uli-list-item>
+						   <uni-list-item title="整体查询" @tap="bindcompanytj(3)" :show-arrow="true" /></uli-list-item>
+					   </uni-list>
+			        </view>
+			    </uni-collapse-item>
+			</uni-collapse>
+			
 			
 		</view>
 	</view>
@@ -42,6 +50,7 @@
 	import uniSection from '@/components/uni-section/uni-section.vue'
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
+	var _self;
 	
 	import {
 	    mapState,
@@ -53,7 +62,8 @@
 			headerNav,uniList,uniListItem,uniSection,uniCollapse,uniCollapseItem
 		},
 		onLoad:function() {
-			this.checkLogin(2);			
+			_self = this;
+			_self.checkLogin(2);			
 		},
 		data(){
 			return{
@@ -63,10 +73,16 @@
 		},
 		methods:{
 			bindtj(id){
-				this.navigateTo('statisticsstudents?id='+id);	
+				if(id == 3){
+					_self.navigateTo('statisticsmember?id='+id);	
+				}
+				else{
+					_self.navigateTo('statisticsstudents?id='+id);	
+				}
+				
 			},
 			bindcompanytj(id){
-				this.navigateTo('statisticscompany?id='+id);	
+				_self.navigateTo('statisticscompany?id='+id);	
 			},
 			change(e) {}
 			

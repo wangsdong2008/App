@@ -132,6 +132,11 @@
 				"navigationBarTitleText": "学生选择"
 			}
 		},{
+			"path": "pages/company/company/statisticsmember",
+			"style": {
+				"navigationBarTitleText": "员工选择"
+			}
+		},{
 			"path": "pages/company/company/statisticscompany",
 			"style": {
 				"navigationBarTitleText": "公司统计"
