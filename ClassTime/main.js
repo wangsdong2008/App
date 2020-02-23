@@ -124,6 +124,15 @@ Vue.prototype.GetCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "getcompanyplan
 Vue.prototype.AddCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "addcompanyplaninfo" //添加安排信息
 Vue.prototype.UpdateCompanyplanInfoUrl = Vue.prototype.CompanyUrl + "updatecompanyplaninfo" //修改安排信息
 
+//员工
+Vue.prototype.GetAllMemberUrl = Vue.prototype.CompanyUrl + "getmemberlist" //获取员工
+Vue.prototype.DelMemberinfoUrl = Vue.prototype.CompanyUrl + "delmemberinfo" //删除员工
+Vue.prototype.GetMemberInfoUrl = Vue.prototype.CompanyUrl + "getmemberinfo" //获取员工信息
+Vue.prototype.AddMemberInfoUrl = Vue.prototype.CompanyUrl + "addmemberinfo" //添加员工信息
+Vue.prototype.UpdateMemberInfoUrl = Vue.prototype.CompanyUrl + "updatememberinfo" //修改员工信息
+Vue.prototype.GetCurrentMemberlistUrl = Vue.prototype.CompanyUrl + "getcurrentmemberlist" //获取今天上班的员工
+
+
 Vue.prototype.GetAllSubCompanyCategoryByComidUrl = Vue.prototype.CompanyUrl + "getsubcompanycategory"  //通过com_id获取子公司所有分类
 //常用函数
 //获取月份
@@ -466,6 +475,10 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 	    method: "get",
 		success: (res) => {
 			if(res.data){
+				let str = '学生';
+				if(catid == 3){
+					str = '员工';
+				}
 				let data = res.data.list; 
 				switch(parseInt(res.data.status)){
 					case 0:{
@@ -474,9 +487,9 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 							icon: 'none',
 						});
 					}
-					case 2:{
+					case 2:{						
 						uni.showToast({
-							title: '请选择要操作的学生',
+							title: '请选择要操作的'+str,
 							icon: 'none',
 						});
 					}
@@ -484,36 +497,56 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 						var items = that.ulist;
 						var v1,v2,com_id,category_id,uid;
 						var num;
-						for(var i = 0;i < items.length;i++){
-							v1 = items[i];
-							for(var j = 0;j<that.dataList.length;j++){
-								com_id = that.dataList[j].com_id;
-								let categorylist = that.dataList[j].categorylist;			
-								for(var jj = 0; jj < categorylist.length; jj++){
-									category_id = categorylist[jj].cat_id;
-									let studentslist = categorylist[jj].studentslist;
-									num = -1;
-									for(var k = 0; k < studentslist.length; k++){
-										uid = studentslist[k].uid;
-										v2 = com_id + '-' + category_id +'-' + uid;
-										num ++;
-										if(v1 == v2){
-											that.dataList_num -- ;
-											that.dataList[j].categorylist[jj].studentslist.splice(num, 1);
+						if(catid < 3){  //学生签到和吃饭签到//删除掉已经签到的记录
+							for(var i = 0;i < items.length;i++){ //存在ulist中的记录,已经被删除掉了
+								v1 = items[i];
+								for(var j = 0;j<that.dataList.length;j++){
+									com_id = that.dataList[j].com_id;
+									let categorylist = that.dataList[j].categorylist;			
+									for(var jj = 0; jj < categorylist.length; jj++){
+										category_id = categorylist[jj].cat_id;
+										let studentslist = categorylist[jj].studentslist;
+										num = -1;
+										for(var k = 0; k < studentslist.length; k++){
+											uid = studentslist[k].uid;
+											v2 = com_id + '-' + category_id +'-' + uid;
+											num ++;
+											if(v1 == v2){
+												that.dataList_num -- ;
+												that.dataList[j].categorylist[jj].studentslist.splice(num, 1);
+											}
 										}
 									}
 								}
 							}
+						}else{
+							/* debugger;*/
+							//员工签到 删除掉已经签到的记录
+							for(var i = 0;i < items.length;i++){ //存在ulist中的记录,已经被删除掉了
+								v1 = items[i];
+								for(var j = 0;j<that.dataList.length;j++){
+									com_id = that.dataList[j].com_id;
+									let memberlist = that.dataList[j].memberlist;
+									num = -1;
+									for(var k = 0; k < memberlist.length; k++){
+										uid = memberlist[k].id;
+										v2 = uid;
+										num ++;
+										if(v1 == v2){
+											that.dataList_num -- ;
+											that.dataList[j].memberlist.splice(num, 1);
+										}
+									}
+									
+								}
+							} 
+							
 						}
 						if(num == that.dataList_num && that.dataList_num > 0){
 							that.isCheckedAll = true;
 						}else{
 							that.isCheckedAll = false;
 						}
-						/* uni.showToast({
-							title: '操作成功',
-							icon: 'none',
-						}); */
 						uni.showModal({
 						    title: "签到成功",
 						    content: '请选择返回的页面',
@@ -524,7 +557,7 @@ Vue.prototype.setSign = function (catid,status,ulist,url,length) {
 									that.navigateTo('/pages/company/company/index');
 									
 						        } else if (res.cancel) {
-									that.navigateTo('/pages/company/company/'+url);
+									//that.navigateTo('/pages/company/company/'+url);
 						        }
 						    }
 						});

@@ -14,7 +14,7 @@
 				<uni-list-item title="上课安排" thumb="../../../static/img/plan.png" @tap="bindcompanyplan"  />
 			</uni-list>
 			<uni-list>
-				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" />				 
+				<uni-list-item title="员工管理" thumb="../../../static/img/staff.png" @tap="bindmember" />				 
 				<uni-list-item title="权限管理" thumb="../../../static/img/power.png" />
 				<uni-list-item title="帮助文档" thumb="../../../static/img/help.png" @tap="bindhelp" />
 			</uni-list>
@@ -54,6 +54,9 @@
 			_self.checkLogin(2);
 		},
 		methods:{
+			bindmember:function(){
+				_self.navigateTo('member');	
+			},
 			bindhelp:function(){
 				_self.navigateTo('help');
 			},

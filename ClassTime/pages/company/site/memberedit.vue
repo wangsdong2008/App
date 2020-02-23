@@ -2,21 +2,22 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="register_account">分类信息</view>
+			<view class="register_account">员工信息</view>
 			<view class="register_account_input">
 				<picker @change="pickerCompanyChange($event)" :value="cindex" :range="cList">
 					<view class="uni-input">{{cList[cindex]}}</view>
 				</picker>
 			</view>
 			<view class="register_account_input">				
-				<m-input class="m-input" type="text" clearable focus v-model="cat_name" placeholder="填写分类名"></m-input>
-			</view>			
-			<view class="textareainput">
-				<textarea class="textarea" v-model="cat_content" placeholder="请填写课程介绍" auto-height="true" ></textarea>
+				<m-input class="m-input" type="text" clearable focus v-model="true_name" placeholder="填写员工名"></m-input>
 			</view>
 			<view class="register_account_input">
-				<m-input class="m-input" type="text" clearable v-model="cat_order" placeholder="填写顺序"></m-input>
+				<m-input class="m-input" type="text" clearable v-model="mobile" placeholder="填写手机号码"></m-input>
+			</view>			
+			<view class="register_account_input">
+				<m-input class="m-input login-input-password" type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
 			</view>
+			
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>
@@ -38,14 +39,14 @@
 		onLoad(options){	
 			_self = this;
 			_self.checkLogin(2);
-			_self.cat_id = options['id'];
-			if(_self.cat_id == undefined){
-				_self.cat_id = 0;
+			_self.id = options['id'];
+			if(_self.id == undefined){
+				_self.id = 0;
 			}
-			if(_self.cat_id == 0){
-				_self.headermsg = "添加新分类,Category Add";
+			if(_self.id == 0){
+				_self.headermsg = "添加新员工,Member Add";
 			}else{
-				_self.headermsg = "分类编辑,Category Edit";
+				_self.headermsg = "员工编辑,Member Edit";
 			}
 		},
 		onReady(){
@@ -53,10 +54,11 @@
 		},
 		data(){
 			return{
-				cat_id:0,
-				cat_name:'',
-				cat_order:'',	
-				cat_content:'',
+				id:0,
+				true_name:'',
+				mobile:'',
+				password:'',
+				
 				dataList:[],
 				headermsg:'',
 				cindex:0,
@@ -73,10 +75,10 @@
 				_self.cindex = e.target.value; 
 			},
 			bindmodify(){
-				if(!service.checkNull(_self.cat_name)){
+				if(!service.checkNull(_self.true_name)){
 					uni.showToast({
 					    icon: 'none',
-					    title: '分类名称不能为空'
+					    title: '员工真实姓名不能为空'
 					});
 					return;
 				}
@@ -87,28 +89,37 @@
 					});
 					return;
 				}
-				if(!service.checkNum(_self.cat_order)){
+				if(!service.checkNull(_self.mobile)){
 					uni.showToast({
 					    icon: 'none',
-					    title: '请填写顺序'
+					    title: '手机不能为空'
 					});
 					return;
+				}
+				if(_self.id == 0){ //添加新员工的时候才检查密码不能为空
+					if(!service.checkNull(_self.password)){
+						uni.showToast({
+							icon: 'none',
+							title: '密码不能为空'
+						});
+						return;
+					}
 				}
 				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
 				}
 				this.sendRequest({
-				        url : this.UpdateCategoryInfoUrl,
+				        url : this.UpdateMemberInfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": ret.guid,
 							"token": ret.token,
-							"id": _self.cat_id,
-							"name": _self.cat_name,
-							"content": _self.cat_content,
-							"sorder":_self.cat_order,
+							"id": _self.id,
+							"true_name": _self.true_name,
 							"comid":_self.com_id,
+							"mobile":_self.mobile,
+							"password":_self.password,
 							"t":Math.random()
 						},
 				        hideLoading : false,
@@ -120,17 +131,21 @@
 				        				str = '数据填写错误';
 				        				break;
 				        			}
+									case 1:{
+										str = '手机号码已经存在';
+										break;
+									}
 				        			case 2:{
-				        				str = '分类名已经存在';
+				        				str = '员工名已经存在';
 				        				break;
 				        			}
 				        			case 3:{
-				        				if(_self.cat_id == 0){
+				        				if(_self.id == 0){
 				        					str = '添加成功';
-				        					_self.cat_id = 0;
-				        					_self.cat_name = '';
-				        					_self.cat_order = '';	
-				        					_self.cat_content = '';
+				        					_self.id = 0;
+				        					_self.true_name = '';
+				        					_self.mobile = '';	
+				        					_self.password = '';
 				        					_self.cindex = 0;
 				        					_self.com_id = 0;
 				        					_self.cList = [];
@@ -140,7 +155,7 @@
 				        					
 											str = '修改成功';
 				        				}
-				        				break;
+				        				break;										
 				        			}							
 				        		}
 				        		
@@ -151,9 +166,9 @@
 									confirmText:'返回前页',
 									success: function (res) {
 										if (res.confirm) {
-											_self.navigateTo('category');
+											_self.navigateTo('member');
 										} else if (res.cancel) {
-											_self.navigateTo('categoryedit?id='+_self.cat_id);
+											_self.navigateTo('memberedit?id='+_self.id);
 										}
 									}
 								});
@@ -162,7 +177,7 @@
 				    },"1","");		
 			},
 			show(){
-				//if(_self.cat_id == 0 ) return;  //考虑添加功能,允许等于0
+				//if(_self.id == 0 ) return;  //考虑添加功能,允许等于0
 				let ret = this.getUserInfo();
 				if(!ret){
 					return false;
@@ -170,51 +185,53 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					id:_self.cat_id
+					id:_self.id
 				};
-				if(_self.cat_id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
+				if(_self.id == 0) _self.btntxt="添加"; else _self.btntxt = '修改';
 				_self.getData(data);
 			},
 			getData(data){			
 					this.sendRequest({
-				        url : this.GetCategoryInfoUrl,
+				        url : this.GetMemberInfoUrl,
 				        method : _self.Method,
 				        data : {
 							"guid": data.guid,
 							"token":data.token,
 							"id":data.id,
-							"comid":data.comid,
 							"t":Math.random()
 						},
 				        hideLoading : true,
 				        success: (res) => {
 				        	    if(res){
-				        			//debugger;
-				        			
 				        	    	var data = res.subcompanylist; 
-				        			if(parseInt(res.status) == 3){									
-				        				let list = [];
-				        				let idlist = [];
-				        				list.push("==请选择==");
-				        				idlist.push(0);
-				        				for (var i = 0; i < data.length; i++) {
-				        					var item = data[i];									
-				        					list.push(item.com_name);
-				        					idlist.push(item.com_id);
-				        				}								
-				        				_self.cList = list;
-				        				_self.cIDList = idlist;
+									
+									let list = [];
+				        			let idlist = [];
+									list.push("==请选择机构==");
+									idlist.push(0);
+									for (var i = 0; i < data.length; i++) {
+										var item = data[i];									
+										list.push(item.com_name);
+										idlist.push(item.com_id);
+									}								
+									_self.cList = list;
+									_self.cIDList = idlist;
 				        				
-				        				if(_self.cat_id > 0){
-				        					data = res.categorylist;									
-				        					_self.cat_name = data.cat_name;									
-				        					_self.cat_order = data.cat_order.toString();
-				        					_self.cat_content = data.cat_content;
-				        					_self.com_id = data.com_id;
-				        					if(_self.cIDList != undefined){
-				        						_self.cindex = _self.cIDList.findIndex(i => i == data.com_id);
-				        					}
-				        				}
+									
+				        			if(parseInt(res.status) == 3){
+				        				data = res.memberinfo;
+										_self.true_name = data.true_name;
+										_self.username = data.username;
+										_self.mobile = data.mobile;
+										
+										//设置默认
+										if(_self.id > 0){
+											_self.com_id = data.com_id;
+											if(_self.cIDList != undefined){
+												_self.cindex = _self.cIDList.findIndex(i => i == data.com_id);
+											}
+										}
+				        				
 				        			}
 				        	    }
 				        	}

@@ -60,7 +60,7 @@
 							<image :src="'../../../static/img/brithday'+isBrithday+'.png'" @tap="bindbrithday" ></image>
 						</uni-grid-item>
 						<uni-grid-item>
-							<image src="../../../static/img/system.png"></image>
+							<image src="../../../static/img/system.png" @tap="bindsystem" ></image>
 						</uni-grid-item>
 					</uni-grid>
 				</view>
@@ -95,64 +95,62 @@
 		},
 		onLoad:function() {	
 			_self = this;
-			this.checkLogin(2);
+			_self.checkLogin(2);
 		},
 		onReady(){
-			this.show();
+			_self.show();
 		},
 		methods: {
+			bindsystem(){
+				_self.navigateTo('../site/index');
+			},
 			bindsksign(){//上课签到
-				this.navigateTo('sksign');
+				_self.navigateTo('sksign');
 			},
 			bindcfsign(){ //吃饭签到
-				this.navigateTo('cfsign');
+				_self.navigateTo('cfsign');
 			},
 			bindygsign(){ //员工签到
-				this.navigateTo('ygsign');
+				_self.navigateTo('ygsign');
 			},
 			bindstudentssearch(){ //学生查询
-				this.navigateTo('studentssearch');
+				_self.navigateTo('studentssearch');
 			},
 			bindstatistics(){ //统计
-				this.navigateTo('statistics');
+				_self.navigateTo('statistics');
 			},
 			bindbrithday(){ //生日提醒
-				this.navigateTo('birthday')
+				_self.navigateTo('birthday')
 			},
 			show(){
-				let ret = uni.getStorageSync(this.USERS_KEY);				
+				let ret = uni.getStorageSync(_self.USERS_KEY);				
 				if(!ret){
 					return false;
 				}
-				this.is_brithday = ret.is_brithday;
+				_self.is_brithday = ret.is_brithday;
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token
 				};
-				this.getData(data);
+				_self.getData(data);
 			},
 			getData(data){
-				let ret = this.getUserInfo();
+				let ret = _self.getUserInfo();
 				_self.sendRequest({
 					url : _self.GetCurrentStudents,
 				    method : _self.Method,
 				    data : {
 						"guid": data.guid,
 						"token":data.token,
+						"catid":1,
 						"t":Math.random()
 					},
 				    hideLoading : true,
 				    success:function (res) {						
 						if(res){
 							var data = res.list;
-							if(parseInt(res.status) == 0){
-								/* uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});	 */	
-							}else{
+							if(parseInt(res.status) == 3){
 								if(data.length > 0){
-									
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
