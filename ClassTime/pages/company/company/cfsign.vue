@@ -131,17 +131,6 @@
 				},"1","");
 				
 			},			
-			checkedOne (fruitId) {
-				//debugger;
-				/* let idIndex = _self.ulist.indexOf(fruitId)
-				if (idIndex >= 0) {
-				  // 如果已经包含了该id, 则去除(单选按钮由选中变为非选中状态)
-				  _self.ulist.splice(idIndex, 1);
-				} else {
-				  // 选中该checkbox
-				  _self.ulist.push(fruitId);
-				}			 */
-			},				
 			bindSelectAll:function(){
 				//debugger;
 				_self.isCheckedAll = !_self.isCheckedAll
