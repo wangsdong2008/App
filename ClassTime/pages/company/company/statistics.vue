@@ -26,7 +26,7 @@
 			</uni-collapse>
 			
 			<uni-collapse>
-			    <uni-collapse-item title="吃饭统计" thumb="../../../static/img/etj.png">
+			    <uni-collapse-item title="员工统计" thumb="../../../static/img/etj.png">
 			        <view style="padding: 30rpx;">
 			           <uni-list>
 						   <uni-list-item title="单人查询"  @tap="bindtj(3)" :show-arrow="true" /></uli-list-item>

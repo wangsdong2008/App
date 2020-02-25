@@ -260,9 +260,9 @@
 				let Ring = {
 					series: []
 				};
-        let Funnel = {
-        	series: []
-        };
+				let Funnel = {
+					series: []
+				};
 				let Radar = {
 					categories: [],
 					series: []
@@ -303,7 +303,7 @@
 				Area.series = data.Area.series;
 				Pie.series = data.Pie.series;
 				Ring.series = data.Ring.series;
-        Funnel.series = data.Pie.series;
+				Funnel.series = data.Pie.series;
 				//自定义文案示例，需设置format字段
 				for (let i = 0; i < Ring.series.length; i++) {
 					Ring.series[i].format = () => {

@@ -18,7 +18,7 @@
 					</picker>
 				</view>
 				
-				<view>月份：</view>
+				<view>年份：</view>
 				<view class="input-txt">
 					<picker @change="pickerDateChange($event)" :value="dindex" :range="dateList">
 						<view class="uni-input">{{dateList[dindex]}}</view>
@@ -76,7 +76,8 @@
 				id:0,
 				cid:0,
 				dateid:'',
-				c_id:0
+				c_id:0,
+				com_id:0
 			}
 		},
 		onLoad(options){
@@ -138,10 +139,7 @@
 							_self.dataIDList = idlist;							
 						}
 					},
-				});
-				
-				
-				
+				});				
 				
 			},
 			show(){
@@ -153,9 +151,7 @@
 				_self.getData(data);
 			},
 			bindclick(){
-				var uid = _self.cid;
-				var d = _self.dateid;
-				_self.navigateTo('statisticsresult?uid='+uid+"&d="+d+"&cid="+_self.c_id+"&id="+_self.id);
+				_self.navigateTo('statisticsmemberresult?comid='+_self.com_id+"&d="+_self.dateid+"&cid="+_self.cid+"&id="+_self.id);
 			},
 			getData(data){
 				let data1 = data;
@@ -183,8 +179,8 @@
 							_self.cList = list;
 							_self.cIDList = idlist;	
 							
-							//日期
-							_self.dateList = _self.GetStudyMonth();
+							//年份
+							_self.dateList = _self.GetStudyYear();
 							_self.cid = _self.dataIDList[0];
 							_self.dateid = _self.dateList[0]; 
 							
@@ -296,9 +292,9 @@
 		border-radius: 25upx;
 	}
 	.icenter > view.searchinput{
-		background: url(../../../static/img/search.png) no-repeat 5upx 10upx;
+		/* background: url(../../../static/img/search.png) no-repeat 5upx 10upx;
 		-webkit-background-size: 55upx 55upx;
-		background-size: 55upx 55upx;
+		background-size: 55upx 55upx; */
 	}
 	.btn{
 		width: 100%;

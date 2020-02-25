@@ -133,9 +133,30 @@ Vue.prototype.UpdateMemberInfoUrl = Vue.prototype.CompanyUrl + "updatememberinfo
 Vue.prototype.GetCurrentMemberlistUrl = Vue.prototype.CompanyUrl + "getcurrentmemberlist" //获取今天上班的员工
 Vue.prototype.GetAllMemberlistUrl = Vue.prototype.CompanyUrl + "getallmemberlist" //获取所有员工
 Vue.prototype.GetAllSubCompanyMemberlistUrl = Vue.prototype.CompanyUrl + "getsubcompanymemberlist" //根据comid来获取子公司所有员工
+Vue.prototype.GetAllSubCompanyMemberStatisticsUrl = Vue.prototype.CompanyUrl + "getsubcompanymemberstatistics" //员工统计数据
+
 
 Vue.prototype.GetAllSubCompanyCategoryByComidUrl = Vue.prototype.CompanyUrl + "getsubcompanycategory"  //通过com_id获取子公司所有分类
 //常用函数
+//获取年份
+Vue.prototype.GetStudyYear = function () {	
+	var startdate = new Date(this.STUDYTIME);
+	var enddate = new Date();	
+	var year_e = enddate.getFullYear(); //获取当前日期的年份
+	var year_s = 2019; //获取开始日期的年份
+	
+	var arr = new Array();
+	var y = year_s;
+	var len = (year_e - y + 1);	
+	var str;
+	for(var i = 0; i < len; i++){		
+		arr[i] = y+i;
+	}	
+	//把数组给反过来
+	return arr.reverse();
+}
+
+
 //获取月份
 Vue.prototype.GetStudyMonth = function () {	
 	var startdate = new Date(this.STUDYTIME);
@@ -164,6 +185,8 @@ Vue.prototype.GetStudyMonth = function () {
 	//把数组给反过来
 	return arr.reverse();
 }
+
+
 
 Vue.prototype.getUsers = function () {
     let ret = '';
