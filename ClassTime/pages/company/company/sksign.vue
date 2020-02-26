@@ -72,15 +72,29 @@
 		},
 		methods: {
 			show(){
-				let ret = _self.getUserInfo();				
+				let ret = _self.getUserInfo();
 				if(!ret){
 					return false;
 				}
-				const data = {
-				    guid: ret.guid,
-				    token: ret.token
-				};
-				_self.getData(data);
+				if(parseInt(ret.pay_status) == 0){ //过期会员去续费
+					uni.showModal({
+					    title: "提醒",
+					    content: '会员已过期，请续费',
+						cancelText:'留在本页',
+						confirmText:'去续费',
+					    success: function (res) {
+					        if (res.confirm) {
+								_self.navigateTo('../../users/main/pay');
+					        }
+					    }
+					});
+				}else{
+					const data = {
+						guid: ret.guid,
+						token: ret.token
+					};
+					_self.getData(data);
+				}
 			},
 			getData(data){
 				_self.sendRequest({

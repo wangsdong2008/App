@@ -29,9 +29,11 @@
 								<label class="checkbox">
 									<checkbox value="1" :checked="isCheckedAll" />全选
 								</label>
-							</view>							
-							<button type="primary" @tap="bindclick(1)" >签到</button>
-							<button type="primary" @tap="bindclick(2)">请假</button>
+							</view>								
+							<button type="primary" @tap="bindclick(1)" v-if="parseInt(_self.dataList_num ) > 0">签到</button>
+							<button type="primary" @tap="bindclick(2)" v-if="parseInt(_self.dataList_num ) > 0">请假</button>
+							<button type="primary" disabled="false" v-if="parseInt(_self.dataList_num ) == 0">签到</button>
+							<button type="primary" disabled="true" v-if="parseInt(_self.dataList_num ) == 0">请假</button>
 							
 							
 							
@@ -75,11 +77,25 @@
 				if(!ret){
 					return false;
 				}
-				const data = {
-				    guid: ret.guid,
-				    token: ret.token
-				};
-				_self.getData(data);
+				if(parseInt(ret.pay_status) == 0){ //过期会员去续费
+					uni.showModal({
+					    title: "提醒",
+					    content: '会员已过期，请续费',
+						cancelText:'留在本页',
+						confirmText:'去续费',
+					    success: function (res) {
+					        if (res.confirm) {
+								_self.navigateTo('../../users/main/pay');
+					        }
+					    }
+					});
+				}else{
+					const data = {
+					    guid: ret.guid,
+					    token: ret.token
+					};
+					_self.getData(data);
+				}	
 			},
 			getData(data){
 				_self.sendRequest({
