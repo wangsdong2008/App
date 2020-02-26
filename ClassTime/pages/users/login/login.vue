@@ -143,7 +143,8 @@
 				        				guid:data.guid,
 				        				time:data.time,
 				        				identity:data.user_identity,
-				        				is_brithday:data.is_brithday
+				        				is_brithday:data.is_brithday,
+										pay_status:data.pay_status
 				        			}
 				        			
 				        			let url = '';

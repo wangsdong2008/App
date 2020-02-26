@@ -39,6 +39,7 @@
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
+	var _self;
 	
 	export default {
 	    components: {
@@ -62,73 +63,80 @@
 			}
 		},
 		onLoad(){
-			this.checkLogin(1);
+			_self = this;
+			_self.checkLogin(1);
+			
 		},
 		onReady() {
 			var date = new Date();
 			var str = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+ date.getDate()+ " " + "星期" + "日一二三四五六".charAt(new Date().getDay());
-			this.currenttime = str;
-			this.getData();
+			_self.currenttime = str;
+			_self.getData();
 		},
 		created() {
-		    //this.currentTime();    
+		    //_self.currentTime();    
 	    },		
 		methods: {
 			 // 销毁定时器
 			beforeDestroy: function() {
-			    if (this.getDate) {
+			    if (_self.getDate) {
 			        console.log("销毁定时器")
-			        clearInterval(this.getDate); // 在Vue实例销毁前，清除时间定时器
+			        clearInterval(_self.getDate); // 在Vue实例销毁前，清除时间定时器
 			    }
 			},
 			currentTime(){
-			    setInterval(this.getTime,60000);
+			    setInterval(_self.getTime,60000);
 			},
 			getTime:function(){
-			      /* var _this = this;
-			      let yy = new Date().getFullYear();
-			      let mm = new Date().getMonth()+1;
-			      let dd = new Date().getDate();
-			      let hh = new Date().getHours();
-			      let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
-			      let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
-			      _this.gettime = hh+':'+mf; */
-				  this.getData();
+				  _self.getData();
 			},
 			getData() {
-				let ret = uni.getStorageSync(this.USERS_KEY);
-				uni.request({
-					url: this.DayClassUrl,
-					header: {"Content-Type": "application/x-www-form-urlencoded"},
-				    data: {
-				        "token": ret.token,
-				        "guid": ret.guid,
-						"t":Math.random()
-				    },
-				    method: "get",
-					success: (res) => {
-						var data = res.data.list;
-						switch(parseInt(res.data.status)){
-							case 1:{
-								uni.showToast({
-									title: '无数据',
-									icon: 'none',
-								});		
-								break;
+				let ret = uni.getStorageSync(_self.USERS_KEY);
+				if(parseInt(ret.pay_status) == 0){ //过期会员去续费
+					uni.showModal({
+					    title: "提醒",
+					    content: '会员已过期，请续费',
+						cancelText:'留在本页',
+						confirmText:'去续费',
+					    success: function (res) {
+					        if (res.confirm) {
+								_self.navigateTo('../../users/main/pay');
+					        }
+					    }
+					});
+				}else{
+					_self.sendRequest({
+						url : _self.DayClassUrl,
+					    method : _self.Method,
+					    data : {
+							"token": ret.token,
+							"guid": ret.guid,
+							"t":Math.random()
+						},
+					    hideLoading : true,
+					    success:function (res) {
+							var data = res.list;
+							switch(parseInt(res.status)){
+								case 1:{
+									/* uni.showToast({
+										title: '无数据',
+										icon: 'none',
+									});		
+									break; */
+								}
+								case 3:{
+									let list = [];
+									for (var i = 0; i < data.length; i++) {
+										var item = data[i];
+										list.push(item);
+									}								
+									_self.dataList = list;
+									break;
+								}
 							}
-							case 3:{
-								let list = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];
-									list.push(item);
-								}								
-								this.dataList = list;
-								break;
-							}
-						}
-						
-					}
-				});
+					    }
+					},"1","");
+				}			
 			}
 		}
 	}

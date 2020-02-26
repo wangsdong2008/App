@@ -136,33 +136,47 @@
 			},
 			getData(data){
 				let ret = _self.getUserInfo();
-				_self.sendRequest({
-					url : _self.GetCurrentStudents,
-				    method : _self.Method,
-				    data : {
-						"guid": data.guid,
-						"token":data.token,
-						"catid":1,
-						"t":Math.random()
-					},
-				    hideLoading : true,
-				    success:function (res) {						
-						if(res){
-							var data = res.list;
-							if(parseInt(res.status) == 3){
-								if(data.length > 0){
-									let list = [];
-									for (var i = 0; i < data.length; i++) {
-										var item = data[i];
-										list.push(item);
-									}							
-									_self.dataList = list;
-								}
-								_self.isBrithday = res.isBrithday; 
-							}					    	
+				if(parseInt(ret.pay_status) == 0){ //过期会员去续费
+					uni.showModal({
+					    title: "提醒",
+					    content: '会员已过期，请续费',
+						cancelText:'留在本页',
+						confirmText:'去续费',
+					    success: function (res) {
+					        if (res.confirm) {
+								_self.navigateTo('../../users/main/pay');
+					        }
+					    }
+					});
+				}else{				
+					_self.sendRequest({
+						url : _self.GetCurrentStudents,
+						method : _self.Method,
+						data : {
+							"guid": data.guid,
+							"token":data.token,
+							"catid":1,
+							"t":Math.random()
+						},
+						hideLoading : true,
+						success:function (res) {						
+							if(res){
+								var data = res.list;
+								if(parseInt(res.status) == 3){
+									if(data.length > 0){
+										let list = [];
+										for (var i = 0; i < data.length; i++) {
+											var item = data[i];
+											list.push(item);
+										}							
+										_self.dataList = list;
+									}
+									_self.isBrithday = res.isBrithday; 
+								}					    	
+							}
 						}
-				    }
-				},"1","");
+					},"1","");
+				}
 			}
 		}
 	}

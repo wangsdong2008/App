@@ -293,7 +293,8 @@ Vue.prototype.checkLogin = function(identity){
 									token:ret.token,
 									time:time,
 									identity:ret.user_identity,
-									is_brithday:data.is_brithday
+									is_brithday:data.is_brithday,
+									pay_status:data.pay_status
 								}
 							});					
 						}else{
