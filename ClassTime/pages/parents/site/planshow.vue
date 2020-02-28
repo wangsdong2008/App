@@ -151,9 +151,9 @@
 			        let item = items[i];
 			        if(values.includes(item.weekid)){
 						list.push(item.weekid);
-			            this.$set(item,'checked',true);
+			            _self.$set(item,'checked',true);
 			        }else{
-			            this.$set(item,'checked',false);
+			            _self.$set(item,'checked',false);
 			        }
 			    }
 				_self.week_dataIDList = list;
@@ -192,8 +192,8 @@
 				_self.getData(data);
 			},
 			getData(data){
-				this.sendRequest({
-				       url : this.ShowChildPlanUrl,
+				_self.sendRequest({
+				       url : _self.ShowChildPlanUrl,
 				       method : _self.Method,
 				       data : {
 						  "guid": data.guid,
@@ -314,8 +314,8 @@
 					return false;
 				}
 				
-				this.sendRequest({
-				    url : this.ModifyChildPlanUrl,
+				_self.sendRequest({
+				    url : _self.ModifyChildPlanUrl,
 				    method : _self.Method,
 				    data : {
 						"guid": ret.guid,

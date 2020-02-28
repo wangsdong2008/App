@@ -60,6 +60,11 @@ Vue.prototype.ModifyChildPlanUrl = Vue.prototype.ParentUrl + "childplanmodify" /
 Vue.prototype.DelChildPlanUrl = Vue.prototype.ParentUrl + "childplandel" //删除某一孩子的计划
 Vue.prototype.ShowChildPlanUrl = Vue.prototype.ParentUrl + "childplanshow" //显示某一计划 
 
+Vue.prototype.GetDayChildCourseUrl = Vue.prototype.ParentUrl + "getdaychildcourselist" //获取某个孩子某天的课程
+Vue.prototype.updateChildCourseTiaokeSignUrl = Vue.prototype.ParentUrl + "updatechildcoursetiaokesign" //更新调课内容
+
+
+
 
 //公司相关
 //当天要接的孩子

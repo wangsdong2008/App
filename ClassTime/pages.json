@@ -91,6 +91,11 @@
 				"navigationBarTitleText": "上课设置"
 			}
 		},{
+			"path": "pages/parents/site/tiaoke",
+			"style": {
+				"navigationBarTitleText": "调课"
+			}
+		},{
 			"path": "pages/parents/site/help",
 			"style": {
 				"navigationBarTitleText": "帮助文档"

@@ -7,7 +7,7 @@
 				<uni-list-item title="课程设置"   thumb="../../../static/img/couse.png" @tap="bindCourse" />
 				<uni-list-item title="孩子管理" thumb="../../../static/img/userHL.png" @tap="bindChild" />
 				<uni-list-item title="上课计划" thumb="../../../static/img/plan.png" @tap="bindPlan" />
-				<uni-list-item title="查找机构" thumb="../../../static/img/company.png" @tap="bindcompany" />
+				<uni-list-item title="调课和请假" thumb="../../../static/img/tiaoke.png" @tap="bindTiaoke" />
 			</uni-list>
 			<uni-list>
 				<uni-list-item title="帮助文档"   thumb="../../../static/img/help.png" @tap="bindhelp" />
@@ -59,6 +59,9 @@
 			onNavigationBarSearchInputChanged (e) {
 			    //console.log("你在搜索框中输入了信息"+e.text);
 				_self.course_name = e.text;
+			},
+			bindTiaoke(){
+				_self.navigateTo('tiaoke');
 			},
 			bindsearch(){
 				if(_self.longitude == 0){  //没有经纬度的时候，获取经纬度
