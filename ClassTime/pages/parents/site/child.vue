@@ -7,7 +7,7 @@
 			</view>
 			<view>
 				<uni-list>
-					<uni-list-item v-for="(item,index) in dataList" :index="index" :key="item.child_id" :title="'【'+item.child_name+'】'" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="false">
+					<uni-list-item v-for="(item,index) in dataList" :index="index" :key="item.child_id" :title="'【'+item.child_name+'】'+(item.is_show==0?'(关闭)':'')" :thumb="'../../../static/img/'+(item.sex==1?'p_boy':'p_gril')+'.png'" :show-arrow="false">
 						<view class="statuslist"><span @tap="showchild(item.child_id)">修改</span><span @tap="delchild(item.child_id)">删除</span></view>
 						</uni-list-item>
 				</uni-list>
@@ -160,7 +160,7 @@
 	
 </script>
 
-<style>
+<style>	
 	.content{
 		width:96%;
 		margin: 0 auto;
