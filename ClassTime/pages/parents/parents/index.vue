@@ -14,7 +14,7 @@
 					<view>
 						<!-- 一般用法 -->
 						<uni-collapse>					
-						    <uni-collapse-item v-for="(item,index) in dataList" :title="item.child_name" :index="index" :key="item.child_id" :open="true" :show-arrow="false" :thumb="'../../../static/img/'+(item.sex == '1'?'p_boy.png':'p_gril.png')" :showAnimation="true" class="classlist"  >
+						    <uni-collapse-item v-for="(item,index) in dataList" v-if="item.num > 0" :title="item.child_name" :index="index" :key="item.child_id" :open="true" :show-arrow="false" :thumb="'../../../static/img/'+(item.sex == '1'?'p_boy.png':'p_gril.png')" :showAnimation="true" class="classlist"  >
 								<uni-list>
 									<uni-list-item v-for="(item2,index2) in item.courselist" :index="index2" :key="item2.cat_id" :show-arrow="false" :title="'【' + item2.c_name + '】--'+item2.organname+'--'+item2.c_address" :show-badge="true" :badge-text="item2.p_time" :show-extra-icon="item2.class_status" :extra-icon="extra1">
 									</uni-list-item>
