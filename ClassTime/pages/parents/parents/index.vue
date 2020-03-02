@@ -121,16 +121,26 @@
 									/* uni.showToast({
 										title: '无数据',
 										icon: 'none',
-									});		
-									break; */
+									});	*/	
+									break; 
 								}
 								case 3:{
+									let num = 0;
 									let list = [];
 									for (var i = 0; i < data.length; i++) {
 										var item = data[i];
 										list.push(item);
+										num = num + item.num*1;
 									}								
 									_self.dataList = list;
+									
+									if(num == 0){
+										uni.showToast({
+											title: '今天的课已上完',
+											icon: 'none',
+										});	
+									}
+									
 									break;
 								}
 							}
