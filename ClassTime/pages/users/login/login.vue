@@ -144,7 +144,8 @@
 				        				time:data.time,
 				        				identity:data.user_identity,
 				        				is_brithday:data.is_brithday,
-										pay_status:data.pay_status
+										pay_status:data.pay_status,
+										power:data.power
 				        			}
 				        			
 				        			let url = '';
