@@ -2,7 +2,7 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
-			<view class="register_account">调课管理</view>
+			<view class="register_account">请假管理</view>
 			<view class="register_account_input">
 				<view class="uni-list-cell-left">
 				    选择孩子
@@ -29,23 +29,7 @@
 				</picker>
 			</view>
 			
-			<view class="register_account_input">
-				<view class="uni-list-cell-left">
-				    调到
-				</view>		
-				<picker mode="date" :value="date1" :start="startDate" :end="endDate" @change="bindDate1Change">
-                    <view class="uni-input">{{date1}}</view>
-                </picker>
-			</view>
 			
-			<view class="register_account_input">
-				<view class="uni-list-cell-left">
-				    选择时间
-				</view>		
-				<picker mode="time" :value="time" start="09:01" end="21:01" @change="bindTimeChange">
-                    <view class="uni-input">{{time}}</view>
-                </picker>
-			</view>
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>
@@ -75,7 +59,7 @@
 		onLoad(){
 			_self = this;
 			_self.checkLogin(1);
-			_self.headermsg = "调课";
+			_self.headermsg = "请假";
 		},
 		onReady(){
 			_self.show();
@@ -98,7 +82,7 @@
 				course_dataList:[],
 				course_dataIDList:[],
 				
-				btntxt:"调课"
+				btntxt:"请假"
 			}
 		},
 		methods:{
@@ -204,20 +188,7 @@
 					});
 					return;					
 				}
-				if(_self.dateid1 == '' || _self.dateid1 == undefined){
-					uni.showToast({
-					    icon: 'none',
-					    title: '请选择调到日期'
-					});
-					return;
-				}
-				if(_self.time == '' || _self.time == undefined){
-					uni.showToast({
-					    icon: 'none',
-					    title: '请选择调上课时间'
-					});
-					return;
-				}
+				
 				
 				let ret = _self.getUserInfo();
 				if(!ret){
@@ -225,7 +196,7 @@
 				}
 				
 				_self.sendRequest({
-				       url : _self.updateChildCourseTiaokeSignUrl,
+				       url : _self.updateChildCourseQingjiaSignUrl,
 				       method : _self.Method,
 				       data : {
 							"guid": ret.guid,
@@ -253,7 +224,7 @@
 								break;
 							}
 							case 2:{
-								str = '课程已调';
+								str = '已经请假了';
 								break;
 							}
 							case 3:{
@@ -350,7 +321,7 @@
 	}
 	
 	uni-button{
-		border-radius: 50upx;	
+		border-radius: 50upx;		
 	}
 	uni-button:after{
 		border: 0px;		

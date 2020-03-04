@@ -62,7 +62,7 @@ Vue.prototype.ShowChildPlanUrl = Vue.prototype.ParentUrl + "childplanshow" //显
 
 Vue.prototype.GetDayChildCourseUrl = Vue.prototype.ParentUrl + "getdaychildcourselist" //获取某个孩子某天的课程
 Vue.prototype.updateChildCourseTiaokeSignUrl = Vue.prototype.ParentUrl + "updatechildcoursetiaokesign" //更新调课内容
-
+Vue.prototype.updateChildCourseQingjiaSignUrl = Vue.prototype.ParentUrl + "updatechildcourseqingjiasign" //请假
 
 
 
@@ -249,7 +249,7 @@ Vue.prototype.checkLogin = function(identity){
 		});
 	}
 	let status = 1;
-	if(parseInt(identity) > 0){
+	if(parseInt(identity) > 0){ //检查此人身份能否查看这个栏目里面的内容
 		if(parseInt(identity) == parseInt(ret.identity)) {
 			status = 1;
 		}else{
@@ -257,8 +257,8 @@ Vue.prototype.checkLogin = function(identity){
 		}
 	}
 	
-	if(status == 1){
-		var now = new Date();
+	if(status == 1){		
+		/* var now = new Date();
 		var year = now.getFullYear(); //得到年份
 		var month = now.getMonth();//得到月份
 		var date = now.getDate();//得到日期
@@ -279,7 +279,7 @@ Vue.prototype.checkLogin = function(identity){
 					"username":ret.username,
 					"t":Math.random()
 				},
-				hideLoading : true,
+				hideLoading : false,
 				success: (res) => {
 						var data = res;
 						if(data.status == 1){
@@ -309,8 +309,8 @@ Vue.prototype.checkLogin = function(identity){
 						}				
 					}
 				
-			},"1","");
-		}
+			},"1",""); 
+		}*/
 	}else{
 		try {
 			uni.removeStorageSync(that.USERS_KEY);
@@ -887,7 +887,8 @@ Vue.prototype.sendRequest = function(param, backtype,backpage){
         fail: (e) => {
             console.log("网络请求fail:" + JSON.stringify(e));
             uni.showModal({
-                content:"" + e.errMsg
+                //content:"" + e.errMsg + "==" +requestUrl
+				content:"" + e.errMsg
             });
             typeof param.fail == "function" && param.fail(e.data);
         },

@@ -31,7 +31,12 @@
 		{
 			"path": "pages/parents/parents/index",
 			"style": {
-				"navigationBarTitleText": "家长页面" 
+				"navigationBarTitleText": "今日提醒",
+				"app-plus": {
+					"titleNView": {
+						"autoBackButton":"false"
+					}
+				}//隐藏顶部导航栏			
 			}
 		},{
 			"path": "pages/parents/site/index",
@@ -94,6 +99,11 @@
 			"path": "pages/parents/site/tiaoke",
 			"style": {
 				"navigationBarTitleText": "调课"
+			}
+		},{
+			"path": "pages/parents/site/qingjia",
+			"style": {
+				"navigationBarTitleText": "请假"
 			}
 		},{
 			"path": "pages/parents/site/help",
@@ -292,7 +302,12 @@
 		},{
 			"path": "pages/users/main/main",
 			"style": {				
-				"navigationBarTitleText": "会员中心"			             
+				"navigationBarTitleText": "会员中心"	,
+				"app-plus": {
+				    "titleNView": {
+						"autoBackButton":"false"
+					}
+				}
 			}
 		},{
 			"path": "pages/users/main/messagelist",
