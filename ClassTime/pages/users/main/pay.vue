@@ -19,7 +19,7 @@
 							<li :class="{
 									'grid-item-box':true,
 									'active':item.activer
-								}" v-for="(item, index) in dataList" :index="index" :key="index" @click="even(index)">￥{{item.c_price}}/{{item.c_month}}月</li>
+								}" v-for="(item, index) in dataList" :index="index" :key="index" @click="even(index)">￥{{item.c_price}}元/{{item.c_month}}月</li>
 						</ul>
 						<view class="clear"></view>
 					</li>				
@@ -64,6 +64,115 @@
 		</view>
 	</view>
 </template>
+<style>		
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	
+	.lists > ul > li.btn{
+		padding-bottom: 80upx;
+	}
+	.primary{
+		border-radius: 50upx;
+	}
+	.main_content{}
+	.lists{
+		/* border:1upx solid #eaeaea; */
+		width:100%;
+		margin: 0 auto;
+		margin-top: 20upx;
+	}
+	.lists > ul,.lists > radio-group> ul{ list-style-type: none; width: 92%; margin: 0 auto; margin-top: 40upx;}
+	.lists > ul > li,.lists > radio-group > ul > li{ font-size: 30upx; line-height: 45upx; height: 45upx; padding: 10upx 0upx; color:#333;}
+	
+	.utitle{
+		font-size: 35upx;
+		color: green;
+		border-bottom: 1upx solid #eee;
+		margin-bottom: 20upx;
+		margin-top: 60upx;
+		overflow: hidden;
+		
+	}
+	.lists > ul > li > ul{
+		list-style-type: none;
+	} 
+	.grid-item-box{
+		width: 30%;
+		border: 1upx solid #eee;
+		float: left;
+		margin-right: 20upx;
+		padding: 20upx 0upx;
+		text-align: center;
+		font-size: 32upx;
+		height: 60upx;
+		line-height: 60upx;
+		color:#666;
+	}
+	.grid-item-box:last-child{
+		margin-right: 0;
+	}
+	.active{
+		background-color:#007AFF;
+		color:#fff;
+		border: 0upx;
+	}
+	
+	.lists > ul > li.grids{	
+		padding-bottom: 30upx;
+	}	
+	.li30{
+		margin-bottom: 60upx;
+	}
+	
+	.li40{
+		height: 55upx;
+		line-height: 55upx;	
+		border:1upx solid #eee;		
+		padding: 20upx;
+		border-radius: 50upx;
+		margin-bottom: 30upx;
+		
+	}
+	
+	.radio_text{
+		margin-left: 10upx;
+		margin-right: 40upx;
+	}
+	.uni-list-cell-pd view{
+		width: auto;
+		float: left;
+		font-size: 35upx;
+	}
+	.uni-list-cell-pd view image{
+		width: 60upx;
+		height: 60upx;
+		vertical-align: middle;
+		margin-right: 30upx;
+	}
+	.uni-list-cell-pd view radio{
+		margin-top: 0upx;
+		margin-left: 20upx;
+	}
+	
+	.content{
+		width:98%;
+		margin: 0 auto;
+	}
+	.content .title{
+		border-bottom: 1px solid #66ccff;
+		height: 45upx;
+		line-height: 45upx;
+		margin: 30upx 0upx;
+		padding-bottom: 30upx;
+	}
+	.content .title image{
+		width: 50upx;
+		height: 50upx;
+		margin-right: 20upx;
+	}
+</style>
 
 <script>
 	import mInput from '../../../components/m-input.vue'
@@ -295,104 +404,3 @@
 		
 </script>
 
-<style>		
-	*{
-		margin: 0;
-		padding: 0;
-	}
-	.lists > ul > li.btn{
-		padding-bottom: 80upx;
-	}
-	.lists > ul > li > .primary{
-		border-radius: 50upx;
-	}
-	.main_content{}
-	.lists{
-		/* border:1upx solid #eaeaea; */
-		width:100%;
-		margin: 0 auto;
-		margin-top: 20upx;
-	}
-	.lists > ul,.lists > radio-group> ul{ list-style-type: none; width: 92%; margin: 0 auto; margin-top: 40upx;}
-	.lists > ul > li,.lists > radio-group > ul > li{ font-size: 30upx; line-height: 45upx; height: 45upx; padding: 10upx 0upx; color:#333;}
-	
-	.lists > ul > li.utitle,.lists > radio-group> ul > li.utitle{
-		font-size: 35upx;
-		color: green;
-		border-bottom: 1upx solid #eee;
-		margin-bottom: 20upx;
-		overflow: hidden;
-		
-	}
-	.lists > ul > li > ul{
-		list-style-type: none;
-	} 
-	.lists > ul > li > ul > li.active{
-		background-color:#007AFF;
-		color:#fff;
-		border: 0upx;
-	}
-	.lists > ul > li > ul > li{
-		width: 22%;
-		border: 1upx solid #eee;
-		float: left;
-		margin-right: 12upx;
-		padding: 5upx 2upx;
-		text-align: center;
-		font-size: 25upx;
-		height: 60upx;
-		line-height: 60upx;
-		color:#666;
-	}
-	
-	.lists > ul > li.grids{	
-		padding-bottom: 30upx;
-	}	
-	
-	.lists > uni-radio-group > ul > li.li40{
-		height: 55upx;
-		line-height: 55upx;	
-		border:1upx solid #eee;		
-		padding: 20upx;
-		border-radius: 50upx;
-		margin-bottom: 30upx;
-		
-	}
-	
-	.radio_text{
-		margin-left: 10upx;
-		margin-right: 40upx;
-	}
-	.uni-list-cell-pd view{
-		width: auto;
-		float: left;
-		font-size: 35upx;
-	}
-	.uni-list-cell-pd view image{
-		width: 60upx;
-		height: 60upx;
-		vertical-align: middle;
-		margin-right: 30upx;
-	}
-	.uni-list-cell-pd view radio{
-		margin-top: 0upx;
-		margin-left: 20upx;
-	}
-	
-	.content{
-		width:98%;
-		margin: 0 auto;
-	}
-	.content .title{
-		border-bottom: 1px solid #66ccff;
-		height: 45upx;
-		line-height: 45upx;
-		margin: 30upx 0upx;
-		padding-bottom: 30upx;
-	}
-	.content .title image{
-		width: 50upx;
-		height: 50upx;
-		margin-right: 20upx;
-	}
-</style>
