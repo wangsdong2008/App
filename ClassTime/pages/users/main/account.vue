@@ -3,10 +3,18 @@
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="center100 content">
 			<view class="title">
-				<image src="../../../static/img/power.png" mode=""></image>修改昵称
+				<image src="../../../static/img/power.png" mode=""></image>个人资料
 			</view>		
 			<view class="main-body write lists">
 				<ul>
+					<li>
+						<view class="uni-list-cell-left">
+						    姓名
+						</view>
+						<view class="cell-right">
+							<m-input class="m-input" type="text" clearable focus v-model="true_name" placeholder="请输入姓名"></m-input>
+						</view>
+					</li>
 					<li>
 						<view class="uni-list-cell-left">
 						    昵称
@@ -14,7 +22,8 @@
 						<view class="cell-right">
 							<m-input class="m-input" type="text" clearable focus v-model="nick_name" placeholder="请输入昵称"></m-input>
 						</view>
-					</li><view class="clear"></view>				
+					</li>
+					<view class="clear"></view>				
 				</ul>
 				<view>
 					<button type="primary" class="btn" @tap="bindsaveuserinfo">保存</button>
@@ -118,13 +127,14 @@
 				userinfo:[],
 				dataList:[],
 				nick_name:'',
+				true_name:'',
 				user_identity:0,
 				headermsg:'会员中心,Member Center',
 				footer:''
 			}
 		},
 		methods:{
-			bindsaveuserinfo(){				
+			bindsaveuserinfo(){
 				if(_self.nick_name.trim() == '' || _self.nick_name.trim().length == 0){
 					uni.showToast({
 					    icon: 'none',
@@ -140,6 +150,7 @@
 							"guid": ret.guid,
 							"token": ret.token,	
 							"nick_name":_self.nick_name,
+							"true_name":_self.true_name,
 							"status":0,
 							"t":Math.random()
 						},
@@ -180,6 +191,7 @@
 							if(data.status == 3){
 								_self.userinfo = data.userinfo;
 								_self.nick_name = _self.userinfo.nick_name;
+								_self.true_name = _self.userinfo.true_name;
 							}
 						}
 				    }

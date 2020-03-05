@@ -52,7 +52,7 @@
 				childface:'',
 				userinfo:[],
 				dataList:[					
-					{"image":"power.png","url":"account","text":"修改昵称"},
+					{"image":"power.png","url":"account","text":"个人资料"},
 					{"image":"password.png","text":"修改密码","url":"modifypassword"},
 					{"image":"mobile5.png","text":"更换手机","url":"modifymobile"},					
 					{image:'message.png',text:'我的消息(0)',url:"messagelist"},

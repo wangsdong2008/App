@@ -35,6 +35,10 @@ Vue.prototype.ResetPasswordrUrl = Vue.prototype.GeneralUrl + "resetpassword" //�
 Vue.prototype.getSessionUrl = Vue.prototype.GeneralUrl + "getsessionid" //生成session
 Vue.prototype.SendSmsUrl = Vue.prototype.GeneralUrl + "sendsms" //发短信
 Vue.prototype.SearchCourseUrl = Vue.prototype.GeneralUrl + "search" //查找机构
+Vue.prototype.showCourseUrl = Vue.prototype.GeneralUrl + "showcourse" //显示课程详情
+
+
+
 Vue.prototype.UpgradeUrl = Vue.prototype.GeneralUrl + "upgrade" //升级申请
 Vue.prototype.ModifyUserInfoUrl = Vue.prototype.GeneralUrl + "modifyuserinfo" //修改个人信息
 Vue.prototype.ModifyParentfaceUrl = Vue.prototype.GeneralUrl + "modifyparentface" //修改家长头像

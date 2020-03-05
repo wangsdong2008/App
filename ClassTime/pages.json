@@ -300,6 +300,21 @@
 				"navigationBarTitleText": "查找"
 			}
 		},{
+			"path": "pages/index/index/showcourse",
+			"style": {				
+				"navigationBarTitleText": "课程详情"
+			}
+		},{
+			"path": "pages/index/index/showshop",
+			"style": {				
+				"navigationBarTitleText": "机构"
+			}
+		},{
+			"path": "pages/index/index/baoming",
+			"style": {				
+				"navigationBarTitleText": "报名"
+			}
+		},{
 			"path": "pages/users/main/main",
 			"style": {				
 				"navigationBarTitleText": "会员中心"	,

@@ -2,16 +2,13 @@
 	<view class="main_content">
 		<headerNav :msg="headermsg"></headerNav>
 		<view class="main_content content">			
-			<uni-section :title="'搜索：'+course_name" type="line"></uni-section>
+			<uni-section title="详情" type="line"></uni-section>
 			<view class="searchlist">
-				<view class="icenter">
-					<!-- 带描述信息 -->
-					<uni-list>
-						
-					    <uni-list-item v-for="(item,index) in dataList" :index="index" :key="item.cat_id" :title="item.cat_name" :note="'【'+item.com_name + '】 ' + item.com_address + ' 距离' + item.distance + '米'" :show-arrow="true" :show-badge="false" badge-text="12" :thumb="'../../../static/img/course.png'" @tap="showcourse(item.userid,item.com_id,item.cat_id)"></uni-list-item> 
-						
-					</uni-list>
-					
+				<view class="course_title">{{cat_name}}</view>
+				<view class="icenter" v-html="cat_content">	</view>
+				<view class="icenter course_jg" @tap="bindcompany">{{company}}</view>
+				<view class="btn-row icenter">
+				    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 				</view>
 			</view>
 		</view>		
@@ -37,20 +34,24 @@
 		onLoad(options) {
 			_self = this;
 			_self.checkLogin(0);
-			_self.course_name = options['keyword'];
-			_self.longitude = options['longitude'];
-			_self.latitude = options['latitude'];			
+			_self.pid = options['pid'];
+			_self.cid = options['cid'];
+			_self.comid = options['comid'];
 		},
 		onReady(){
 			_self.show();
 		},
 		data(){
 			return{
-				headermsg:'查找结果,Search Result',
-				course_name:'',
-				latitude:0,
-				longitude:0,
-				dataList:[]
+				headermsg:'课程详情',
+				pid:0,
+				cid:0,
+				comid:0,
+				cat_content:'',
+				cat_name:'',
+				dataList:[],
+				btntxt:'报名',
+				company:''
 			}
 		},
 		methods:{
@@ -62,25 +63,28 @@
 				const data = {
 				    guid: ret.guid,
 				    token: ret.token,
-					keyword:_self.course_name,
-					longitude:_self.longitude,
-					latitude:_self.latitude
+					uid:_self.pid,
+					cid:_self.cid,
+					comid:_self.comid
 				};				
 				_self.getData(data);
 			},
-			showcourse(userid,com_id,cat_id){
-				_self.navigateTo('showcourse?pid='+userid+"&comid="+com_id+"&cid="+cat_id);
+			bindmodify(){
+				_self.navigateTo('baoming?pid='+_self.pid+"&comid="+_self.comid+"&cid="+_self.cid);
+			},
+			bindcompany(){
+				_self.navigateTo('showshop?pid='+_self.uid+"&comid="+_self.comid);
 			},
 			getData(data){
-				this.sendRequest({
-				        url : this.SearchCourseUrl,
+				_self.sendRequest({
+				        url : _self.showCourseUrl,
 				        method : _self.Method,
 				        data : {
 							"token": data.token,
 							"guid": data.guid,
-							"keyword":data.keyword,
-							"longitude":data.longitude,
-							"latitude":data.latitude,
+							"uid":data.uid,
+							"cid":data.cid,
+							"comid":data.comid,
 							"t":Math.random()
 						},
 				        hideLoading : true,
@@ -95,12 +99,9 @@
 				       				break;
 				       			}
 				       			case 3:{
-				       				let list = [];
-				       				for (var i = 0; i < data.length; i++) {
-				       					var item = data[i];
-				       					list.push(item);
-				       				}								
-				       				_self.dataList = list;
+				       				_self.cat_name  = data.cat_name;
+									_self.cat_content  = data.cat_content;
+									_self.company = res.companylist.com_name;
 				       				break;
 				       			}
 				       		}
@@ -124,21 +125,39 @@
 	.main_center{
 		width:95%;			
 		margin: 0 auto;
-	}
+	}	
 	.icenter{
 		width: 90%;
 		margin: 0 auto;
-		margin-top: 40upx;
+		margin-top: 30upx;
+		margin-bottom: 30upx;
+		font-size: 30upx;
+		line-height: 65upx;
+		
 	}
-	.imgs{	
-		border:1upx solid #ccc;	
-		padding-left: 20upx;
-		width: 60%;		
-		padding: 10upx;
-		background:url(../../../static/img/search2.png) no-repeat 10upx 25upx;
+	.course_title{
+		width: 80%;
+		margin: 0 auto;
+		border-bottom: 1upx solid #0A8AFF;
+		font-size: 45upx;
+		font-weight: bold;
+		line-height:60upx;
+		padding-bottom:20upx;
+		margin-top: 40upx;
+		padding-left: 80upx;
+		background:url(../../../static/img/course.png) no-repeat 10upx 5upx;
 		background-size: 60upx 60upx;
-		float: left;
-		border-radius: 15upx;
+	}
+	
+	.course_jg{
+		width: 80%;
+		margin: 0 auto;
+		border-top: 1upx solid #eee;
+		padding-left: 80upx;
+		background:url(../../../static/img/company.png) no-repeat 10upx 5upx;
+		background-size: 60upx 60upx;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 	
 	.m-input{
