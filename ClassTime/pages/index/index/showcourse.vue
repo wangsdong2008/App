@@ -73,7 +73,7 @@
 				_self.navigateTo('baoming?pid='+_self.pid+"&comid="+_self.comid+"&cid="+_self.cid);
 			},
 			bindcompany(){
-				_self.navigateTo('showshop?pid='+_self.uid+"&comid="+_self.comid);
+				_self.navigateTo('showshop?pid='+_self.pid+"&comid="+_self.comid);
 			},
 			getData(data){
 				_self.sendRequest({

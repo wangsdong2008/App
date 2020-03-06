@@ -143,9 +143,10 @@
 				        				guid:data.guid,
 				        				time:data.time,
 				        				identity:data.user_identity,
-				        				is_brithday:data.is_brithday,
+				        				is_brithday:data.is_brithday, //是否显示生日功能
+										true_name:data.true_name,
 										pay_status:data.pay_status,
-										power:data.power
+										power:data.power //权限
 				        			}
 				        			
 				        			let url = '';

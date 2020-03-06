@@ -67,8 +67,8 @@ Vue.prototype.ShowChildPlanUrl = Vue.prototype.ParentUrl + "childplanshow" //显
 Vue.prototype.GetDayChildCourseUrl = Vue.prototype.ParentUrl + "getdaychildcourselist" //获取某个孩子某天的课程
 Vue.prototype.updateChildCourseTiaokeSignUrl = Vue.prototype.ParentUrl + "updatechildcoursetiaokesign" //更新调课内容
 Vue.prototype.updateChildCourseQingjiaSignUrl = Vue.prototype.ParentUrl + "updatechildcourseqingjiasign" //请假
-
-
+Vue.prototype.EnlistBiomingUrl = Vue.prototype.ParentUrl + "enlistbiaming" //报名
+Vue.prototype.CompanyInfoUrl = Vue.prototype.ParentUrl + "companyinfo" //公司及其下课程详情
 
 //公司相关
 //当天要接的孩子
