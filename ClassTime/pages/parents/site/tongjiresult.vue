@@ -25,6 +25,10 @@
 			</view>
 			
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>	
+	
 	</view>
 </template>
 
@@ -32,13 +36,14 @@
 <script>
 	import uCharts from '@/components/u-charts/u-charts.js';
 	import headerNav from "@/components/header/company_header.vue"
+	import footerNav from "@/components/footer/footer_nav.vue"
 	
 	var _self;
 	var canvasObj = {};
 
 	export default {	
 		components: {
-			headerNav
+			headerNav,footerNav
 		},
 		data() {
 			return {

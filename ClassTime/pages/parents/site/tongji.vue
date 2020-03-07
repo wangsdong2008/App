@@ -24,7 +24,9 @@
 				</view>
 				<view class="btn"><button type="primary" class="btn1" @tap="bindclick">搜索</button></view>
 			</view>
-			
+			<view class="footer">
+				<footerNav :msg="footer"></footerNav>
+			</view>
 		</view>
 	</view>
 </template>
@@ -33,7 +35,8 @@
 	import service from '@/service.js';
 	import mInput from '@/components/m-input.vue'
 	import uniSection from '@/components/uni-section/uni-section.vue'
-	import headerNav from "@/components/header/company_header.vue"
+	import headerNav from "@/components/header/company_header.vue"	
+	import footerNav from "@/components/footer/footer_nav.vue"
 	
 	var _self = this;
 	import {
@@ -59,7 +62,7 @@
 	 
 	export default {
 	    components: {
-			headerNav,uniSection
+			headerNav,footerNav,uniSection
 		},
 		data(){
 			return{
