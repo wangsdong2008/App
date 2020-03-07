@@ -69,6 +69,8 @@ Vue.prototype.updateChildCourseTiaokeSignUrl = Vue.prototype.ParentUrl + "update
 Vue.prototype.updateChildCourseQingjiaSignUrl = Vue.prototype.ParentUrl + "updatechildcourseqingjiasign" //请假
 Vue.prototype.EnlistBiomingUrl = Vue.prototype.ParentUrl + "enlistbiaming" //报名
 Vue.prototype.CompanyInfoUrl = Vue.prototype.ParentUrl + "companyinfo" //公司及其下课程详情
+Vue.prototype.GetChildStatisticsUrl = Vue.prototype.ParentUrl + "getchildstatistics" //孩子上课统计(按年)
+
 
 //公司相关
 //当天要接的孩子

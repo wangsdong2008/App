@@ -106,6 +106,16 @@
 				"navigationBarTitleText": "请假"
 			}
 		},{
+			"path": "pages/parents/site/tongji",
+			"style": {
+				"navigationBarTitleText": "统计"
+			}
+		},{
+			"path": "pages/parents/site/tongjiresult",
+			"style": {
+				"navigationBarTitleText": "统计结果"
+			}
+		},{
 			"path": "pages/parents/site/help",
 			"style": {
 				"navigationBarTitleText": "帮助文档"
