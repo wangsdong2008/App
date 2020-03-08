@@ -115,7 +115,7 @@
 			userLogin(data){
 				//清空缓存			
 				let name = data.username,password = data.password;
-				console.log(_self.LoginUrl);
+				//console.log(_self.LoginUrl);
 				
 				_self.sendRequest({
 				        url : _self.LoginUrl,

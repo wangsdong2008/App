@@ -418,6 +418,7 @@ Vue.prototype.addUsers = function(userInfo){
 			"password":userInfo.password,
 			"againpassword":userInfo.againpassword,
 			"code":userInfo.code,
+			"recommend":userInfo.recommend,
 			"t":Math.random()
 	    },
 	    method: "get",

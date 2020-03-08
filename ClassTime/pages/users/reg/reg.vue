@@ -17,6 +17,9 @@
 			<view class="register_account_input">
 				<m-input class="m-input register-input register-input-password" displayable type="password" clearable v-model="againpassword" placeholder="再次确认密码"></m-input>
 			</view>
+			<view class="register_account_input">
+				<m-input class="m-input register-input register-input-mobile" type="text" clearable focus v-model="recommend" placeholder="推荐人手机号码"></m-input>
+			</view>
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="register">注册</button>
 			</view>			
@@ -47,7 +50,7 @@
 	}
 	
 	uni-button{
-		border-radius: 25upx;		
+		border-radius: 50upx;		
 	}
 	uni-button:after{
 		border: 0px;		
@@ -170,6 +173,7 @@
                 password: '',
                 againpassword: '',
 				mobile:'',
+				recommend:'', //推荐人手机
 				sessionid:''
             }
         },
@@ -249,6 +253,7 @@
                     password: _self.password,
 					againpassword: _self.againpassword,
                     mobile: _self.mobile,
+					recommend:_self.recommend,
 					code:_self.code
                 }
                 _self.addUsers(data);
