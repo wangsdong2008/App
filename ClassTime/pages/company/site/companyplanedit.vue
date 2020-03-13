@@ -201,8 +201,6 @@
 								<view class="radio_text">{{fan_item.name}}</view>
 								</label>
 							</radio-group>	
-							
-							
 							</view>	
 						</view>
 						<view class="clear"></view>
@@ -212,16 +210,17 @@
 				<view class="clear"></view>
 			</view>	
 			<view class="clear"></view>
-			</view>
 			<view class="btn-row clear">
 				<button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>	
 		</view>
-		
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 <style>	
-	..register_account_input.form{
+	.register_account_input.form{
 		/* height: 60upx;
 		line-height: 60upx; */
 	}
@@ -411,11 +410,14 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	import footerNav from "@/components/footer/footer_nav.vue"
+	
+	
 	var _self;
 	export default {
 	    components: {
 			service,
-			headerNav,
+			headerNav,footerNav,
 			mInput
 		},
 		onLoad(options){
@@ -521,12 +523,12 @@
 				
 				ptime:"15:00",
 				headermsg:'',
-				btntxt:''
+				btntxt:'',
+				footer: ''
 			}
 		},
 		methods:{
 			sexChange: function(evt) {
-				debugger;
 				var current = evt.detail.value;
 				_self.sex = current;	
 			},

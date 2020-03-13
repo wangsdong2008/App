@@ -46,7 +46,7 @@ Vue.prototype.MessagelistUrl = Vue.prototype.GeneralUrl + "getmessagelist" //某
 Vue.prototype.MessageshowUrl = Vue.prototype.GeneralUrl + "messageshow" //某人短信详情
 //Vue.prototype.AlipayUrl = Vue.prototype.GeneralUrl + "alipay" //支付,待完成
 Vue.prototype.ArticleListUrl = Vue.prototype.GeneralUrl + "getarticlelist" //获取文章信息
-
+Vue.prototype.helpshowUrl = Vue.prototype.GeneralUrl + "getarticleshow" //获取帮助信息
 
 //家长相关
 Vue.prototype.DayClassUrl = Vue.prototype.ParentUrl + "dayclass" //当天课程

@@ -49,7 +49,9 @@
 			<view class="btn-row">
 			    <button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>
-			</view>
+		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
 		</view>
 	</view>
 </template>
@@ -57,11 +59,12 @@
 	import service from '../../../service.js';
 	import mInput from '../../../components/m-input.vue';
 	import headerNav from "@/components/header/company_header.vue"
+	import footerNav from "@/components/footer/footer_nav.vue"
 	var _self;
 	export default {
 	    components: {
 			service,
-			headerNav,
+			headerNav,footerNav,
 			mInput
 		},
 		computed: {
@@ -98,7 +101,8 @@
 				course_dataList:[],
 				course_dataIDList:[],
 				
-				btntxt:"调课"
+				btntxt:"调课",
+				footer: ''
 			}
 		},
 		methods:{

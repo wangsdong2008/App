@@ -16,7 +16,7 @@
 						<view class="uni-input">{{cList[cindex]}}</view>
 					</picker>
 				</view>
-				<view class="lefttxt">月份：</view>
+				<view class="lefttxt">年份：</view>
 				<view class="input-txt">
 					<picker @change="pickerDateChange($event)" :value="dindex" :range="dateList">
 						<view class="uni-input">{{dateList[dindex]}}</view>
@@ -78,7 +78,8 @@
 				headermsg:'',
 				child_id:0,//孩子
 				cid:0,   //课程
-				dateid:0 //年份
+				dateid:0 ,//年份
+				footer: ''
 			}
 		},
 		onLoad(options){

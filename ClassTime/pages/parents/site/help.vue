@@ -5,11 +5,15 @@
 			<view class="title">
 				<image src="../../../static/img/help.png" mode=""></image>帮助文档
 			</view>
-			<uni-collapse accordion="true">
-			    <uni-collapse-item v-for="(item,index) in dataList" :title="item.article_title" :open="item.open" :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'" class="colbg">
-					<view class="newcontent">{{item.article_content}}</view>					
-			    </uni-collapse-item>
-			</uni-collapse>
+			
+			<uni-list>
+			    <uni-list-item class="ulist" :show-arrow="false" v-for="(item,index) in dataList" :title="item.article_title"  @tap="bindclick(item.article_id)"  :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'"></uni-list-item>
+			</uni-list>
+			
+			<view>
+				<uni-pagination class="pagination" @change="handlePage" :show-icon="true" :total="total" :current="page" :pageSize="pagesize" />
+			</view>
+			
 			
 		</view>
 		<view class="footer">
@@ -21,18 +25,25 @@
 <script>
 	import headerNav from "@/components/header/company_header.vue"
 	import footerNav from "@/components/footer/footer_nav.vue"
-	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
-	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'
+	import uniList from "@/components/uni-list/uni-list.vue"
+	import uniListItem from "@/components/uni-list-item/uni-list-item.vue"
+	import uniPagination from '@/components/uni-pagination/uni-pagination.vue'
+	
 	var _self;
 	export default {
 		components: {
-			uniCollapse,
-			uniCollapseItem,
+			uniList,
+			uniListItem,
+			uniPagination,
 			headerNav,
 			footerNav
 		},
 		data(){
 			return{
+				page:1,
+				current: 1,
+				total: 0,
+				pagesize: 5,
 				dataList:[
 					
 				],
@@ -48,6 +59,16 @@
 			_self.show();
 		},
 		methods:{
+			handlePage(params){
+				//debugger;
+				_self.page = params.current;
+				_self.show();
+			},
+			bindclick:function(id){
+				//debugger;
+				_self.navigateTo('helpshow?id='+id+"&page="+_self.page);
+				
+			},		
 			show:function(){
 				let ret = _self.getUserInfo();
 				if(!ret){
@@ -60,12 +81,14 @@
 				_self.getData(data);
 			},
 			getData(data){
-				this.sendRequest({
-				       url : this.ArticleListUrl,
+				_self.sendRequest({
+				       url : _self.ArticleListUrl,
 				       method : _self.Method,
 				       data : {
 							"guid": data.guid,
 							"token":data.token,
+							"page":_self.page,
+							"pagesize":_self.pagesize,
 							"cat_id":1,
 							"t":Math.random()
 					   },
@@ -74,12 +97,14 @@
 						if(res){
 							var data = res.articlelist; 
 							if(parseInt(res.status)==3){
+								let data1 = data.list;
 								let list = [];
-								for (var i = 0; i < data.length; i++) {
-									var item = data[i];
+								for (var i = 0; i < data1.length; i++) {
+									var item = data1[i];
 									list.push(item);
 								}								
 								_self.dataList = list;
+								_self.total =  data.count;
 							}					    	
 						}
 				       }
@@ -90,6 +115,12 @@
 </script>
 
 <style>
+	.uni-pagination{
+		width:100%;
+	}
+	.ulist{
+		padding-left: 0upx;
+	}
 	.newcontent{
 		width: 92%;	
 		margin: 20upx auto;
