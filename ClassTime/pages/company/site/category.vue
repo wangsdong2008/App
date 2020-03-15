@@ -23,6 +23,9 @@
 				<button type="primary" plain="true" @tap="categoryadd">添加分类</button>
 			</view>
 		</view>
+	    <view class="footer">
+	    	<footerNav :msg="footer"></footerNav>
+	    </view>
 	</view>
 </template>
 
@@ -30,6 +33,7 @@
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	import footerNav from "@/components/footer/footer_nav.vue"
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
 	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
 	var _self;
@@ -37,7 +41,7 @@
 	    components: {
 			uniList,
 			uniListItem,
-			headerNav,
+			headerNav,footerNav,
 			uniCollapse,uniCollapseItem
 		},
 		onLoad(){	
@@ -50,7 +54,8 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'课程管理,Category Manage'
+				headermsg:'课程管理,Category Manage',
+				footer:''
 			}
 		},
 		methods:{

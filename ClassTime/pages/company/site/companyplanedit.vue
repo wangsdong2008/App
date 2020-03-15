@@ -201,6 +201,8 @@
 								<view class="radio_text">{{fan_item.name}}</view>
 								</label>
 							</radio-group>	
+							
+							
 							</view>	
 						</view>
 						<view class="clear"></view>
@@ -210,13 +212,12 @@
 				<view class="clear"></view>
 			</view>	
 			<view class="clear"></view>
+			</view>
 			<view class="btn-row clear">
 				<button type="primary" class="primary" @tap="bindmodify">{{btntxt}}</button>
 			</view>	
 		</view>
-		<view class="footer">
-			<footerNav :msg="footer"></footerNav>
-		</view>
+		
 	</view>
 </template>
 <style>	
@@ -523,12 +524,12 @@
 				
 				ptime:"15:00",
 				headermsg:'',
-				btntxt:'',
-				footer: ''
+				btntxt:''
 			}
 		},
 		methods:{
 			sexChange: function(evt) {
+				debugger;
 				var current = evt.detail.value;
 				_self.sex = current;	
 			},

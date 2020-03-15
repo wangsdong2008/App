@@ -53,4 +53,7 @@
 	.bg{
 		background-color: #fff;
 	}
+	.fz30{
+		font-size: 30upx;
+	}
 </style>

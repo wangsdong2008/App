@@ -4,49 +4,73 @@
 		<view class="center100 content">
 			<view class="register_account">上课管理</view>
 			<view class="register_account_input">	
-				<view class="uni-list-cell-left">
+				<view class="uni-list-cell-left fz30">
 				    选择孩子
 				</view>
 				<picker focus @change="ChildPickerChange($event)" :value="child_index" :range="child_dataList">
-					<view class="uni-input">{{child_dataList[child_index]}}</view>
+					<view class="uni-input fz30">{{child_dataList[child_index]}}</view>
 				</picker>
 			</view>
 			<view class="register_account_input">	
-				<view class="uni-list-cell-left">
+				<view class="uni-list-cell-left fz30">
 				    选择课程
 				</view>		
 				<picker @change="CoursePickerChange($event)" :value="course_index" :range="course_dataList">
-					<view class="uni-input">{{course_dataList[course_index]}}</view>
+					<view class="uni-input fz30">{{course_dataList[course_index]}}</view>
 				</picker>
 			</view>
 			<view :class="{
 				'register_account_input':true,
 				 'weeklist':(plan_id == 0)
 				}">
-				<view class="uni-list-cell-left">
+				<view class="uni-list-cell-left fz30">
 				    选择周几
 				</view>
 				<view v-if="plan_id == 0" class="cell-right weeks">
-					<checkbox-group @change="checkboxChange">
+					<checkbox-group @change="weekcheckboxChange">
 			    		<label class="uni-list-cell uni-list-cell-pd" v-for="(item,index) in week_dataList" :index="index" :key="item.weekid">
-			    			<checkbox :value="item.weekid" /><text>{{item.weektext}}</text>
+			    			<checkbox :value="item.weekid" :checked="item.shower" /><text>{{item.weektext}}</text>
 			    		</label>
 			    	</checkbox-group>
 			    </view>
 				<picker v-if="plan_id > 0" @change="WeekPickerChange($event)" :value="week_index" :range="week_dataList">
-					<view class="uni-input">{{week_dataList[week_index]}}</view>
+					<view class="uni-input fz30">{{week_dataList[week_index]}}</view>
 				</picker>
 			</view>
-			<view class="register_account_input">
-			    <view class="uni-list-cell-left">
-			        上课时间
-			    </view>     
-				<picker mode="time" :value="p_time" start="00:01" end="23:59" @change="bindTimeChange">
-				    <view class="uni-input">{{p_time}}</view>
+			
+			<view :class="{
+				'week-list-time':true,
+				'register_account_input':(plan_id > 0)
+				}">
+				<view class="left_txt fz30">上课时间</view>				
+				<view v-if="plan_id == 0" class="cell-right listq">
+					<view v-for="(item2,index2) in week_dataList" :index="index2" :key="item2.weekid">
+						<view :class="{
+							'fz30':true,
+							'texts':true,
+							'hidden':!item2.shower
+							}">周{{item2.weektext}}
+						</view>
+						<picker mode="time" :value="item2.p_time" start="00:01" end="23:59"  @change="bindTimeChange($event,item2.weekid)" :class="{
+								'fz30':true,
+								'awidth':true,
+								'hidden':!item2.shower
+								}">
+								<view class="uni-input pickerlist">{{item2.p_time}}</view>
+						</picker>
+					</view>
+					<view class="clear"></view>	
+				</view>
+				<picker v-if="plan_id > 0"  @change="bindTime2Change" mode="time"  :value="studentsutime_list">
+					<view class="uni-input fz30">{{studentsutime_list}}</view>
 				</picker>
+				<view class="clear"></view>	
 			</view>
+			
+			
+			
 			<view class="register_account_input">
-			    <view class="uni-list-cell-left">
+			    <view class="uni-list-cell-left fz30">
 			        每课时间
 			    </view>
 				<view class="cell-right">
@@ -54,19 +78,19 @@
 				</view>
 			</view>
 			<view class="register_account_input">
-			    <view class="uni-list-cell-left">
+			    <view class="uni-list-cell-left fz30">
 			        总节数
 			    </view>
 				<view class="cell-right">
-					<m-input class="m-input" type="text" clearable  v-model="p_num" placeholder="总节数"></m-input>	
+					<m-input class="m-input fz30" type="text" clearable  v-model="p_num" placeholder="总节数"></m-input>	
 				</view>
 			</view>
 			<view class="register_account_input">
-			    <view class="uni-list-cell-left">
+			    <view class="uni-list-cell-left fz30">
 			        已上节数
 			    </view>  
 				<view class="cell-right">
-					<m-input class="m-input" type="text" clearable v-model="p_numed" placeholder="已上节数"></m-input>
+					<m-input class="m-input fz30" type="text" clearable v-model="p_numed" placeholder="已上节数"></m-input>
 				</view>
 			</view>
 			<view class="btn-row">
@@ -133,7 +157,11 @@
 				week_index:0,
 				week_dataList:[],
 				week_dataIDList:[],				
-				p_time:'12:00',				
+				p_time:'12:00',		
+						
+				studentsweek_list:'1',//所选周几
+				studentsutime_list:'15:00',//所选周几的接孩子时间
+				
 				items: [
 					{
 						value: '1',
@@ -148,7 +176,22 @@
 			}
 		},
 		methods:{
-			checkboxChange: function (e) {
+			getWeekList:function(){
+				//debugger;
+				var items = _self.week_dataList;
+				let list_utime = [];
+				let list = [];				
+				for (var i = 0; i <  items.length; i++) {
+				    let item = items[i];
+					if(item.shower){
+						list.push(item.weekid);
+						list_utime.push(item.p_time);
+				    }
+				}
+				_self.studentsweek_list = list.toString();
+				_self.studentsutime_list = list_utime.toString();	
+			},
+			weekcheckboxChange: function (e) {
 				//debugger;
 				var items = _self.week_dataList;
 			    var values = e.detail.value;
@@ -157,15 +200,21 @@
 			        let item = items[i];
 			        if(values.includes(item.weekid)){
 						list.push(item.weekid);
-			            _self.$set(item,'checked',true);
+			            this.$set(item,'shower',true);
 			        }else{
-			            _self.$set(item,'checked',false);
+			            this.$set(item,'shower',false);
 			        }
-			    }
-				_self.week_dataIDList = list;
+			    }				
+				_self.getWeekList();
 			},
-			bindTimeChange: function(e) {
-			    _self.p_time = e.target.value;
+			bindTimeChange: function(e,num) {
+				num = parseInt(num);
+				if(num == 0) num = 7;
+				_self.week_dataList[num-1].p_time = e.target.value;
+				_self.getWeekList();
+			},	
+			bindTime2Change: function(e) {
+				_self.studentsutime_list = e.target.value
 			},
 			show(){			  
 				let ret = _self.getUserInfo();
@@ -180,13 +229,13 @@
 				if(_self.plan_id == 0){
 					_self.btntxt="添加"; 
 					_self.week_dataList = [					
-						{"weektext":'一',"weekid":'1'},
-						{"weektext":'二',"weekid":'2'},
-						{"weektext":'三',"weekid":'3'},
-						{"weektext":'四',"weekid":'4'},
-						{"weektext":'五',"weekid":'5'},
-						{"weektext":'六',"weekid":'6'},
-						{"weektext":'日',"weekid":'0'},
+						{"weektext":'一',"weekid":'1',"shower":true,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'二',"weekid":'2',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'三',"weekid":'3',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'四',"weekid":'4',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'五',"weekid":'5',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'六',"weekid":'6',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
+						{"weektext":'日',"weekid":'0',"shower":false,"p_time":_self.p_time,"uaddress":'','givetime':'18:01','giveaddress':'','backtime':'19:00',"classroom_index":0,"fan_status":0},
 					];
 				}
 				else{
@@ -249,13 +298,17 @@
 									
 									_self.course_id = planlist.c_id;
 									j = _self.course_dataIDList.findIndex(i => i == _self.course_id);
-									_self.course_index = j;
+									_self.course_index = j;									
 									
 									_self.week_id = planlist.p_week;
 									j = _self.week_dataIDList.findIndex(i => i == _self.week_id);
 									_self.week_index = j;
 									
 									_self.p_time = planlist.p_time;
+									_self.studentsweek_list = planlist.p_week;
+									_self.studentsutime_list = planlist.p_time;
+									
+									
 									_self.p_id = planlist.p_id;
 									_self.p_num = planlist.p_num.toString();
 									_self.p_numed = planlist.p_numed.toString();
@@ -280,6 +333,7 @@
 				console.log('picker发送选择改变，携带值为', e.target.value+"===="+_self.week_dataList[e.target.value] + _self.week_dataIDList[e.target.value]);
 				_self.week_id = _self.week_dataIDList[e.target.value];
 				_self.week_index = e.target.value;
+				_self.studentsweek_list = _self.week_dataIDList[e.target.value];
 			},
 			bindmodify(){
 				if(_self.child_id == 0){
@@ -297,14 +351,14 @@
 					return;
 			    }
 				if(_self.plan_id  == 0){
-					if(_self.week_dataIDList.length == 0){
+					if(_self.studentsweek_list.length == 0){
 						uni.showToast({
 							icon: 'none',
 							title: '请选择周几'
 						});
 						return;
 					}
-					_self.week_id = _self.week_dataIDList;
+					//_self.week_id = _self.week_dataIDList;
 				}else{
 					if(_self.week_id == -1){
 						uni.showToast({
@@ -312,6 +366,14 @@
 						    title: '请选择周几'
 						});
 						return;
+					}else{
+						if(_self.studentsweek_list.length == 0){
+							uni.showToast({
+								icon: 'none',
+								title: '请选择周几'
+							});
+							return;
+						}
 					}
 				}
 				
@@ -319,6 +381,11 @@
 				if(!ret){
 					return false;
 				}
+				
+				/* 
+				//单个上课时间写法
+				"week_id":_self.week_id,
+				"p_time":_self.p_time, */
 				
 				_self.sendRequest({
 				    url : _self.ModifyChildPlanUrl,
@@ -329,8 +396,10 @@
 						"id": _self.plan_id,
 						"child_id": _self.child_id,
 						"course_id":_self.course_id,
-						"week_id":_self.week_id,
-						"p_time":_self.p_time,
+						
+						"week_id":_self.studentsweek_list,
+						"p_time":_self.studentsutime_list,
+						
 						"p_num":_self.p_num,
 						"p_numed":_self.p_numed,
 						"p_pertime":_self.p_pertime,
@@ -397,9 +466,43 @@
 </script>
 
 <style>	
+    .pickerlist{
+		width: 98%;
+	}
+	.listq{
+		padding: 20upx 0upx;
+		margin-top: 20upx;
+	}
+	
+	.texts{
+		margin-right: 10upx;
+		float: left;
+		width: 20%;
+	}
+   .left_txt{
+		width:30%;
+		float: left;
+	}	
+	.week-list{
+		padding-left: 20upx;
+		border:1px solid #ccc;
+		border-radius: 25upx;		
+		margin-top: 20upx;
+	}			
+	
+	.hidden{
+		display: none;
+	}
+	.awidth{
+		margin-left: 10upx;
+		text-align: left;		
+		margin-bottom: 20upx;
+		width: 75%;
+		overflow: hidden;
+		
+	}
 	.register_account_input view{
 		float: left;
-		margin-bottom: 10upx;
 	}	
 	.content{
 		width:96%;
@@ -416,7 +519,7 @@
 	}
 	
 	uni-button{
-		border-radius: 25upx;		
+		border-radius: 50upx;		
 	}
 	uni-button:after{
 		border: 0px;		
@@ -500,13 +603,13 @@
 	}
 	picker view{
 		border: 1px solid #66ccff;
-		width:60%;
+		width:65%;
 		text-align: center;
 	}
 	.cell-right{
 		float: left;
 		border: 1px solid #66ccff;
-		width:60%;
+		width:65%;
 		text-align: center;		
 	}
 	.btn-row{
