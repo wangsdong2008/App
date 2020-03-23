@@ -20,6 +20,9 @@
 				<button type="primary" class="btn" @tap="bindsaveuserinfo">修改</button>
 			</view>
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 <style>

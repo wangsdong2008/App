@@ -11,15 +11,18 @@
 						<m-input class="m-input" type="text" clearable focus v-model="old_mobile" placeholder="请输入旧手机"></m-input>
 					</li>
 					<li class="li30">
-						<m-input class="m-input" type="text" clearable v-model="new_mobile" placeholder="请输入新手机"></m-input>
+						<m-input class="m-input" type="text" v-model="new_mobile" placeholder="请输入新手机"></m-input>
 					</li>
 					<li class="li30">
-						<m-input class="m-input inputs" type="text" clearable v-model="code" placeholder="请输入验证码"></m-input>
+						<m-input class="m-input inputs" type="text" v-model="code" placeholder="请输入验证码"></m-input>
 						<button type="default" class="btns" size="mini" @tap="bindcode">获取验证码</button>
 					</li>
 				</ul>
 				<button type="primary" class="btn" @tap="bindsavemobile">修改</button>
 			</view>
+		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
 		</view>
 	</view>
 </template>
@@ -45,10 +48,7 @@
 	
 	.lists ul{
 		list-style-type: none;
-	}
-	.lists ul li{
-		padding: 20upx 20upx;
-	}
+	}	
 	.inputs {
 		float: left;
 		width: 60%;
@@ -59,8 +59,8 @@
 	.li30{
 		padding: 20upx 10upx;
 		margin-bottom: 30upx;
-		padding-left: 70upx;
-		background:url(../../../static/img/mobile5.png) 20upx 25upx no-repeat;
+		padding-left: 50upx;
+		background:url(../../../static/img/mobile5.png) 10upx 25upx no-repeat;
 		-webkit-background-size: 40upx 40upx;
 		background-size: 40upx 40upx;
 		border: 1upx solid #EEEEEE;

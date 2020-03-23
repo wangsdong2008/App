@@ -56,4 +56,7 @@
 	.fz30{
 		font-size: 30upx;
 	}
+	.btn{		
+		border-radius: 50upx;
+	}
 </style>

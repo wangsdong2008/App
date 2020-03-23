@@ -62,6 +62,9 @@
 			
 			
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 <style>		

@@ -131,6 +131,11 @@
 				"navigationBarTitleText": "帮助文档"
 			}
 		},{
+			"path": "pages/company/site/helpshow",
+			"style": {
+				"navigationBarTitleText": "帮助文档"
+			}
+		},{
 			"path": "pages/company/site/index",
 			"style": {
 				"navigationBarTitleText": "公司设置"

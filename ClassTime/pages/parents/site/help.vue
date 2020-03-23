@@ -7,7 +7,7 @@
 			</view>
 			
 			<uni-list>
-			    <uni-list-item class="ulist" :show-arrow="false" v-for="(item,index) in dataList" :title="item.article_title"  @tap="bindclick(item.article_id)"  :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'"></uni-list-item>
+			    <uni-list-item class="ulist" :show-arrow="false" v-for="(item,index) in dataList" :title="item.article_title"  @tap="bindclick(item.guid)"  :index="index" :key="item.help_id" :thumb="'../../../static/img/step.png'"></uni-list-item>
 			</uni-list>
 			
 			<view>

@@ -6,25 +6,13 @@
 				<image src="../../../static/img/power.png" mode=""></image>个人资料
 			</view>		
 			<view class="main-body write lists">
-				<ul>
-					<li>
-						<view class="uni-list-cell-left">
-						    姓名
-						</view>
-						<view class="cell-right">
-							<m-input class="m-input" type="text" clearable focus v-model="true_name" placeholder="请输入姓名"></m-input>
-						</view>
-					</li>
-					<li>
-						<view class="uni-list-cell-left">
-						    昵称
-						</view>
-						<view class="cell-right">
-							<m-input class="m-input" type="text" clearable focus v-model="nick_name" placeholder="请输入昵称"></m-input>
-						</view>
-					</li>
-					<view class="clear"></view>				
-				</ul>
+				<view class="register_account_input">
+					<m-input class="m-input" type="text" clearable v-model="true_name" placeholder="请输入姓名"></m-input>
+				</view>
+				<view class="register_account_input">
+					<m-input class="m-input" type="text" clearable v-model="nick_name" placeholder="请输入昵称"></m-input>
+				</view>
+				
 				<view>
 					<button type="primary" class="btn" @tap="bindsaveuserinfo">保存</button>
 				</view>
@@ -43,6 +31,17 @@
 	*{
 		margin: 0;
 		padding: 0;
+	}
+	.register_account_input view{
+		float: left;
+		margin-bottom: 10upx;
+	}
+	.register_account_input{
+		padding-top: 20upx;
+		padding-bottom: 10px;
+		border-bottom: 1px solid #eeeeee;
+		line-height: 60upx;
+		height: 60upx;
 	}
 	.main_content{		
 	}	

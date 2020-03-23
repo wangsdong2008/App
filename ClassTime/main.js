@@ -15,8 +15,11 @@ Vue.prototype.temp_status = 0; //临时状态,调试用,=1时,debugger起作用
 Vue.prototype.STUDYTIME = "2019-06-01";
 Vue.prototype.Method = "get"; //请求方式
 
-//图片地址
+//服务器
+//Vue.prototype.WebUrl = "http://968293.ichengyun.net/";
 Vue.prototype.WebUrl = "http://192.168.1.103/";
+
+//图片地址
 Vue.prototype.PicUrl = Vue.prototype.WebUrl + "uploadfile/" ;
 
 //api接口变量
