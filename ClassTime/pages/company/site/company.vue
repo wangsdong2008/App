@@ -16,6 +16,9 @@
 				<button type="primary" plain="true" @tap="companyadd">添加公司</button>
 			</view>
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 
@@ -23,12 +26,13 @@
 	import uniList from '@/components/uni-list/uni-list.vue'
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
+	import footerNav from "@/components/footer/footer_nav.vue"
 	var _self;
 	export default {
 	    components: {
 			uniList,
 			uniListItem,
-			headerNav,
+			headerNav,footerNav
 		},
 		onLoad(){
 			_self = this;
@@ -40,7 +44,8 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'公司管理,Company Manage'
+				headermsg:'公司管理,Company Manage',
+				footer: ''
 			}
 		},
 		methods:{

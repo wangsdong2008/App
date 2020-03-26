@@ -23,6 +23,9 @@
 				<button type="primary" plain="true" @tap="classroomadd">添加教室</button>
 			</view>
 		</view>
+		<view class="footer">
+			<footerNav :msg="footer"></footerNav>
+		</view>
 	</view>
 </template>
 
@@ -31,13 +34,14 @@
 	import uniListItem from '@/components/uni-list-item/uni-list-item.vue'
 	import headerNav from "@/components/header/company_header.vue"
 	import uniCollapse from '@/components/uni-collapse/uni-collapse.vue'
-	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'	
+	import uniCollapseItem from '@/components/uni-collapse-item/uni-collapse-item.vue'		
+	import footerNav from "@/components/footer/footer_nav.vue"
 	var _self;
 	export default {
 	    components: {
 			uniList,
 			uniListItem,
-			headerNav,
+			headerNav,footerNav,
 			uniCollapse,uniCollapseItem
 		},
 		onLoad(){	
@@ -50,7 +54,8 @@
 		data(){
 			return{
 				dataList:[],				
-				headermsg:'教室管理,Classroom Manage'
+				headermsg:'教室管理,Classroom Manage',
+				footer: ''
 			}
 		},
 		methods:{
